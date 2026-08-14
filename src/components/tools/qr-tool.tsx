@@ -70,12 +70,14 @@ export function QrCodeTool({ messages }: ToolComponentProps) {
             {messages.tool.correction}{" "}
             <select
               className="select"
-              style={{ width: 70, height: 34 }}
+              style={{ width: 150, height: 34 }}
               value={level}
               onChange={(event) => setLevel(event.target.value as typeof level)}
             >
-              {["L", "M", "Q", "H"].map((item) => (
-                <option key={item}>{item}</option>
+              {(["L", "M", "Q", "H"] as const).map((item) => (
+                <option value={item} key={item}>
+                  {messages.tool.qrLevels[item]}
+                </option>
               ))}
             </select>
           </label>

@@ -42,14 +42,19 @@ export function RegexTool({ messages }: ToolComponentProps) {
           />
         </div>
         <div className="option-row">
-          {["g", "i", "m", "s", "u"].map((flag) => (
-            <label className="checkbox" key={flag}>
+          {(["g", "i", "m", "s", "u"] as const).map((flag) => (
+            <label
+              className="checkbox regex-flag"
+              key={flag}
+              title={`${messages.tool.regexFlags[flag]} (${flag})`}
+            >
               <input
                 type="checkbox"
                 checked={flags.includes(flag)}
                 onChange={() => toggleFlag(flag)}
               />
-              {flag}
+              <span>{messages.tool.regexFlags[flag]}</span>
+              <code>{flag}</code>
             </label>
           ))}
         </div>

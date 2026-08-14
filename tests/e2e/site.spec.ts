@@ -91,6 +91,48 @@ test("英文站点保持可用", async ({ page }) => {
   await expect(page).toHaveURL(/\/en\/tools$/);
 });
 
+test("文本差异在左右编辑器中直接高亮", async ({ page }) => {
+  await page.goto("/zh/tools/text-diff");
+  await waitForHydration(page);
+  const inlineDiff = page.getByTestId("inline-diff");
+  await expect(inlineDiff).toBeVisible();
+  await page.getByLabel("原始文本").fill("第一行\n删除内容\n");
+  await page.getByLabel("修改后文本").fill("第一行\n新增内容\n额外行\n");
+  await expect(
+    inlineDiff.locator(".diff-inline-modified").first(),
+  ).toBeVisible();
+  await expect(inlineDiff.locator(".diff-inline-added")).not.toHaveCount(0);
+  await expect(page.getByText("差异结果", { exact: true })).toHaveCount(0);
+});
+
+test("Cron 可视化设置生成表达式", async ({ page }) => {
+  await page.goto("/zh/tools/cron-generator");
+  await waitForHydration(page);
+  await page.getByLabel("计划类型").selectOption("weekly");
+  await page.getByLabel("星期三").check();
+  const timeSelectors = page.locator(".cron-time-fields select");
+  await timeSelectors.nth(0).selectOption("10");
+  await timeSelectors.nth(1).selectOption("30");
+  await expect(page.getByLabel("生成的表达式")).toHaveValue("30 10 * * 1,3");
+  await expect(page.getByText("接下来五次运行")).toBeVisible();
+});
+
+test("二维码和正则选项使用中文说明", async ({ page }) => {
+  await page.goto("/zh/tools/qr-code-generator");
+  await waitForHydration(page);
+  await expect(page.getByRole("option", { name: "低（约 7%）" })).toHaveCount(
+    1,
+  );
+  await expect(page.getByRole("option", { name: "高（约 30%）" })).toHaveCount(
+    1,
+  );
+  await page.goto("/zh/tools/regex-tester");
+  await waitForHydration(page);
+  await expect(page.getByText("全局匹配", { exact: true })).toBeVisible();
+  await expect(page.getByText("忽略大小写", { exact: true })).toBeVisible();
+  await expect(page.getByText("点号匹配换行", { exact: true })).toBeVisible();
+});
+
 test("健康接口和安全响应头可用", async ({ request }) => {
   const response = await request.get("/api/health");
   expect(response.ok()).toBeTruthy();

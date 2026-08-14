@@ -1,11 +1,81 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { compareText, toUnifiedLikeDiff } from "@/lib/tools";
+import { useMemo, useRef, useState } from "react";
+import {
+  compareText,
+  createSideBySideDiff,
+  toUnifiedLikeDiff,
+  type DiffLine,
+} from "@/lib/tools";
 import { CopyButton, DownloadButton } from "./tool-actions";
 import type { ToolComponentProps } from "@/lib/types";
 
-export function DiffTool({ messages }: ToolComponentProps) {
+function DiffPane({
+  label,
+  value,
+  onChange,
+  lines,
+  side,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  lines: DiffLine[];
+  side: "left" | "right";
+}) {
+  const highlightRef = useRef<HTMLDivElement>(null);
+  const syncScroll = (target: HTMLTextAreaElement) => {
+    if (highlightRef.current) {
+      highlightRef.current.scrollTop = target.scrollTop;
+      highlightRef.current.scrollLeft = target.scrollLeft;
+    }
+  };
+  return (
+    <div className={`diff-pane diff-pane-${side}`}>
+      <div className="panel-label">
+        <span>{label}</span>
+        <span>{value.split("\n").length} lines</span>
+      </div>
+      <div className="diff-editor-shell">
+        <div className="diff-highlight" ref={highlightRef} aria-hidden="true">
+          {lines.map((line, row) => (
+            <div
+              className={`diff-inline-line diff-inline-${line.tone}`}
+              key={`${row}-${line.number}`}
+            >
+              <span className="diff-gutter">
+                <span>{line.number ?? ""}</span>
+                <b>{line.marker}</b>
+              </span>
+              <code>
+                {line.segments.map((segment, index) => (
+                  <span
+                    className={
+                      segment.changed ? "diff-char-changed" : undefined
+                    }
+                    key={index}
+                  >
+                    {segment.value}
+                  </span>
+                ))}
+              </code>
+            </div>
+          ))}
+        </div>
+        <textarea
+          className="diff-textarea"
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          onScroll={(event) => syncScroll(event.currentTarget)}
+          spellCheck={false}
+          aria-label={label}
+        />
+      </div>
+    </div>
+  );
+}
+
+export function DiffTool({ messages, locale }: ToolComponentProps) {
   const [before, setBefore] = useState(
     "const status = 'draft';\nconsole.log(status);\n",
   );
@@ -17,13 +87,12 @@ export function DiffTool({ messages }: ToolComponentProps) {
   const result = useMemo(() => {
     try {
       const parts = compareText(before, after, mode, ignoreWhitespace);
-      return { parts, text: toUnifiedLikeDiff(parts), error: "" };
-    } catch (error) {
       return {
-        parts: [],
-        text: "",
-        error: error instanceof Error ? error.message : "Diff failed.",
+        model: createSideBySideDiff(before, after, ignoreWhitespace),
+        text: toUnifiedLikeDiff(parts),
       };
+    } catch {
+      return { model: { left: [], right: [] }, text: "" };
     }
   }, [before, after, mode, ignoreWhitespace]);
   return (
@@ -36,13 +105,13 @@ export function DiffTool({ messages }: ToolComponentProps) {
               aria-pressed={mode === "lines"}
               onClick={() => setMode("lines")}
             >
-              Lines
+              {messages.tool.lines}
             </button>
             <button
               aria-pressed={mode === "characters"}
               onClick={() => setMode("characters")}
             >
-              Characters
+              {messages.tool.characters}
             </button>
           </div>
           <label className="checkbox">
@@ -61,35 +130,36 @@ export function DiffTool({ messages }: ToolComponentProps) {
           />
         </div>
       </div>
-      <div className="workspace-grid">
-        <div className="workspace-panel">
-          <div className="panel-label">{messages.tool.original}</div>
-          <textarea
-            className="editor"
-            value={before}
-            onChange={(event) => setBefore(event.target.value)}
-          />
-        </div>
-        <div className="workspace-panel">
-          <div className="panel-label">{messages.tool.changed}</div>
-          <textarea
-            className="editor"
-            value={after}
-            onChange={(event) => setAfter(event.target.value)}
-          />
-        </div>
+      <div className="diff-workspace" data-testid="inline-diff">
+        <DiffPane
+          label={messages.tool.original}
+          value={before}
+          onChange={setBefore}
+          lines={result.model.left}
+          side="left"
+        />
+        <DiffPane
+          label={messages.tool.changed}
+          value={after}
+          onChange={setAfter}
+          lines={result.model.right}
+          side="right"
+        />
       </div>
-      <div className="panel-label">{messages.tool.difference}</div>
-      <pre className="editor editor-output" style={{ minHeight: 180 }}>
-        {result.parts.map((part, index) => (
-          <span
-            key={index}
-            className={`diff-line${part.added ? " diff-added" : part.removed ? " diff-removed" : ""}`}
-          >
-            {part.value}
-          </span>
-        ))}
-      </pre>
+      <div className="workspace-footer">
+        <span className="workspace-footer-meta">
+          {locale === "zh"
+            ? "差异直接显示在左右文本中"
+            : "Differences are highlighted directly in both editors"}
+        </span>
+        <span className="badge">
+          {
+            result.model.left.filter(
+              (line) => line.tone !== "unchanged" && line.tone !== "empty",
+            ).length
+          }
+        </span>
+      </div>
     </section>
   );
 }
