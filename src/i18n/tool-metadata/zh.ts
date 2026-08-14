@@ -1,0 +1,354 @@
+import type { ToolCategoryId } from "@/lib/types";
+
+export interface LocalizedToolMetadata {
+  name: string;
+  shortName: string;
+  description: string;
+  keywords: string[];
+  seoTitle: string;
+  seoDescription: string;
+  faq: Array<{ question: string; answer: string }>;
+}
+
+export const zhCategories: Record<
+  ToolCategoryId,
+  { name: string; description: string }
+> = {
+  "json-data": {
+    name: "JSON 与数据",
+    description: "格式化、校验和转换结构化数据",
+  },
+  encoding: { name: "编码与 URL", description: "编码和解码文本及 Web 数据" },
+  text: { name: "文本工具", description: "统计、对比和转换文本" },
+  regex: { name: "正则与测试", description: "测试表达式并查看匹配结果" },
+  "time-number": {
+    name: "时间与数字",
+    description: "转换时间戳、进制和定时计划",
+  },
+  crypto: { name: "Hash 与标识", description: "生成摘要、UUID 并解码令牌" },
+  web: { name: "Web 开发", description: "构建请求、颜色、二维码和网页标记" },
+};
+
+export const zhTools: Record<string, LocalizedToolMetadata> = {
+  "json-formatter": {
+    name: "JSON 格式化",
+    shortName: "JSON 格式化",
+    description: "使用可配置缩进美化 JSON，并清晰显示语法错误。",
+    keywords: ["json", "格式化", "美化", "缩进", "数据"],
+    seoTitle: "JSON 在线格式化 — 美化与校验 JSON",
+    seoDescription:
+      "在浏览器本地快速格式化 JSON，支持语法校验和缩进设置，数据无需上传。",
+    faq: [
+      {
+        question: "我的 JSON 会被上传吗？",
+        answer: "不会。格式化完全在浏览器中完成，输入内容不会离开您的设备。",
+      },
+      {
+        question: "最多可以输入多大的 JSON？",
+        answer: "默认上限为 5 MB，并设有嵌套深度保护，避免浏览器卡顿。",
+      },
+    ],
+  },
+  "json-validator": {
+    name: "JSON 校验",
+    shortName: "JSON 校验",
+    description: "检查 JSON 语法，并在内容无效时显示准确错误。",
+    keywords: ["json", "校验", "验证", "语法", "检查"],
+    seoTitle: "JSON 在线校验 — 检查 JSON 语法",
+    seoDescription:
+      "在浏览器本地校验 JSON 并定位语法错误，无需向服务器发送数据。",
+    faq: [
+      {
+        question: "校验会检查哪些内容？",
+        answer: "会检查 JSON 语法、输入大小和过深的嵌套结构。",
+      },
+    ],
+  },
+  "json-minifier": {
+    name: "JSON 压缩",
+    shortName: "JSON 压缩",
+    description: "移除有效 JSON 中的空白，减小接口数据和测试文件体积。",
+    keywords: ["json", "压缩", "精简", "去空格"],
+    seoTitle: "JSON 在线压缩 — 精简 JSON",
+    seoDescription: "在浏览器中安全压缩有效 JSON，并复制或下载结果。",
+    faq: [
+      {
+        question: "压缩会改变数据吗？",
+        answer: "不会。只会移除无意义的空白，解析后的 JSON 数据保持不变。",
+      },
+    ],
+  },
+  base64: {
+    name: "Base64 编码 / 解码",
+    shortName: "Base64",
+    description: "将 UTF-8 文本编码为 Base64，或将 Base64 解码为可读文本。",
+    keywords: ["base64", "编码", "解码", "utf8", "文本"],
+    seoTitle: "Base64 在线编码与解码",
+    seoDescription: "在浏览器中私密地编码和解码 UTF-8 Base64 文本。",
+    faq: [
+      {
+        question: "支持中文和 Emoji 吗？",
+        answer:
+          "支持。文本通过 UTF-8 转换，因此可处理中文、Emoji 和其他非拉丁字符。",
+      },
+    ],
+  },
+  "url-encoder": {
+    name: "URL 编码",
+    shortName: "URL 编码",
+    description: "将文本安全地进行百分号编码，用于 URL 路径和查询参数。",
+    keywords: ["url", "uri", "百分号", "编码", "查询参数"],
+    seoTitle: "URL 在线编码 — 百分号编码文本",
+    seoDescription: "在浏览器中快速编码 URL 组件和查询参数值。",
+    faq: [
+      {
+        question: "可以编码完整 URL 吗？",
+        answer:
+          "此工具采用 URL 组件编码，最适合处理单独的路径片段或查询参数值。",
+      },
+    ],
+  },
+  "url-decoder": {
+    name: "URL 解码",
+    shortName: "URL 解码",
+    description: "解码百分号编码的 URL 组件和使用加号分隔的查询文本。",
+    keywords: ["url", "uri", "百分号", "解码", "查询参数"],
+    seoTitle: "URL 在线解码 — 解析百分号编码",
+    seoDescription: "在本地解码 URL 编码文本，并清晰提示无效编码序列。",
+    faq: [
+      {
+        question: "加号会被转换为空格吗？",
+        answer:
+          "会，与常见的 application/x-www-form-urlencoded 查询值保持一致。",
+      },
+    ],
+  },
+  "timestamp-converter": {
+    name: "时间戳转换",
+    shortName: "时间戳",
+    description: "转换 Unix 秒、毫秒、ISO 日期、UTC 和本地时间。",
+    keywords: ["unix", "时间戳", "日期", "时间", "utc", "毫秒"],
+    seoTitle: "Unix 时间戳在线转换 — 时间戳转日期",
+    seoDescription: "在 Unix 时间戳、ISO、UTC 和本地时区日期之间快速转换。",
+    faq: [
+      {
+        question: "如何区分秒和毫秒？",
+        answer: "绝对值小于 1000 亿的数字按秒处理，更大的值按毫秒处理。",
+      },
+    ],
+  },
+  "uuid-generator": {
+    name: "UUID 生成器",
+    shortName: "UUID",
+    description: "批量生成最多 100 个加密安全的随机 UUID v4。",
+    keywords: ["uuid", "guid", "随机", "标识符", "v4", "生成"],
+    seoTitle: "UUID v4 在线生成器 — 批量随机 UUID",
+    seoDescription: "在浏览器本地生成安全的 UUID v4，支持复制和下载。",
+    faq: [
+      {
+        question: "UUID 如何生成？",
+        answer: "使用浏览器 Web Crypto API 提供的 crypto.randomUUID 生成。",
+      },
+    ],
+  },
+  "hash-generator": {
+    name: "Hash 生成器",
+    shortName: "Hash",
+    description: "生成 SHA-256、SHA-384、SHA-512、SHA-1 或 MD5 文本摘要。",
+    keywords: ["hash", "哈希", "sha256", "sha512", "sha1", "md5", "摘要"],
+    seoTitle: "Hash 在线生成 — SHA-256、SHA-512 与 MD5",
+    seoDescription: "使用现代 Web Crypto 算法在本地计算常见文本 Hash。",
+    faq: [
+      {
+        question: "可以用它存储密码吗？",
+        answer:
+          "不可以。密码存储应使用 Argon2 或 scrypt 等专用慢速算法，并为每个密码使用唯一盐值。",
+      },
+    ],
+  },
+  "text-counter": {
+    name: "文本统计",
+    shortName: "文本统计",
+    description: "统计字符、单词、行、字节、数字、空白和中文字符。",
+    keywords: ["文本", "字数", "字符", "单词", "字节", "行数", "统计"],
+    seoTitle: "在线文本统计 — 字符、单词、行数与字节",
+    seoDescription: "在浏览器中即时分析文本，提供支持 Unicode 的多项统计。",
+    faq: [
+      {
+        question: "Emoji 能正确计数吗？",
+        answer:
+          "字符统计支持 Unicode 码点，但由多个码点组成的字形可能会被计为多个字符。",
+      },
+    ],
+  },
+  "case-converter": {
+    name: "文本大小写转换",
+    shortName: "大小写转换",
+    description:
+      "将文本转换为 camelCase、PascalCase、snake_case、kebab-case 等格式。",
+    keywords: [
+      "大小写",
+      "驼峰",
+      "camelcase",
+      "pascal",
+      "snake",
+      "kebab",
+      "命名",
+    ],
+    seoTitle: "文本大小写转换 — camelCase、snake_case 等",
+    seoDescription: "在十种常用命名规则之间转换标识符和文本。",
+    faq: [
+      {
+        question: "支持哪些分隔符？",
+        answer: "支持空格、连字符、下划线、点、正斜杠、反斜杠和驼峰边界。",
+      },
+    ],
+  },
+  "text-diff": {
+    name: "文本差异对比",
+    shortName: "文本 Diff",
+    description: "按行或字符对比两段文本，并导出精简差异结果。",
+    keywords: ["diff", "差异", "对比", "文本", "变更", "比较"],
+    seoTitle: "在线文本 Diff — 按行或字符对比",
+    seoDescription: "在本地清晰对比文本新增和删除内容，并下载结果。",
+    faq: [
+      {
+        question: "可以忽略空白差异吗？",
+        answer: "可以，按行对比时可选择忽略空白变化。",
+      },
+    ],
+  },
+  "regex-tester": {
+    name: "正则表达式测试",
+    shortName: "正则测试",
+    description: "测试 JavaScript 正则表达式，实时高亮匹配并统计数量。",
+    keywords: ["regex", "正则", "表达式", "javascript", "匹配", "测试"],
+    seoTitle: "正则表达式在线测试 — JavaScript Regex",
+    seoDescription:
+      "在本地测试 JavaScript 正则表达式，实时查看匹配并提供安全限制。",
+    faq: [
+      {
+        question: "使用哪种正则语法？",
+        answer: "使用浏览器提供的 JavaScript RegExp 实现。",
+      },
+      {
+        question: "如何防止 ReDoS？",
+        answer: "限制输入和表达式长度、匹配数量，并拒绝常见的嵌套量词模式。",
+      },
+    ],
+  },
+  "number-base-converter": {
+    name: "数字进制转换",
+    shortName: "进制转换",
+    description: "在 2 到 36 进制之间转换任意精度整数。",
+    keywords: ["二进制", "十进制", "十六进制", "八进制", "进制", "转换"],
+    seoTitle: "在线进制转换 — 二进制、十进制与十六进制",
+    seoDescription: "在 2 至 36 进制之间无精度损失地转换大整数。",
+    faq: [
+      {
+        question: "支持大整数吗？",
+        answer:
+          "支持。转换使用 JavaScript BigInt，不会出现普通浮点数精度损失。",
+      },
+    ],
+  },
+  "color-converter": {
+    name: "颜色转换",
+    shortName: "颜色转换",
+    description: "转换并预览 HEX、RGB 和 HSL 颜色，生成可用的 CSS 值。",
+    keywords: ["颜色", "hex", "rgb", "hsl", "css", "取色器", "转换"],
+    seoTitle: "在线颜色转换 — HEX、RGB 与 HSL",
+    seoDescription: "转换 HEX 和 RGB 颜色，查看 HSL、预览颜色并复制 CSS。",
+    faq: [
+      {
+        question: "支持哪些输入？",
+        answer: "支持 3 位或 6 位 HEX、rgb(r,g,b) 以及以逗号分隔的 RGB 值。",
+      },
+    ],
+  },
+  "qr-code-generator": {
+    name: "二维码生成器",
+    shortName: "二维码",
+    description: "生成可下载的 PNG 二维码，并设置尺寸和纠错等级。",
+    keywords: ["二维码", "qr", "qrcode", "url", "png", "生成"],
+    seoTitle: "二维码在线生成 — 下载 PNG",
+    seoDescription: "在本地生成可自定义的二维码，并下载高清 PNG 图片。",
+    faq: [
+      {
+        question: "二维码内容会被上传吗？",
+        answer: "不会。二维码图像完全在浏览器中生成。",
+      },
+    ],
+  },
+  "curl-parser": {
+    name: "cURL 解析器",
+    shortName: "cURL 解析",
+    description: "解析常见 cURL 命令中的请求方法、URL、请求头和请求体。",
+    keywords: ["curl", "解析", "http", "api", "请求"],
+    seoTitle: "cURL 在线解析 — 查看 HTTP 请求",
+    seoDescription: "在本地将常见 cURL 命令解析为方法、URL、请求头和请求体。",
+    faq: [
+      {
+        question: "工具会执行请求吗？",
+        answer: "不会。工具只在本地解析命令，不会发送任何网络请求。",
+      },
+    ],
+  },
+  "curl-generator": {
+    name: "cURL 生成器",
+    shortName: "cURL 生成",
+    description: "通过简单表单生成 cURL 或 JavaScript fetch 请求代码。",
+    keywords: ["curl", "生成", "fetch", "http", "api", "请求"],
+    seoTitle: "cURL 在线生成 — 构建 HTTP 请求",
+    seoDescription: "在不发送 API 数据的情况下生成 cURL 和 fetch 请求代码。",
+    faq: [
+      {
+        question: "会执行生成的请求吗？",
+        answer: "不会。工具只生成源代码，您可以检查后自行运行。",
+      },
+    ],
+  },
+  "jwt-decoder": {
+    name: "JWT 解码",
+    shortName: "JWT 解码",
+    description: "解码 JWT 头部、载荷和时间声明，不验证也不上传令牌。",
+    keywords: ["jwt", "令牌", "token", "解码", "头部", "载荷", "声明"],
+    seoTitle: "JWT 在线解码 — 查看头部与载荷",
+    seoDescription: "在浏览器中私密解码 JWT 声明，并查看签发和过期时间。",
+    faq: [
+      {
+        question: "解码能证明 JWT 有效吗？",
+        answer: "不能。只有使用可信密钥完成加密验证后，才能确认令牌真实有效。",
+      },
+    ],
+  },
+  "cron-generator": {
+    name: "Cron 表达式工具",
+    shortName: "Cron",
+    description: "校验 Cron 表达式、应用常用预设并预览后续运行时间。",
+    keywords: ["cron", "定时", "计划", "crontab", "下次运行", "生成"],
+    seoTitle: "Cron 表达式在线生成与运行预览",
+    seoDescription:
+      "使用预设构建和校验 Cron 计划，并查看接下来五次本地运行时间。",
+    faq: [
+      {
+        question: "支持哪种 Cron 语法？",
+        answer: "本地解析器支持标准五字段表达式和可选的秒字段。",
+      },
+    ],
+  },
+  "html-formatter": {
+    name: "HTML 格式化",
+    shortName: "HTML 格式化",
+    description: "使用清晰结构和统一缩进美化 HTML。",
+    keywords: ["html", "格式化", "美化", "prettier", "网页", "标记"],
+    seoTitle: "HTML 在线格式化 — 美化网页标记",
+    seoDescription: "在本地格式化 HTML，使用清晰缩进并支持复制或下载结果。",
+    faq: [
+      {
+        question: "输入的 HTML 会被执行吗？",
+        answer: "不会。输入内容仅作为源代码文本进行格式化和显示，不会被执行。",
+      },
+    ],
+  },
+};
