@@ -1,6 +1,6 @@
 # DevToolbox
 
-A fast, privacy-first, bilingual developer toolbox built with Next.js and TypeScript. The first release includes a metadata-driven platform, 21 browser-local tools, Simplified Chinese and English interfaces, global bilingual search, responsive light/dark themes, favorites, recent tools, localized SEO pages, automated tests, Docker, and one-command deployment.
+A fast, privacy-first, bilingual developer toolbox built with Next.js and TypeScript. It includes a metadata-driven platform, 21 browser-local tools, Simplified Chinese and English interfaces, global bilingual search, responsive light/dark themes, favorites, recent tools, localized SEO pages, and a secure administration console with real operational metrics and complete user management.
 
 ## Included tools
 
@@ -44,6 +44,21 @@ npm run test:e2e
 
 The registry automatically feeds search, cards, categories, static routes, sitemap entries, metadata, FAQs, and related-tool navigation. Dynamic mappings keep each tool implementation in a separate, on-demand bundle.
 
+## Administration
+
+The administration console is available at `/zh/admin` and `/en/admin`. It provides DAU/WAU/MAU, registered and active users, tool usage, PV/UV, visits, popular tools, error rate, API and file metrics, plus searchable/paginated user management. Admins can inspect users, disable accounts, reset passwords, change permitted roles, and delete accounts. Every admin mutation is re-authorized on the server, revokes affected sessions where appropriate, and writes an audit log.
+
+For local development, set the bootstrap values before the first start:
+
+```bash
+DATABASE_PATH=./data/devtoolbox.sqlite
+ADMIN_EMAIL=admin@example.com
+ADMIN_NAME="DevToolbox Admin"
+ADMIN_PASSWORD="a-unique-strong-password"
+```
+
+The first process that opens an empty database with both bootstrap variables configured creates one Super Admin. The password must be at least 12 characters and contain uppercase and lowercase letters, a number, and a symbol. Without those variables, public tools still run but no admin can sign in. Bootstrap variables do not overwrite an existing Super Admin. Back up the SQLite database file before upgrades.
+
 ## Docker
 
 ```bash
@@ -69,6 +84,10 @@ See [`deploy/README.md`](deploy/README.md) for HTTPS, Nginx, updates, logs, and 
 | ---------------------- | ----------------------- | -------------------------------------------------- |
 | `NEXT_PUBLIC_SITE_URL` | `http://localhost:3000` | Canonical origin for metadata, sitemap, and robots |
 | `APP_PORT`             | `3000`                  | Loopback host port exposed by Compose              |
+| `DATABASE_PATH`         | `/data/devtoolbox.sqlite` | Writable SQLite path (persistent Compose volume)  |
+| `ADMIN_EMAIL`           | required                | First Super Admin email                            |
+| `ADMIN_NAME`            | `DevToolbox Admin`       | First Super Admin display name                     |
+| `ADMIN_PASSWORD`        | required                | First Super Admin bootstrap password               |
 | `IMAGE_NAME`           | `web-dev-tools`         | Docker image name                                  |
 | `IMAGE_TAG`            | `latest`                | Docker image tag                                   |
 

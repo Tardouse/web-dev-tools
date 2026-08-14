@@ -3,7 +3,11 @@ import { SITE_CONFIG } from "@/lib/config";
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: "*", allow: "/", disallow: ["/favorites"] },
+    rules: {
+      userAgent: "*",
+      allow: "/",
+      disallow: ["/favorites", "/zh/admin", "/en/admin", "/zh/login", "/en/login"],
+    },
     sitemap: `${SITE_CONFIG.url}/sitemap.xml`,
     host: SITE_CONFIG.url,
   };
