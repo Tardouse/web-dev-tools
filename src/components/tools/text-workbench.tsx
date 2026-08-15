@@ -50,6 +50,18 @@ export function TextWorkbench({
   const run = useCallback(async () => {
     setRunning(true);
     setError("");
+    const inputSize = byteLength(input);
+    if (inputSize > maxInputSize) {
+      setOutput("");
+      setError(
+        localizeToolError(
+          `Input is ${formatBytes(inputSize)}. The limit for this tool is ${formatBytes(maxInputSize)}.`,
+          messages,
+        ),
+      );
+      setRunning(false);
+      return;
+    }
     try {
       setOutput(await transform(input));
     } catch (caught) {
@@ -62,7 +74,7 @@ export function TextWorkbench({
     } finally {
       setRunning(false);
     }
-  }, [input, transform, messages]);
+  }, [input, maxInputSize, transform, messages]);
   const clear = () => {
     setInput("");
     setOutput("");

@@ -67,7 +67,7 @@ const toolComponents: Record<string, ComponentType<ToolComponentProps>> = {
     import("./cron-tool").then((module) => module.CronTool),
   ),
   "html-formatter": dynamic(() =>
-    import("./text-tools").then((module) => module.HtmlFormatterTool),
+    import("./web-code-tool").then((module) => module.WebCodeTool),
   ),
   "image-workbench": dynamic(() =>
     import("./image-tool").then((module) => module.ImageWorkbenchTool),
@@ -87,6 +87,44 @@ const toolComponents: Record<string, ComponentType<ToolComponentProps>> = {
   "http-status-reference": dynamic(() =>
     import("./reference-tools").then(
       (module) => module.HttpStatusReferenceTool,
+    ),
+  ),
+  "sql-formatter": dynamic(() =>
+    import("./sql-tool").then((module) => module.SqlFormatterTool),
+  ),
+  "css-formatter": dynamic(() =>
+    import("./web-code-tool").then((module) => module.WebCodeTool),
+  ),
+  "javascript-formatter": dynamic(() =>
+    import("./web-code-tool").then((module) => module.WebCodeTool),
+  ),
+  "git-command-builder": dynamic(() =>
+    import("./git-tool").then((module) => module.GitCommandBuilderTool),
+  ),
+  "network-calculator": dynamic(() =>
+    import("./network-tool").then((module) => module.NetworkCalculatorTool),
+  ),
+  "api-request-builder": dynamic(() =>
+    import("./api-tool").then((module) => module.ApiRequestBuilderTool),
+  ),
+  "linux-cheatsheet": dynamic(() =>
+    import("./cheatsheet-tool").then(
+      (module) => module.DeveloperCheatsheetTool,
+    ),
+  ),
+  "git-cheatsheet": dynamic(() =>
+    import("./cheatsheet-tool").then(
+      (module) => module.DeveloperCheatsheetTool,
+    ),
+  ),
+  "docker-cheatsheet": dynamic(() =>
+    import("./cheatsheet-tool").then(
+      (module) => module.DeveloperCheatsheetTool,
+    ),
+  ),
+  "nginx-cheatsheet": dynamic(() =>
+    import("./cheatsheet-tool").then(
+      (module) => module.DeveloperCheatsheetTool,
     ),
   ),
 };

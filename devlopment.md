@@ -2,17 +2,18 @@
 
 ## 敏捷开发模式开发清单
 
-> 状态更新：2026-08-15。`[x]` 仅表示当前仓库已有可运行实现并通过现有自动化验证；未勾选项仍在后续计划中。部分 Sprint 已交付核心范围，但仍可能保留未完成的增强项。
+> 状态更新：2026-08-16。`[x]` 仅表示当前仓库已有可运行实现并通过现有自动化验证；未勾选项仍在后续计划中。部分 Sprint 已交付核心范围，但仍可能保留未完成的增强项。
 
 ### 当前交付概览
 
-- 第一版建议工具：20 / 20 已完成，仓库实际注册 27 个独立工具
+- 第一版建议工具：20 / 20 已完成，仓库实际注册 37 个独立工具
 - P0 必须项：19 / 19 已完成
 - P1 第一阶段项：11 / 11 已完成
 - Sprint 5：图片、归档、文件检查、SSH Key、MIME Type 与 HTTP Status Code 已完成，并通过桌面/移动端 E2E
 - Sprint 6：邮箱验证与找回密码已完成，包含单次令牌、双重限流、SMTP / 测试 outbox 和会话撤销，并通过桌面/移动端 E2E
 - Sprint 7：工具管理与系统设置已完成，包含双语工具配置、访问策略、全局站点开关、容量/API 限额和维护模式，并通过桌面/移动端 E2E
 - Sprint 8：SEO、Sitemap、搜索、相关推荐、FAQ、Analytics 与按需加载已完成，并通过聚合 E2E 验收
+- Sprint 9：SQL、Web 代码处理、Git、网络分析、浏览器 API 请求与 Linux/Git/Docker/Nginx 速查已完成，并通过桌面/移动端 E2E
 - 用户与后台：已完成 Email 注册验证、登录与密码恢复、用户/管理员认证隔离、收藏与最近使用、运营 Dashboard 和用户管理
 - 工程化：已具备单元、集成和 E2E 测试、GitHub Actions CI 及生产部署配置；实际域名、HTTPS 证书和 CD 尚未落地
 
@@ -586,13 +587,13 @@ MD5 / SHA-1 可以提供，但明确标记其用途，不要把它们宣传为�
 建议增加：
 
 - [x] HTML 格式化
-- [ ] HTML 压缩
-- [ ] CSS 格式化
-- [ ] CSS 压缩
-- [ ] JavaScript 格式化
-- [ ] JavaScript 压缩
-- [ ] HTML Entity Encode
-- [ ] HTML Entity Decode
+- [x] HTML 压缩
+- [x] CSS 格式化
+- [x] CSS 压缩
+- [x] JavaScript 格式化
+- [x] JavaScript 压缩
+- [x] HTML Entity Encode
+- [x] HTML Entity Decode
 - [ ] CSS Gradient Generator
 - [ ] CSS Box Shadow Generator
 - [ ] CSS Border Radius Generator
@@ -606,9 +607,9 @@ MD5 / SHA-1 可以提供，但明确标记其用途，不要把它们宣传为�
 
 # 20. SQL 工具
 
-- [ ] SQL Formatter
+- [x] SQL Formatter
 - [ ] SQL Minifier
-- [ ] SQL Beautifier
+- [x] SQL Beautifier
 - [ ] SQL → JSON
 - [ ] JSON → SQL
 - [ ] SQL Query Builder
@@ -623,17 +624,17 @@ MD5 / SHA-1 可以提供，但明确标记其用途，不要把它们宣传为�
 
 建议增加一组 Git 工具。
 
-- [ ] Git Command Generator
-- [ ] Git Branch Name Generator
+- [x] Git Command Generator
+- [x] Git Branch Name Generator
 - [ ] Gitignore Generator
 - [ ] Git Diff Viewer
 - [ ] Git Commit Message Generator
-- [ ] Git URL Parser
-- [ ] GitHub URL Parser
-- [ ] Git Clone Command Generator
-- [ ] Git Reset Command Generator
-- [ ] Git Rebase Command Generator
-- [ ] Git Cherry-pick Command Generator
+- [x] Git URL Parser
+- [x] GitHub URL Parser
+- [x] Git Clone Command Generator
+- [x] Git Reset Command Generator
+- [x] Git Rebase Command Generator
+- [x] Git Cherry-pick Command Generator
 
 ---
 
@@ -641,18 +642,18 @@ MD5 / SHA-1 可以提供，但明确标记其用途，不要把它们宣传为�
 
 建议：
 
-- [ ] IPv4 转换
-- [ ] IPv6 转换
-- [ ] IP 地址信息
-- [ ] CIDR Calculator
-- [ ] Subnet Calculator
-- [ ] IP Range Calculator
-- [ ] MAC 地址格式化
+- [x] IPv4 转换
+- [x] IPv6 转换
+- [x] IP 地址信息
+- [x] CIDR Calculator
+- [x] Subnet Calculator
+- [x] IP Range Calculator
+- [x] MAC 地址格式化
 - [x] HTTP Status Code 查询
 - [ ] HTTP Header 查询
 - [x] MIME Type 查询
 - [ ] User-Agent Parser
-- [ ] URL Parser
+- [x] URL Parser
 - [ ] DNS Record 查询
 
 注意：
@@ -733,9 +734,9 @@ Generate
 
 可以逐渐发展成一个小型 API 工具箱。
 
-- [ ] HTTP Request Builder
-- [ ] API Request Generator
-- [ ] REST API Tester
+- [x] HTTP Request Builder
+- [x] API Request Generator
+- [x] REST API Tester
 - [ ] HTTP Header Generator
 - [ ] Authorization Header Generator
 - [ ] Bearer Token Generator
@@ -768,10 +769,10 @@ Webhook / HTTP 请求功能必须严格控制服务器端网络访问能力，�
 
 可以增加：
 
-- [ ] Linux Command Cheatsheet
-- [ ] Git Cheatsheet
-- [ ] Docker Cheatsheet
-- [ ] Nginx Cheatsheet
+- [x] Linux Command Cheatsheet
+- [x] Git Cheatsheet
+- [x] Docker Cheatsheet
+- [x] Nginx Cheatsheet
 - [ ] Vim Cheatsheet
 - [ ] Regex Cheatsheet
 - [ ] Bash Cheatsheet
@@ -1563,20 +1564,20 @@ Code Review
 - [x] Analytics
 - [x] 性能优化
 
-## Sprint 9+
+## Sprint 9
 
 持续增加工具：
 
-- [ ] SQL
-- [ ] Git
-- [ ] Docker
-- [ ] Linux
-- [ ] Nginx
-- [ ] CSS
-- [ ] HTML
-- [ ] JavaScript
-- [ ] 网络工具
-- [ ] API 工具
+- [x] SQL
+- [x] Git
+- [x] Docker
+- [x] Linux
+- [x] Nginx
+- [x] CSS
+- [x] HTML
+- [x] JavaScript
+- [x] 网络工具
+- [x] API 工具
 
 ---
 
@@ -1913,12 +1914,12 @@ Curl
 - [x] 图片
 - [x] SSH
 - [x] JWT
-- [ ] SQL
-- [ ] Git
-- [ ] Docker
-- [ ] Linux
-- [ ] Nginx
-- [ ] API Tester
+- [x] SQL
+- [x] Git
+- [x] Docker
+- [x] Linux
+- [x] Nginx
+- [x] API Tester
 - [ ] Webhook
 
 ### P3 —— 商业化
