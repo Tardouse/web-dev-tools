@@ -4,18 +4,24 @@ services:
     build:
       context: .
       args:
-        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:8886}
     container_name: web-dev-tools
     restart: unless-stopped
     init: true
     ports:
-      - "127.0.0.1:${APP_PORT:-3000}:3000"
+      - "127.0.0.1:${APP_PORT:-8886}:8886"
     environment:
       NODE_ENV: production
       HOSTNAME: 0.0.0.0
-      PORT: 3000
+      PORT: 8886
+      DATABASE_PATH: ${DATABASE_PATH:-/data/devtoolbox.sqlite}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-}
+      ADMIN_NAME: ${ADMIN_NAME:-DevToolbox Admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+    volumes:
+      - devtoolbox-data:/data
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8886/api/health"]
       interval: 20s
       timeout: 5s
       retries: 5
@@ -32,3 +38,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+volumes:
+  devtoolbox-data:

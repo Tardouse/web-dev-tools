@@ -1,6 +1,6 @@
 # DevToolbox
 
-A fast, privacy-first, bilingual developer toolbox built with Next.js and TypeScript. The first release includes a metadata-driven platform, 21 browser-local tools, Simplified Chinese and English interfaces, global bilingual search, responsive light/dark themes, favorites, recent tools, localized SEO pages, automated tests, Docker, and one-command deployment.
+A fast, privacy-first, bilingual developer toolbox built with Next.js and TypeScript. It includes a metadata-driven platform, 21 browser-local tools, Simplified Chinese and English interfaces, global bilingual search, responsive light/dark themes, favorites, recent tools, localized SEO pages, and a secure administration console with real operational metrics and complete user management.
 
 ## Included tools
 
@@ -24,7 +24,7 @@ npm install
 npm run dev
 ```
 
-Open <http://localhost:3000>. The root detects the saved preference and browser language, then redirects to `/zh` or `/en`. The language switch preserves the current page. Useful checks:
+Open <http://localhost:8886>. The root detects the saved preference and browser language, then redirects to `/zh` or `/en`. The language switch preserves the current page. Useful checks:
 
 ```bash
 npm run lint
@@ -44,13 +44,28 @@ npm run test:e2e
 
 The registry automatically feeds search, cards, categories, static routes, sitemap entries, metadata, FAQs, and related-tool navigation. Dynamic mappings keep each tool implementation in a separate, on-demand bundle.
 
+## Administration
+
+The administration console is intentionally absent from public navigation. Authorized operators can open `/zh/admin` or `/en/admin` directly; unauthenticated access redirects to the private username-based admin authentication page. It provides DAU/WAU/MAU, registered and active users, tool usage, PV/UV, visits, popular tools, error rate, API and file metrics, plus searchable/paginated user management. Admins can inspect users, disable accounts, reset passwords, change permitted roles, and delete accounts. Every admin mutation is re-authorized on the server, revokes affected sessions where appropriate, and writes an audit log.
+
+For local development, set the bootstrap values before the first start:
+
+```bash
+DATABASE_PATH=./data/devtoolbox.sqlite
+ADMIN_USERNAME=admin
+ADMIN_NAME="DevToolbox Admin"
+ADMIN_PASSWORD="a-unique-strong-password"
+```
+
+The first process that opens an empty database with both bootstrap variables configured creates one username-based Super Admin. The password must be at least 12 characters and contain uppercase and lowercase letters, a number, and a symbol. Without those variables, public tools still run but no admin can sign in. Bootstrap variables do not overwrite an existing Super Admin. Back up the SQLite database file before upgrades.
+
 ## Docker
 
 ```bash
 cp .env.example .env
 # Edit NEXT_PUBLIC_SITE_URL if deploying publicly.
 docker compose up -d --build
-curl http://127.0.0.1:3000/api/health
+curl http://127.0.0.1:8886/api/health
 ```
 
 The production image uses Next.js standalone output, a non-root user, a read-only filesystem, dropped capabilities, log rotation, and a health check.
@@ -67,8 +82,12 @@ See [`deploy/README.md`](deploy/README.md) for HTTPS, Nginx, updates, logs, and 
 
 | Variable               | Default                 | Purpose                                            |
 | ---------------------- | ----------------------- | -------------------------------------------------- |
-| `NEXT_PUBLIC_SITE_URL` | `http://localhost:3000` | Canonical origin for metadata, sitemap, and robots |
-| `APP_PORT`             | `3000`                  | Loopback host port exposed by Compose              |
+| `NEXT_PUBLIC_SITE_URL` | `http://localhost:8886` | Canonical origin for metadata, sitemap, and robots |
+| `APP_PORT`             | `8886`                  | Loopback host port exposed by Compose              |
+| `DATABASE_PATH`         | `/data/devtoolbox.sqlite` | Writable SQLite path (persistent Compose volume)  |
+| `ADMIN_USERNAME`        | required                | First Super Admin username                            |
+| `ADMIN_NAME`            | `DevToolbox Admin`       | First Super Admin display name                     |
+| `ADMIN_PASSWORD`        | required                | First Super Admin bootstrap password               |
 | `IMAGE_NAME`           | `web-dev-tools`         | Docker image name                                  |
 | `IMAGE_TAG`            | `latest`                | Docker image tag                                   |
 

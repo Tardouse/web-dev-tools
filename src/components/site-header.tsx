@@ -11,9 +11,11 @@ import { localePath, type Locale, type Messages } from "@/i18n";
 export function SiteHeader({
   locale,
   messages,
+  accountNavigation,
 }: {
   locale: Locale;
   messages: Messages;
+  accountNavigation?: React.ReactNode;
 }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -82,6 +84,7 @@ export function SiteHeader({
               <kbd>⌘ K</kbd>
             </button>
             <LanguageSwitcher locale={locale} label={messages.languageShort} />
+            {accountNavigation}
             <button
               type="button"
               className="icon-button"

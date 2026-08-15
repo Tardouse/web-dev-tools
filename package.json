@@ -5,7 +5,7 @@
   "type": "module",
   "description": "A fast, privacy-first toolbox for developers.",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 8886",
     "build": "next build",
     "start": "./scripts/start.sh",
     "lint": "eslint . --max-warnings=0",
@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@noble/hashes": "2.3.0",
+    "bcryptjs": "^3.0.3",
     "croner": "10.0.1",
     "diff": "9.0.0",
     "lucide-react": "1.31.0",
@@ -27,7 +28,9 @@
     "prettier": "3.9.6",
     "qrcode": "1.5.4",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "server-only": "^0.0.1",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@playwright/test": "1.62.1",

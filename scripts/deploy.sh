@@ -34,7 +34,7 @@ printf '%s\n' "Building and starting DevToolbox..."
 $COMPOSE --env-file "$ENV_FILE" up -d --build --remove-orphans
 
 if [ -z "$HEALTH_URL" ]; then
-  PUBLISHED_PORT=$($COMPOSE --env-file "$ENV_FILE" port web 3000 | sed 's/.*://')
+  PUBLISHED_PORT=$($COMPOSE --env-file "$ENV_FILE" port web 8886 | sed 's/.*://')
   HEALTH_URL="http://127.0.0.1:${PUBLISHED_PORT}/api/health"
 fi
 

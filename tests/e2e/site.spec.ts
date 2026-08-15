@@ -1,5 +1,17 @@
 import { expect, test } from "@playwright/test";
 
+const adminUsername = "admin";
+const adminPassword = "E2e-Admin-Password-2026!";
+
+async function signInAsAdmin(page: import("@playwright/test").Page, locale = "zh") {
+  await page.goto(`/${locale}/admin/login`);
+  await waitForHydration(page);
+  await page.getByLabel(locale === "zh" ? "用户名" : "Username").fill(adminUsername);
+  await page.getByLabel(locale === "zh" ? "密码" : "Password").fill(adminPassword);
+  await page.getByRole("button", { name: locale === "zh" ? "登录" : "Sign in" }).click();
+  await expect(page).toHaveURL(new RegExp(`/${locale}/admin$`));
+}
+
 async function waitForHydration(page: import("@playwright/test").Page) {
   await expect(page.locator("html")).toHaveAttribute("data-hydrated", "true");
 }
@@ -131,6 +143,72 @@ test("二维码和正则选项使用中文说明", async ({ page }) => {
   await expect(page.getByText("全局匹配", { exact: true })).toBeVisible();
   await expect(page.getByText("忽略大小写", { exact: true })).toBeVisible();
   await expect(page.getByText("点号匹配换行", { exact: true })).toBeVisible();
+});
+
+test("未登录访问后台会跳转到登录页", async ({ page }) => {
+  await page.goto("/zh/admin");
+  await expect(page).toHaveURL(/\/zh\/admin\/login$/);
+  await expect(page.getByRole("heading", { name: "管理认证" })).toBeVisible();
+});
+
+test("管理员登录后可查看完整 Dashboard", async ({ page }) => {
+  await signInAsAdmin(page);
+  await expect(page.getByRole("heading", { name: "管理后台", level: 1 })).toBeVisible();
+  for (const metric of ["DAU", "WAU", "MAU", "注册用户", "活跃账号", "工具使用次数", "今日访问量", "PV", "UV", "错误率", "API 请求量", "文件处理量"]) {
+    await expect(page.getByText(metric, { exact: true }).first()).toBeVisible();
+  }
+  await expect(page.getByRole("heading", { name: "用户活跃趋势" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "访问趋势" })).toBeVisible();
+  await page.getByRole("button", { name: "查看数据表" }).first().click();
+  await expect(page.getByRole("table").first()).toBeVisible();
+});
+
+test("用户管理可搜索并查看超级管理员详情", async ({ page }) => {
+  await signInAsAdmin(page);
+  const menuButton = page.getByRole("button", { name: "打开导航" });
+  const usersLink = page.getByRole("link", { name: "用户管理" });
+  if (await menuButton.isVisible()) {
+    await menuButton.click();
+    await expect(usersLink).toBeInViewport();
+  }
+  await usersLink.click();
+  await expect(page.getByRole("heading", { name: "用户管理" })).toBeVisible();
+  await page.getByPlaceholder("按姓名、邮箱或用户名搜索…").fill(adminUsername);
+  await page.getByRole("button", { name: "筛选" }).click();
+  const userLink = page.getByRole("link", { name: new RegExp(adminUsername) });
+  await expect(userLink).toBeVisible();
+  await userLink.click();
+  await expect(page.getByRole("heading", { name: "DevToolbox Admin" })).toBeVisible();
+  await expect(page.getByText("超级管理员", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("无可用操作", { exact: true })).toBeVisible();
+});
+
+test.describe.serial("管理员登录限制", () => {
+test("管理员登录错误会返回通用错误且英文后台可用", async ({ page }) => {
+  await page.goto("/en/admin/login");
+  await waitForHydration(page);
+  await page.getByLabel("Username").fill(adminUsername);
+  await page.getByLabel("Password").fill("wrong-password");
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await expect(page.locator(".form-error")).toHaveText("The username or password is incorrect.");
+  await page.reload();
+  await waitForHydration(page);
+  await page.getByLabel("Username").fill(adminUsername);
+  await page.getByLabel("Password").fill(adminPassword);
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
+});
+});
+
+test("移动端后台导航和深色模式保持可用", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "mobile", "移动端专属检查");
+  await page.addInitScript(() => localStorage.setItem("devtoolbox:theme", "dark"));
+  await signInAsAdmin(page);
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await page.getByRole("button", { name: "打开导航" }).click();
+  await expect(page.getByRole("navigation", { name: "后台导航" })).toBeVisible();
+  await page.getByRole("link", { name: "用户管理" }).click();
+  await expect(page.getByRole("heading", { name: "用户管理" })).toBeVisible();
 });
 
 test("健康接口和安全响应头可用", async ({ request }) => {

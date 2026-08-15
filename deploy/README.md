@@ -4,7 +4,7 @@
 
 ```bash
 cp .env.example .env
-# Set NEXT_PUBLIC_SITE_URL and APP_PORT in .env
+# Set NEXT_PUBLIC_SITE_URL, APP_PORT, ADMIN_USERNAME, and a strong ADMIN_PASSWORD in .env
 ./scripts/deploy.sh
 ```
 
@@ -28,4 +28,19 @@ docker compose logs -f --tail=100 web
 ./scripts/stop.sh
 ```
 
-The container runs as an unprivileged user, drops Linux capabilities, uses a read-only root filesystem, rotates JSON logs, and exposes a Docker health check.
+The container runs as an unprivileged user, drops Linux capabilities, uses a read-only root filesystem (with only the `/data` volume writable), rotates JSON logs, and exposes a Docker health check.
+
+## Administration and database operations
+
+On the first start of an empty database, `ADMIN_USERNAME`, `ADMIN_NAME`, and `ADMIN_PASSWORD` create the sole Super Admin. The password must contain at least 12 characters with upper/lowercase letters, a number, and a symbol. These variables never overwrite an existing administrator. Open `/<locale>/admin` and sign in; all admin mutations are permission checked and written to the audit log.
+
+SQLite is persisted in the `devtoolbox-data` volume at `/data/devtoolbox.sqlite`. Back up consistently before deploying schema changes:
+
+```bash
+docker compose stop web
+docker run --rm -v devtoolbox_devtoolbox-data:/data -v "$PWD":/backup alpine \
+  cp /data/devtoolbox.sqlite /backup/devtoolbox-$(date +%F).sqlite
+docker compose start web
+```
+
+Restore only while the web service is stopped, retain ownership for UID/GID 1001, and keep backup files out of the public web root.

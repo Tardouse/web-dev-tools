@@ -2,10 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { AppProviders } from "@/components/providers/app-providers";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
 import {
-  getMessages,
   htmlLocale,
   isLocale,
   localePath,
@@ -14,6 +11,7 @@ import {
 } from "@/i18n";
 import { SITE_CONFIG } from "@/lib/config";
 import "../globals.css";
+import "../admin-styles.css";
 
 const geistSans = Geist({ variable: "--font-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-mono", subsets: ["latin"] });
@@ -92,18 +90,13 @@ export default async function LocaleLayout({
   const { locale: value } = await params;
   if (!isLocale(value)) notFound();
   const locale: Locale = value;
-  const messages = getMessages(locale);
   return (
     <html lang={htmlLocale(locale)} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <AppProviders>
-          <SiteHeader locale={locale} messages={messages} />
-          <main className="page-shell">{children}</main>
-          <SiteFooter locale={locale} messages={messages} />
-        </AppProviders>
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );
