@@ -69,6 +69,26 @@ const toolComponents: Record<string, ComponentType<ToolComponentProps>> = {
   "html-formatter": dynamic(() =>
     import("./text-tools").then((module) => module.HtmlFormatterTool),
   ),
+  "image-workbench": dynamic(() =>
+    import("./image-tool").then((module) => module.ImageWorkbenchTool),
+  ),
+  "archive-workbench": dynamic(() =>
+    import("./archive-tool").then((module) => module.ArchiveWorkbenchTool),
+  ),
+  "file-inspector": dynamic(() =>
+    import("./file-inspector-tool").then((module) => module.FileInspectorTool),
+  ),
+  "ssh-key-generator": dynamic(() =>
+    import("./ssh-tool").then((module) => module.SshKeyGeneratorTool),
+  ),
+  "mime-type-lookup": dynamic(() =>
+    import("./reference-tools").then((module) => module.MimeTypeLookupTool),
+  ),
+  "http-status-reference": dynamic(() =>
+    import("./reference-tools").then(
+      (module) => module.HttpStatusReferenceTool,
+    ),
+  ),
 };
 export function RegisteredTool({
   definition,

@@ -47,6 +47,13 @@ export const categories: ToolCategory[] = [
     color: "#b45309",
   },
   {
+    id: "files",
+    name: "Files & Images",
+    description: "Inspect, transform, and archive local files",
+    icon: "Files",
+    color: "#047857",
+  },
+  {
     id: "web",
     name: "Web Development",
     description: "Build requests, colors, QR codes, and markup",
@@ -605,6 +612,202 @@ export const tools: ToolDefinition[] = [
         question: "Is markup rendered?",
         answer:
           "No. The input is treated as source text, formatted, and displayed without executing it.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "image-workbench",
+    slug: "image-workbench",
+    name: "Image Workbench",
+    shortName: "Images",
+    category: "files",
+    icon: "Image",
+    featured: true,
+    sortOrder: 220,
+    description:
+      "Compress, resize, crop, convert, inspect, and encode images without uploading them.",
+    keywords: [
+      "image",
+      "compress",
+      "resize",
+      "crop",
+      "png",
+      "jpg",
+      "webp",
+      "base64",
+      "exif",
+      "favicon",
+    ],
+    maxInputSize: TOOL_LIMITS.image,
+    seoTitle: "Image Compressor, Resizer & Converter Online",
+    seoDescription:
+      "Compress, resize, crop, convert PNG, JPG, and WebP images, inspect EXIF and colors, or convert Base64 locally.",
+    related: ["file-inspector", "archive-workbench", "color-converter"],
+    faq: [
+      {
+        question: "Are images uploaded?",
+        answer:
+          "No. Decoding, Canvas transformations, EXIF parsing, and downloads all stay in your browser.",
+      },
+      {
+        question: "Which output formats are supported?",
+        answer:
+          "Modern browsers can export PNG, JPEG, and WebP, plus a 32×32 PNG favicon.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "archive-workbench",
+    slug: "archive-workbench",
+    name: "ZIP, TAR & GZIP Workbench",
+    shortName: "Archives",
+    category: "files",
+    icon: "FileArchive",
+    featured: true,
+    sortOrder: 230,
+    description:
+      "Extract ZIP, TAR, and GZIP archives or create ZIP and GZIP files with strict safety limits.",
+    keywords: ["zip", "unzip", "tar", "gzip", "archive", "compress", "extract"],
+    maxInputSize: TOOL_LIMITS.archive,
+    seoTitle: "ZIP, TAR & GZIP Extractor and Compressor Online",
+    seoDescription:
+      "Extract ZIP, TAR, TAR.GZ, and GZIP archives or create ZIP and GZIP files locally with Zip Slip and Zip Bomb protection.",
+    related: ["file-inspector", "image-workbench", "mime-type-lookup"],
+    faq: [
+      {
+        question: "How are unsafe archives blocked?",
+        answer:
+          "The extractor rejects traversal paths, absolute paths, deep trees, too many entries, excessive output, and suspicious compression ratios.",
+      },
+      {
+        question: "Does extraction upload the archive?",
+        answer:
+          "No. Archive data is parsed and decompressed locally in your browser.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "file-inspector",
+    slug: "file-inspector",
+    name: "File Inspector",
+    shortName: "File Info",
+    category: "files",
+    icon: "FileSearch",
+    sortOrder: 240,
+    description:
+      "Inspect file metadata, MIME signatures, hashes, hexadecimal bytes, encoding, and file sizes.",
+    keywords: ["file", "mime", "hash", "hex", "encoding", "size", "metadata"],
+    maxInputSize: TOOL_LIMITS.file,
+    seoTitle: "File Inspector Online — MIME, Hash, Hex & Encoding",
+    seoDescription:
+      "Inspect a local file's MIME type, SHA and MD5 hashes, hex bytes, text encoding, and exact size without uploading it.",
+    related: ["archive-workbench", "mime-type-lookup", "hash-generator"],
+    faq: [
+      {
+        question: "How is the MIME type selected?",
+        answer:
+          "Known binary signatures take priority, followed by the filename extension and browser-provided type.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "ssh-key-generator",
+    slug: "ssh-key-generator",
+    name: "SSH Key Generator",
+    shortName: "SSH Keys",
+    category: "crypto",
+    icon: "KeyRound",
+    featured: true,
+    sortOrder: 250,
+    description:
+      "Generate RSA, Ed25519, or ECDSA SSH key pairs locally with downloadable key files.",
+    keywords: [
+      "ssh",
+      "rsa",
+      "ed25519",
+      "ecdsa",
+      "public key",
+      "private key",
+      "openssh",
+      "pkcs8",
+    ],
+    maxInputSize: TOOL_LIMITS.text,
+    seoTitle: "SSH Key Generator Online — RSA, Ed25519 & ECDSA",
+    seoDescription:
+      "Generate SSH keys privately in your browser, including OpenSSH public keys and downloadable protected private keys.",
+    related: ["hash-generator", "uuid-generator", "file-inspector"],
+    faq: [
+      {
+        question: "Does the private key leave my browser?",
+        answer:
+          "No. Key generation and private-key export use local cryptographic APIs only.",
+      },
+      {
+        question: "Which private-key formats are produced?",
+        answer:
+          "Ed25519 uses OpenSSH private-key format. RSA and ECDSA use interoperable PKCS#8, optionally encrypted with a passphrase.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "mime-type-lookup",
+    slug: "mime-type-lookup",
+    name: "MIME Type Lookup",
+    shortName: "MIME Types",
+    category: "web",
+    icon: "FileType2",
+    sortOrder: 260,
+    description:
+      "Find media types, filename extensions, charsets, and compression hints.",
+    keywords: ["mime", "media type", "content-type", "extension", "charset"],
+    maxInputSize: TOOL_LIMITS.text,
+    seoTitle: "MIME Type Lookup — Extensions & Content Types",
+    seoDescription:
+      "Search MIME types by extension or media type and inspect charsets and compression metadata.",
+    related: ["file-inspector", "http-status-reference", "curl-generator"],
+    faq: [
+      {
+        question: "Can I search by extension?",
+        answer:
+          "Yes. Search with values such as json, .png, wasm, or a complete media type.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "http-status-reference",
+    slug: "http-status-reference",
+    name: "HTTP Status Code Reference",
+    shortName: "HTTP Status",
+    category: "web",
+    icon: "CircleGauge",
+    sortOrder: 270,
+    description:
+      "Search standard HTTP response codes by number, name, class, or meaning.",
+    keywords: [
+      "http",
+      "status",
+      "response",
+      "404",
+      "500",
+      "redirect",
+      "error code",
+    ],
+    maxInputSize: TOOL_LIMITS.text,
+    seoTitle: "HTTP Status Code Reference — Search 1xx to 5xx",
+    seoDescription:
+      "Look up standard HTTP status codes with concise meanings and filters for informational, success, redirect, and error responses.",
+    related: ["mime-type-lookup", "curl-parser", "curl-generator"],
+    faq: [
+      {
+        question: "Which status codes are included?",
+        answer:
+          "The reference covers standard registered HTTP status codes across the 1xx through 5xx classes.",
       },
     ],
   },

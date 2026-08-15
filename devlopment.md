@@ -6,9 +6,10 @@
 
 ### 当前交付概览
 
-- 第一版建议工具：20 / 20 已完成，仓库实际注册 21 个独立工具
+- 第一版建议工具：20 / 20 已完成，仓库实际注册 27 个独立工具
 - P0 必须项：19 / 19 已完成
 - P1 第一阶段项：9 / 11 已完成，待补 Email 验证与后台工具管理
+- Sprint 5：图片、归档、文件检查、SSH Key、MIME Type 与 HTTP Status Code 已完成，并通过桌面/移动端 E2E
 - 用户与后台：已完成 Email 注册登录、用户/管理员认证隔离、收藏与最近使用、运营 Dashboard 和用户管理
 - 工程化：已具备单元、集成和 E2E 测试、GitHub Actions CI 及生产部署配置；实际域名、HTTPS 证书和 CD 尚未落地
 
@@ -481,15 +482,15 @@ Preview
 
 支持：
 
-- [ ] RSA
-- [ ] ED25519
-- [ ] ECDSA
-- [ ] 密钥长度选择
-- [ ] Passphrase
-- [ ] Public Key
-- [ ] Private Key
-- [ ] OpenSSH 格式
-- [ ] 下载密钥
+- [x] RSA
+- [x] ED25519
+- [x] ECDSA
+- [x] 密钥长度选择
+- [x] Passphrase
+- [x] Public Key
+- [x] Private Key
+- [x] OpenSSH 格式
+- [x] 下载密钥
 
 重要安全要求：
 
@@ -529,17 +530,17 @@ MD5 / SHA-1 可以提供，但明确标记其用途，不要把它们宣传为�
 
 这是第二阶段重点。
 
-- [ ] 在线 ZIP 解压
-- [ ] ZIP 压缩
-- [ ] TAR 解包
-- [ ] GZIP 解压
-- [ ] GZIP 压缩
-- [ ] 文件信息查看
-- [ ] MIME Type 查询
-- [ ] 文件大小转换
-- [ ] 文件 Hash
-- [ ] 文件 Hex Viewer
-- [ ] 文本文件编码检测
+- [x] 在线 ZIP 解压
+- [x] ZIP 压缩
+- [x] TAR 解包
+- [x] GZIP 解压
+- [x] GZIP 压缩
+- [x] 文件信息查看
+- [x] MIME Type 查询
+- [x] 文件大小转换
+- [x] 文件 Hash
+- [x] 文件 Hex Viewer
+- [x] 文本文件编码检测
 
 文件工具统一设置：
 
@@ -559,19 +560,19 @@ MD5 / SHA-1 可以提供，但明确标记其用途，不要把它们宣传为�
 
 建议补充：
 
-- [ ] 图片压缩
-- [ ] 图片尺寸调整
-- [ ] 图片裁剪
-- [ ] 图片格式转换
-- [ ] PNG → JPG
-- [ ] JPG → PNG
-- [ ] WebP 转换
-- [ ] 图片 Base64
-- [ ] Base64 → 图片
-- [ ] 图片 EXIF 查看
-- [ ] 图片颜色分析
-- [ ] 图片平均颜色
-- [ ] Favicon Generator
+- [x] 图片压缩
+- [x] 图片尺寸调整
+- [x] 图片裁剪
+- [x] 图片格式转换
+- [x] PNG → JPG
+- [x] JPG → PNG
+- [x] WebP 转换
+- [x] 图片 Base64
+- [x] Base64 → 图片
+- [x] 图片 EXIF 查看
+- [x] 图片颜色分析
+- [x] 图片平均颜色
+- [x] Favicon Generator
 
 尽量让图片处理在浏览器本地完成。
 
@@ -644,9 +645,9 @@ MD5 / SHA-1 可以提供，但明确标记其用途，不要把它们宣传为�
 - [ ] Subnet Calculator
 - [ ] IP Range Calculator
 - [ ] MAC 地址格式化
-- [ ] HTTP Status Code 查询
+- [x] HTTP Status Code 查询
 - [ ] HTTP Header 查询
-- [ ] MIME Type 查询
+- [x] MIME Type 查询
 - [ ] User-Agent Parser
 - [ ] URL Parser
 - [ ] DNS Record 查询
@@ -833,8 +834,8 @@ ZIP：
 - [x] 最大输入
 - [ ] 最大输出
 - [x] 最大递归深度
-- [ ] 最大文件数量
-- [ ] 最大解压大小
+- [x] 最大文件数量
+- [x] 最大解压大小
 - [ ] 最大并发数
 
 ---
@@ -1215,10 +1216,10 @@ Lazy Loading
 - [ ] Rate Limit
 - [x] 登录暴力破解限制
 - [ ] 邮箱验证码限制
-- [ ] 文件上传安全检查
-- [ ] MIME 检查
-- [ ] 文件名过滤
-- [ ] 路径穿越防护
+- [x] 文件上传安全检查
+- [x] MIME 检查
+- [x] 文件名过滤
+- [x] 路径穿越防护
 
 ## 文件安全
 
@@ -1232,11 +1233,11 @@ Lazy Loading
 
 压缩包处理必须防止：
 
-- [ ] Zip Bomb
-- [ ] Zip Slip
-- [ ] 超大文件
-- [ ] 超深目录
-- [ ] 超多文件
+- [x] Zip Bomb
+- [x] Zip Slip
+- [x] 超大文件
+- [x] 超深目录
+- [x] 超多文件
 
 ---
 
@@ -1524,12 +1525,12 @@ Code Review
 
 ## Sprint 5
 
-- [ ] 图片工具
-- [ ] ZIP 工具
-- [ ] 文件工具
-- [ ] SSH Key Generator
-- [ ] MIME Type
-- [ ] HTTP Status Code
+- [x] 图片工具
+- [x] ZIP 工具
+- [x] 文件工具
+- [x] SSH Key Generator
+- [x] MIME Type
+- [x] HTTP Status Code
 
 ## Sprint 6
 
@@ -1905,9 +1906,9 @@ Curl
 
 ### P2 —— 用户增长后开发
 
-- [ ] ZIP
-- [ ] 图片
-- [ ] SSH
+- [x] ZIP
+- [x] 图片
+- [x] SSH
 - [x] JWT
 - [ ] SQL
 - [ ] Git

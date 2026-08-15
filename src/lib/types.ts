@@ -5,6 +5,7 @@ export type ToolCategoryId =
   | "text"
   | "regex"
   | "crypto"
+  | "files"
   | "web";
 
 export type ProcessingMode = "client" | "server" | "hybrid";

@@ -26,6 +26,7 @@ export const zhCategories: Record<
     description: "转换时间戳、进制和定时计划",
   },
   crypto: { name: "Hash 与标识", description: "生成摘要、UUID 并解码令牌" },
+  files: { name: "文件与图片", description: "检查、转换和归档本地文件" },
   web: { name: "Web 开发", description: "构建请求、颜色、二维码和网页标记" },
 };
 
@@ -348,6 +349,132 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
       {
         question: "输入的 HTML 会被执行吗？",
         answer: "不会。输入内容仅作为源代码文本进行格式化和显示，不会被执行。",
+      },
+    ],
+  },
+  "image-workbench": {
+    name: "图片工作台",
+    shortName: "图片处理",
+    description: "无需上传即可压缩、缩放、裁剪、转换、检查和编码图片。",
+    keywords: [
+      "图片",
+      "压缩",
+      "缩放",
+      "裁剪",
+      "png",
+      "jpg",
+      "webp",
+      "base64",
+      "exif",
+      "favicon",
+    ],
+    seoTitle: "在线图片压缩、尺寸调整与格式转换",
+    seoDescription:
+      "在浏览器本地压缩、缩放和裁剪 PNG、JPG、WebP 图片，查看 EXIF 与颜色，或转换 Base64。",
+    faq: [
+      {
+        question: "图片会被上传吗？",
+        answer:
+          "不会。图片解码、Canvas 转换、EXIF 解析和下载都在您的浏览器中完成。",
+      },
+      {
+        question: "支持哪些输出格式？",
+        answer: "现代浏览器可以输出 PNG、JPEG、WebP，以及 32×32 PNG Favicon。",
+      },
+    ],
+  },
+  "archive-workbench": {
+    name: "ZIP、TAR 与 GZIP 工具",
+    shortName: "归档工具",
+    description: "安全解包 ZIP、TAR 和 GZIP，或在本地创建 ZIP 与 GZIP 文件。",
+    keywords: ["zip", "解压", "tar", "gzip", "归档", "压缩", "解包"],
+    seoTitle: "在线 ZIP、TAR 与 GZIP 解压和压缩",
+    seoDescription:
+      "在本地解包 ZIP、TAR、TAR.GZ 和 GZIP，或创建 ZIP 与 GZIP，并提供 Zip Slip 和 Zip Bomb 防护。",
+    faq: [
+      {
+        question: "如何拦截危险压缩包？",
+        answer:
+          "解包器会拒绝路径穿越、绝对路径、超深目录、过多条目、超大输出和异常压缩比。",
+      },
+      {
+        question: "解包时会上传文件吗？",
+        answer: "不会。归档文件完全在浏览器中解析和解压。",
+      },
+    ],
+  },
+  "file-inspector": {
+    name: "文件检查器",
+    shortName: "文件信息",
+    description: "查看文件信息、MIME 签名、Hash、十六进制内容、编码和大小。",
+    keywords: ["文件", "mime", "hash", "十六进制", "编码", "大小", "元数据"],
+    seoTitle: "在线文件检查 — MIME、Hash、Hex 与编码",
+    seoDescription:
+      "无需上传即可检查本地文件的 MIME、SHA/MD5、Hex、文本编码和精确大小。",
+    faq: [
+      {
+        question: "MIME Type 如何确定？",
+        answer:
+          "优先使用已知二进制签名，其次参考文件扩展名和浏览器提供的类型。",
+      },
+    ],
+  },
+  "ssh-key-generator": {
+    name: "SSH 密钥生成器",
+    shortName: "SSH 密钥",
+    description: "在本地生成 RSA、Ed25519 或 ECDSA SSH 密钥，并下载密钥文件。",
+    keywords: [
+      "ssh",
+      "rsa",
+      "ed25519",
+      "ecdsa",
+      "公钥",
+      "私钥",
+      "openssh",
+      "pkcs8",
+    ],
+    seoTitle: "在线 SSH 密钥生成 — RSA、Ed25519 与 ECDSA",
+    seoDescription:
+      "在浏览器中私密生成 SSH 密钥，包括 OpenSSH 公钥和可下载的受保护私钥。",
+    faq: [
+      {
+        question: "私钥会离开浏览器吗？",
+        answer: "不会。密钥生成和私钥导出只使用浏览器本地加密 API。",
+      },
+      {
+        question: "会生成哪种私钥格式？",
+        answer:
+          "Ed25519 使用 OpenSSH 私钥格式；RSA 和 ECDSA 使用可互操作的 PKCS#8，并可用口令加密。",
+      },
+    ],
+  },
+  "mime-type-lookup": {
+    name: "MIME Type 查询",
+    shortName: "MIME Type",
+    description: "查询媒体类型、文件扩展名、字符集和压缩提示。",
+    keywords: ["mime", "媒体类型", "content-type", "扩展名", "字符集"],
+    seoTitle: "MIME Type 查询 — 扩展名与 Content-Type",
+    seoDescription:
+      "按扩展名或媒体类型查询 MIME Type，并查看字符集和压缩元数据。",
+    faq: [
+      {
+        question: "可以按扩展名查询吗？",
+        answer: "可以。可输入 json、.png、wasm 或完整的媒体类型。",
+      },
+    ],
+  },
+  "http-status-reference": {
+    name: "HTTP 状态码查询",
+    shortName: "HTTP 状态码",
+    description: "按编号、名称、类别或含义查询标准 HTTP 响应状态码。",
+    keywords: ["http", "状态码", "响应", "404", "500", "重定向", "错误码"],
+    seoTitle: "HTTP 状态码查询 — 搜索 1xx 到 5xx",
+    seoDescription:
+      "查询标准 HTTP 状态码及其简要含义，并按信息、成功、重定向和错误响应筛选。",
+    faq: [
+      {
+        question: "包含哪些状态码？",
+        answer: "参考表覆盖 1xx 到 5xx 分类中的标准注册 HTTP 状态码。",
       },
     ],
   },

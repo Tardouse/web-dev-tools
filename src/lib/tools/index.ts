@@ -7,3 +7,8 @@ export * from "./curl";
 export * from "./time";
 export * from "./cron";
 export * from "./diff";
+export * from "./archive";
+export * from "./file";
+export * from "./reference";
+export * from "./ssh";
+export * from "./image";
