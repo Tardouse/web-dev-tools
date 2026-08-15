@@ -66,7 +66,7 @@ builds a standalone release, creates a persistent SQLite data directory, starts
 the server in the background, and verifies `/api/health`:
 
 ```bash
-./scripts/install-native.sh
+./scripts/install.sh
 ```
 
 On first installation it creates `.env.native` with a random bootstrap admin
@@ -98,19 +98,17 @@ curl http://127.0.0.1:8886/api/health
 
 The production image uses Next.js standalone output, a non-root user, a read-only filesystem, dropped capabilities, log rotation, and a health check.
 
-## One-click deployment
-
-Docker:
+## One-click installation (without Docker)
 
 ```bash
-./scripts/deploy.sh
+./scripts/install.sh
 ```
 
-Native Node.js:
-
-```bash
-./scripts/install-native.sh
-```
+This is the default installation path. It runs `npm ci` and `next build`
+directly on the host, then starts the standalone Node.js server. It never
+invokes Docker or Docker Compose. The older `scripts/install-native.sh` name is
+kept as a compatibility alias. Docker deployment remains available separately
+through `scripts/deploy.sh`.
 
 See [`deploy/README.md`](deploy/README.md) for HTTPS, Nginx, updates, logs, and shutdown instructions.
 
