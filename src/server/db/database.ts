@@ -48,6 +48,12 @@ function uniqueUsername(database: DatabaseSync, value: string, userId?: string):
 }
 
 function migrateDatabase(database: DatabaseSync): void {
+  if (!hasColumn(database, "users", "email_verified_at")) {
+    database.exec("ALTER TABLE users ADD COLUMN email_verified_at TEXT;");
+    database.exec(
+      "UPDATE users SET email_verified_at = created_at WHERE role = 'user';",
+    );
+  }
   if (!hasColumn(database, "users", "username")) {
     database.exec("ALTER TABLE users ADD COLUMN username TEXT COLLATE NOCASE;");
   }
@@ -102,6 +108,7 @@ function createDatabase(path: string): DatabaseSync {
       status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'disabled')),
       must_change_password INTEGER NOT NULL DEFAULT 0 CHECK (must_change_password IN (0, 1)),
       password_version INTEGER NOT NULL DEFAULT 1,
+      email_verified_at TEXT,
       created_at TEXT NOT NULL,
       updated_at TEXT NOT NULL,
       last_login_at TEXT,
@@ -129,6 +136,29 @@ function createDatabase(path: string): DatabaseSync {
       locked_until TEXT,
       updated_at TEXT NOT NULL
     ) STRICT;
+
+    CREATE TABLE IF NOT EXISTS account_tokens (
+      token_hash TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      purpose TEXT NOT NULL CHECK (purpose IN ('email_verification', 'password_reset')),
+      created_at TEXT NOT NULL,
+      expires_at TEXT NOT NULL,
+      consumed_at TEXT
+    ) STRICT;
+    CREATE INDEX IF NOT EXISTS idx_account_tokens_user_purpose
+      ON account_tokens(user_id, purpose);
+    CREATE INDEX IF NOT EXISTS idx_account_tokens_expiry
+      ON account_tokens(expires_at);
+
+    CREATE TABLE IF NOT EXISTS account_request_limits (
+      key_hash TEXT PRIMARY KEY,
+      action TEXT NOT NULL CHECK (action IN ('email_verification', 'password_reset')),
+      attempts INTEGER NOT NULL CHECK (attempts >= 1),
+      window_started_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    ) STRICT;
+    CREATE INDEX IF NOT EXISTS idx_account_request_limits_updated
+      ON account_request_limits(updated_at);
 
     CREATE TABLE IF NOT EXISTS tool_usage_events (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

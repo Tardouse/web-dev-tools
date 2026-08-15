@@ -94,10 +94,10 @@ export async function createManagedUser(
     .prepare(
       `INSERT INTO users (
         id, email, username, name, password_hash, role, status,
-        must_change_password, password_version, created_at, updated_at
-      ) VALUES (?, ?, NULL, ?, ?, 'user', 'active', 1, 1, ?, ?)`,
+        must_change_password, password_version, email_verified_at, created_at, updated_at
+      ) VALUES (?, ?, NULL, ?, ?, 'user', 'active', 1, 1, ?, ?, ?)`,
     )
-    .run(userId, normalizedEmail, name.data, await hashPassword(temporaryPassword), now, now);
+    .run(userId, normalizedEmail, name.data, await hashPassword(temporaryPassword), now, now, now);
   await writeAuditLog({
     actor,
     action: "user.create",

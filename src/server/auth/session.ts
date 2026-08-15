@@ -82,6 +82,7 @@ interface SessionRow {
   must_change_password: number;
   session_password_version: number;
   user_password_version: number;
+  email_verified_at: string | null;
   expires_at: string;
   last_active_at: string;
 }
@@ -96,13 +97,15 @@ async function readSession(audience: SessionAudience): Promise<SessionUser | nul
       `SELECT sessions.token_hash, sessions.password_version AS session_password_version,
         sessions.expires_at, sessions.last_active_at,
         users.id, users.email, users.username, users.name, users.role, users.status,
-        users.must_change_password, users.password_version AS user_password_version
+        users.must_change_password, users.password_version AS user_password_version,
+        users.email_verified_at
        FROM sessions JOIN users ON users.id = sessions.user_id
        WHERE sessions.token_hash = ? AND sessions.audience = ?`,
     )
     .get(hashOpaqueValue(token), audience) as SessionRow | undefined;
   const roleMatches = row && (audience === "admin" ? row.role !== "user" : row.role === "user");
-  if (!row || !roleMatches || row.status !== "active" || row.session_password_version !== row.user_password_version || Date.parse(row.expires_at) <= Date.now()) {
+  const verified = row && (audience === "admin" || row.email_verified_at !== null);
+  if (!row || !roleMatches || !verified || row.status !== "active" || row.session_password_version !== row.user_password_version || Date.parse(row.expires_at) <= Date.now()) {
     if (row) database.prepare("DELETE FROM sessions WHERE token_hash = ?").run(row.token_hash);
     return null;
   }

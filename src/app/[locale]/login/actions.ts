@@ -5,7 +5,10 @@ import { z } from "zod";
 import { isLocale, localePath } from "@/i18n";
 import { authenticateUser } from "@/server/auth/login";
 
-export interface LoginState { error?: "invalid" | "locked" | "validation" }
+export interface LoginState {
+  error?: "invalid" | "locked" | "unverified" | "validation";
+  email?: string;
+}
 const schema = z.object({
   locale: z.string().refine(isLocale),
   email: z.email().trim().max(254),
@@ -18,6 +21,6 @@ export async function loginAction(_state: LoginState, formData: FormData): Promi
   });
   if (!parsed.success) return { error: "validation" };
   const result = await authenticateUser(parsed.data.email, parsed.data.password);
-  if (!result.ok) return { error: result.reason };
+  if (!result.ok) return { error: result.reason, email: parsed.data.email.toLowerCase() };
   redirect(localePath(parsed.data.locale, result.mustChangePassword ? "/account/change-password" : "/account"));
 }

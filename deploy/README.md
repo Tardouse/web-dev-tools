@@ -24,11 +24,24 @@ DATABASE_PATH="/absolute/path/to/web-dev-tools/data/devtoolbox.sqlite"
 ADMIN_USERNAME="admin"
 ADMIN_NAME="DevToolbox Admin"
 ADMIN_PASSWORD="a-unique-strong-password"
+MAIL_TRANSPORT="smtp"
+MAIL_FROM="DevToolbox <no-reply@tools.example.com>"
+SMTP_HOST="smtp.example.com"
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER="smtp-user"
+SMTP_PASSWORD="smtp-password"
 PORT=8886
 BIND_HOST="127.0.0.1"
 ```
 
 `NEXT_PUBLIC_SITE_URL` is embedded during `next build`, so rerun the installer after changing it. Use an absolute `DATABASE_PATH`; the installer rejects relative database paths so data cannot accidentally move between release directories.
+
+Production registration, verification, and password recovery require a working
+SMTP configuration. `SMTP_USER` and `SMTP_PASSWORD` are optional only when the
+server permits unauthenticated delivery. Local development defaults to a
+permission-restricted `.tmp/mail-outbox.jsonl` file instead of sending mail;
+production rejects this outbox unless the explicit E2E-only override is set.
 
 Native operations:
 
@@ -52,7 +65,7 @@ ENV_FILE=/etc/devtoolbox.env NATIVE_DIR=/opt/devtoolbox-runtime ./scripts/instal
 
 ```bash
 cp .env.example .env
-# Set NEXT_PUBLIC_SITE_URL, APP_PORT, ADMIN_USERNAME, and a strong ADMIN_PASSWORD in .env
+# Set the site URL, administrator credentials, and SMTP values in .env
 ./scripts/deploy.sh
 ```
 

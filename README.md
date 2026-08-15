@@ -71,7 +71,9 @@ the server in the background, and verifies `/api/health`:
 
 On first installation it creates `.env.native` with a random bootstrap admin
 password and prints the credentials once. Set `NEXT_PUBLIC_SITE_URL` in that
-file and rerun the installer before exposing the site through a public domain.
+file, replace the SMTP placeholders, and rerun the installer before exposing
+the site through a public domain. SMTP is required for email verification and
+password recovery.
 The service listens on `127.0.0.1:8886` by default.
 
 ```bash
@@ -122,6 +124,13 @@ See [`deploy/README.md`](deploy/README.md) for HTTPS, Nginx, updates, logs, and 
 | `ADMIN_USERNAME`        | required                | First Super Admin username                            |
 | `ADMIN_NAME`            | `DevToolbox Admin`       | First Super Admin display name                     |
 | `ADMIN_PASSWORD`        | required                | First Super Admin bootstrap password               |
+| `MAIL_TRANSPORT`        | `smtp` in production    | Email transport (`smtp` or development outbox)     |
+| `MAIL_FROM`             | required for SMTP       | Sender shown on account emails                     |
+| `SMTP_HOST`             | required for SMTP       | SMTP server hostname                               |
+| `SMTP_PORT`             | `587`                   | SMTP server port                                   |
+| `SMTP_SECURE`           | `false`                 | Use implicit TLS (normally port 465)                |
+| `SMTP_USER`             | optional                | SMTP username                                      |
+| `SMTP_PASSWORD`         | optional                | SMTP password                                      |
 | `PORT`                  | `8886`                  | Native server port                                 |
 | `BIND_HOST`             | `127.0.0.1`             | Native server bind address                         |
 | `IMAGE_NAME`           | `web-dev-tools`         | Docker image name                                  |
@@ -133,6 +142,7 @@ Tool input limits are centralized in `src/lib/config.ts`.
 
 - Core tool operations remain client-side.
 - No tool input is persisted by default.
+- Verification and recovery links are short-lived and single-use; only SHA-256 token hashes are stored.
 - CSP, frame denial, MIME sniffing protection, referrer policy, and restricted permissions headers are configured.
 - Regex input, pattern length, match count, and obvious nested quantifiers are limited.
 - JSON size and nesting depth are guarded.

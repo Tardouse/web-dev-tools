@@ -6,7 +6,7 @@
 .auth-wrap { width: min(440px, 100%); }
 .auth-logo { margin-bottom: 34px; }
 .auth-heading { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 22px; }
-.auth-heading h1 { margin: 2px 0 4px; font-size: 1.8rem; letter-spacing: -0.035em; }
+.auth-heading h1 { margin: 2px 0 4px; font-size: 1.8rem; letter-spacing: 0; }
 .auth-heading p { margin: 0; color: var(--text-muted); }
 .auth-lock { flex: 0 0 auto; width: 46px; height: 46px; display: grid; place-items: center; border-radius: 12px; color: var(--accent); background: var(--accent-soft); }
 .auth-form { display: grid; padding: 24px; }
@@ -15,6 +15,13 @@
 .field-input, .field-select { width: 100%; min-height: 42px; padding: 8px 11px; border: 1px solid var(--border-strong); border-radius: 9px; background: var(--surface); color: var(--text); }
 .field-input:focus, .field-select:focus { border-color: var(--accent); outline: 3px solid color-mix(in srgb, var(--accent) 20%, transparent); }
 .form-error { margin: 12px 0 0; padding: 9px 11px; border-radius: 8px; color: var(--danger); background: var(--danger-soft); }
+.form-success { margin: 12px 0 0; padding: 9px 11px; border-radius: 8px; color: var(--success); background: var(--success-soft); }
+.auth-page-notice { margin: 0 0 14px; }
+.auth-form-copy { margin: 0; color: var(--text-muted); }
+.auth-form small { margin-top: 7px; color: var(--text-muted); }
+.auth-message { gap: 16px; }
+.auth-message .form-error { margin: 0; }
+.auth-form-link-start { margin-bottom: -8px; text-align: left; }
 .auth-submit { width: 100%; margin-top: 18px; }
 .auth-back { display: block; margin-top: 18px; text-align: center; color: var(--text-muted); }
 .auth-back:hover { color: var(--text); }

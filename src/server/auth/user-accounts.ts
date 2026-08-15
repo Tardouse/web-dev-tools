@@ -1,9 +1,7 @@
 import "server-only";
 
 import { createHash } from "node:crypto";
-import { headers } from "next/headers";
 import { z } from "zod";
-import { getClientIp } from "@/server/auth/session";
 import { hashPassword, passwordSchema } from "@/server/auth/password";
 import { getDatabase, initializeDatabase } from "@/server/db/database";
 
@@ -14,15 +12,14 @@ export const registrationSchema = z.object({
 });
 
 export type RegistrationResult =
-  | { ok: true; userId: string; passwordVersion: number }
+  | { ok: true; userId: string; email: string }
   | { ok: false; reason: "exists" | "limited" | "invalid" };
 
-export async function registerUser(input: unknown): Promise<RegistrationResult> {
+export async function registerUser(input: unknown, ip: string): Promise<RegistrationResult> {
   const parsed = registrationSchema.safeParse(input);
   if (!parsed.success) return { ok: false, reason: "invalid" };
   await initializeDatabase();
   const database = getDatabase();
-  const ip = getClientIp(await headers());
   const key = createHash("sha256").update(`register\0${ip}`).digest("hex");
   const since = new Date(Date.now() - 60 * 60 * 1000).toISOString();
   const attempts = database
@@ -51,5 +48,5 @@ export async function registerUser(input: unknown): Promise<RegistrationResult> 
        ON CONFLICT(key_hash) DO UPDATE SET failures = failures + 1, updated_at = excluded.updated_at`,
     )
     .run(key, now, now);
-  return { ok: true, userId: id, passwordVersion: 1 };
+  return { ok: true, userId: id, email: parsed.data.email };
 }

@@ -79,6 +79,11 @@ if [ ! -f "$ENV_FILE" ]; then
     printf 'ADMIN_USERNAME="%s"\n' "${NATIVE_ADMIN_USERNAME:-admin}"
     printf 'ADMIN_NAME="%s"\n' "${NATIVE_ADMIN_NAME:-DevToolbox Admin}"
     printf 'ADMIN_PASSWORD="%s"\n' "$GENERATED_ADMIN_PASSWORD"
+    printf '%s\n' '# Configure these values before using registration or password recovery.'
+    printf '%s\n' 'MAIL_TRANSPORT="smtp"'
+    printf '%s\n' 'MAIL_FROM="DevToolbox <no-reply@tools.example.com>"'
+    printf '%s\n' 'SMTP_HOST="smtp.example.com"' 'SMTP_PORT=587' 'SMTP_SECURE=false'
+    printf '%s\n' 'SMTP_USER="replace-with-smtp-user"' 'SMTP_PASSWORD="replace-with-smtp-password"'
     printf 'PORT=%s\n' "$NATIVE_PORT"
     printf 'BIND_HOST="%s"\n' "$BIND_HOST"
     printf '%s\n' 'NODE_ENV=production' 'NEXT_TELEMETRY_DISABLED=1'

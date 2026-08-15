@@ -19,6 +19,7 @@ interface LoginUserRow {
   must_change_password: number;
   status: UserStatus;
   role: UserRole;
+  email_verified_at: string | null;
 }
 
 function attemptKey(audience: SessionAudience, identifier: string, ip: string): string {
@@ -26,6 +27,9 @@ function attemptKey(audience: SessionAudience, identifier: string, ip: string): 
 }
 
 export type LoginResult =
+  | { ok: true; mustChangePassword: boolean }
+  | { ok: false; reason: "invalid" | "locked" | "unverified" };
+export type AdminLoginResult =
   | { ok: true; mustChangePassword: boolean }
   | { ok: false; reason: "invalid" | "locked" };
 
@@ -51,7 +55,8 @@ async function authenticate(
   const column = audience === "admin" ? "username" : "email";
   const user = database
     .prepare(
-      `SELECT id, password_hash, password_version, must_change_password, status, role
+      `SELECT id, password_hash, password_version, must_change_password, status, role,
+        email_verified_at
        FROM users WHERE ${column} = ? COLLATE NOCASE`,
     )
     .get(identifier) as LoginUserRow | undefined;
@@ -74,6 +79,11 @@ async function authenticate(
     return { ok: false, reason: lockedUntil ? "locked" : "invalid" };
   }
 
+  if (audience === "user" && !user.email_verified_at) {
+    database.prepare("DELETE FROM login_attempts WHERE key_hash = ?").run(key);
+    return { ok: false, reason: "unverified" };
+  }
+
   database.prepare("DELETE FROM login_attempts WHERE key_hash = ?").run(key);
   database.prepare("UPDATE users SET last_login_at = ?, updated_at = ? WHERE id = ?").run(now.toISOString(), now.toISOString(), user.id);
   await createSession(user.id, user.password_version, audience);
@@ -84,6 +94,13 @@ export function authenticateUser(email: string, password: string): Promise<Login
   return authenticate("user", email, password);
 }
 
-export function authenticateAdmin(username: string, password: string): Promise<LoginResult> {
-  return authenticate("admin", username, password);
+export async function authenticateAdmin(
+  username: string,
+  password: string,
+): Promise<AdminLoginResult> {
+  const result = await authenticate("admin", username, password);
+  if (!result.ok) {
+    return { ok: false, reason: result.reason === "unverified" ? "invalid" : result.reason };
+  }
+  return result;
 }

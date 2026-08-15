@@ -1,18 +1,44 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
+import { z } from "zod";
 import { isLocale, localePath } from "@/i18n";
-import { createSession } from "@/server/auth/session";
-import { registerUser } from "@/server/auth/user-accounts";
+import { sendRegistrationVerification } from "@/server/auth/account-tokens";
+import { getClientIp } from "@/server/auth/session";
+import { passwordSchema } from "@/server/auth/password";
+import { registerUser, registrationSchema } from "@/server/auth/user-accounts";
 
 export interface RegisterState { error?: "invalid" | "mismatch" | "exists" | "limited" }
+const schema = registrationSchema.extend({
+  locale: z.string().refine(isLocale),
+  confirm: passwordSchema,
+}).superRefine((value, context) => {
+  if (value.password !== value.confirm) {
+    context.addIssue({ code: "custom", path: ["confirm"], message: "password_mismatch" });
+  }
+});
+
 export async function registerAction(_state: RegisterState, formData: FormData): Promise<RegisterState> {
-  const localeValue = String(formData.get("locale") ?? "zh");
-  const locale = isLocale(localeValue) ? localeValue : "zh";
-  const password = String(formData.get("password") ?? "");
-  if (password !== String(formData.get("confirm") ?? "")) return { error: "mismatch" };
-  const result = await registerUser({ name: formData.get("name"), email: formData.get("email"), password });
+  const parsed = schema.safeParse({
+    locale: formData.get("locale"),
+    name: formData.get("name"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    confirm: formData.get("confirm"),
+  });
+  if (!parsed.success) {
+    const mismatch = parsed.error.issues.some((issue) => issue.message === "password_mismatch");
+    return { error: mismatch ? "mismatch" : "invalid" };
+  }
+  const ip = getClientIp(await headers());
+  const result = await registerUser(parsed.data, ip);
   if (!result.ok) return { error: result.reason };
-  await createSession(result.userId, result.passwordVersion, "user");
-  redirect(localePath(locale, "/account"));
+  const delivery = await sendRegistrationVerification(
+    result.userId,
+    result.email,
+    parsed.data.locale,
+    ip,
+  );
+  redirect(`${localePath(parsed.data.locale, "/verify-email")}?sent=${delivery === "sent" ? "1" : "0"}`);
 }
