@@ -8,6 +8,7 @@
 # production
 /build
 /data/
+/.native/
 
 # testing
 /coverage/
@@ -17,6 +18,7 @@
 
 # local environment
 .env
+.env.native
 .env.local
 .env.*.local
 .env.docker-test

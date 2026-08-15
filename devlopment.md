@@ -2,6 +2,16 @@
 
 ## 敏捷开发模式开发清单
 
+> 状态更新：2026-08-15。`[x]` 仅表示当前仓库已有可运行实现并通过现有自动化验证；未勾选项仍在后续计划中。部分 Sprint 已交付核心范围，但仍可能保留未完成的增强项。
+
+### 当前交付概览
+
+- 第一版建议工具：20 / 20 已完成，仓库实际注册 21 个独立工具
+- P0 必须项：19 / 19 已完成
+- P1 第一阶段项：9 / 11 已完成，待补 Email 验证与后台工具管理
+- 用户与后台：已完成 Email 注册登录、用户/管理员认证隔离、收藏与最近使用、运营 Dashboard 和用户管理
+- 工程化：已具备单元、集成和 E2E 测试、GitHub Actions CI 及生产部署配置；实际域名、HTTPS 证书和 CD 尚未落地
+
 ### 1. 项目定位
 
 开发一个面向程序员、开发人员、运维人员、学生及技术从业者的在线开发工具网站。
@@ -156,46 +166,46 @@ AI Agent
 
 ## Sprint 1：基础框架
 
-- [ ] 创建前端项目
-- [ ] 创建后端项目
-- [ ] 配置数据库
-- [ ] 配置开发环境
-- [ ] 配置生产环境
+- [x] 创建前端项目
+- [x] 创建后端项目
+- [x] 配置数据库
+- [x] 配置开发环境
+- [x] 配置生产环境
 - [ ] 配置 HTTPS
 - [ ] 配置域名
-- [ ] 配置 Nginx / 反向代理
-- [ ] 配置日志
-- [ ] 配置错误处理
-- [ ] 配置环境变量
-- [ ] 配置 Docker
-- [ ] 建立 Git 仓库
+- [x] 配置 Nginx / 反向代理
+- [x] 配置日志
+- [x] 配置错误处理
+- [x] 配置环境变量
+- [x] 配置 Docker
+- [x] 建立 Git 仓库
 - [ ] 建立 CI/CD
-- [ ] 建立基础组件库
-- [ ] 建立统一 Layout
-- [ ] 建立响应式布局
+- [x] 建立基础组件库
+- [x] 建立统一 Layout
+- [x] 建立响应式布局
 
 ## Sprint 2：网站基础 UI
 
-- [ ] 首页
-- [ ] 工具分类页面
-- [ ] 工具详情页面
-- [ ] 工具搜索
-- [ ] Header
-- [ ] Footer
-- [ ] Breadcrumb
-- [ ] 工具卡片
-- [ ] 搜索框
-- [ ] Toast
-- [ ] Modal
-- [ ] Loading
-- [ ] Error 状态
-- [ ] Empty 状态
-- [ ] 复制按钮
-- [ ] 下载按钮
-- [ ] 清空按钮
-- [ ] 深色模式
-- [ ] 浅色模式
-- [ ] 移动端适配
+- [x] 首页
+- [x] 工具分类页面
+- [x] 工具详情页面
+- [x] 工具搜索
+- [x] Header
+- [x] Footer
+- [x] Breadcrumb
+- [x] 工具卡片
+- [x] 搜索框
+- [x] Toast
+- [x] Modal
+- [x] Loading
+- [x] Error 状态
+- [x] Empty 状态
+- [x] 复制按钮
+- [x] 下载按钮
+- [x] 清空按钮
+- [x] 深色模式
+- [x] 浅色模式
+- [x] 移动端适配
 
 ---
 
@@ -207,9 +217,9 @@ AI Agent
 
 ## JSON
 
-- [ ] JSON 格式化
-- [ ] JSON 压缩
-- [ ] JSON 校验
+- [x] JSON 格式化
+- [x] JSON 压缩
+- [x] JSON 校验
 - [ ] JSON 转 YAML
 - [ ] JSON 转 XML
 - [ ] JSON 转 CSV
@@ -228,9 +238,9 @@ AI Agent
 
 ## Base64
 
-- [ ] Base64 编码
-- [ ] Base64 解码
-- [ ] 文本 Base64
+- [x] Base64 编码
+- [x] Base64 解码
+- [x] 文本 Base64
 - [ ] 文件 Base64
 - [ ] 图片 Base64
 - [ ] 自动识别编码
@@ -243,8 +253,8 @@ AI Agent
 
 ## URL
 
-- [ ] URL Encode
-- [ ] URL Decode
+- [x] URL Encode
+- [x] URL Decode
 - [ ] URL Parser
 - [ ] Query String Parser
 - [ ] Query String Generator
@@ -261,18 +271,18 @@ AI Agent
 
 # 7. 进制与数字工具
 
-- [ ] 二进制 → 十进制
-- [ ] 二进制 → 十六进制
-- [ ] 十进制 → 二进制
-- [ ] 十进制 → 十六进制
-- [ ] 十六进制 → 十进制
-- [ ] 十六进制 → 二进制
-- [ ] 任意进制转换
+- [x] 二进制 → 十进制
+- [x] 二进制 → 十六进制
+- [x] 十进制 → 二进制
+- [x] 十进制 → 十六进制
+- [x] 十六进制 → 十进制
+- [x] 十六进制 → 二进制
+- [x] 任意进制转换
 - [ ] Bit / Byte 转换
 - [ ] KB / MB / GB 转换
-- [ ] Unix Timestamp 转换
-- [ ] 时间戳 → 日期
-- [ ] 日期 → 时间戳
+- [x] Unix Timestamp 转换
+- [x] 时间戳 → 日期
+- [x] 日期 → 时间戳
 
 ---
 
@@ -280,14 +290,14 @@ AI Agent
 
 这一类非常适合做流量入口。
 
-- [ ] 字符数统计
-- [ ] 字节数统计
-- [ ] 单词数统计
-- [ ] 行数统计
-- [ ] 中文字符统计
+- [x] 字符数统计
+- [x] 字节数统计
+- [x] 单词数统计
+- [x] 行数统计
+- [x] 中文字符统计
 - [ ] 英文字符统计
-- [ ] 数字统计
-- [ ] 空格统计
+- [x] 数字统计
+- [x] 空格统计
 - [ ] 删除空行
 - [ ] 删除重复行
 - [ ] 行排序
@@ -302,17 +312,17 @@ AI Agent
 
 # 9. 大小写转换
 
-- [ ] 全部大写
-- [ ] 全部小写
+- [x] 全部大写
+- [x] 全部小写
 - [ ] 首字母大写
-- [ ] 每个单词首字母大写
-- [ ] camelCase
-- [ ] PascalCase
-- [ ] snake_case
-- [ ] kebab-case
-- [ ] CONSTANT_CASE
-- [ ] dot.case
-- [ ] path/case
+- [x] 每个单词首字母大写
+- [x] camelCase
+- [x] PascalCase
+- [x] snake_case
+- [x] kebab-case
+- [x] CONSTANT_CASE
+- [x] dot.case
+- [x] path/case
 
 ---
 
@@ -320,16 +330,16 @@ AI Agent
 
 建议做成一个比较完整的 Regex Playground。
 
-- [ ] 正则表达式测试
-- [ ] 实时匹配
-- [ ] 匹配结果高亮
+- [x] 正则表达式测试
+- [x] 实时匹配
+- [x] 匹配结果高亮
 - [ ] 捕获组显示
 - [ ] 替换测试
-- [ ] Match 数量统计
+- [x] Match 数量统计
 - [ ] 常用正则模板
 - [ ] Regex 解释
-- [ ] Flags 设置
-- [ ] JavaScript Regex
+- [x] Flags 设置
+- [x] JavaScript Regex
 - [ ] PCRE 说明
 
 限制：
@@ -344,17 +354,17 @@ AI Agent
 
 # 11. 文本差异比较
 
-- [ ] 两段文本 Diff
-- [ ] 行级 Diff
-- [ ] 字符级 Diff
-- [ ] Unified Diff
+- [x] 两段文本 Diff
+- [x] 行级 Diff
+- [x] 字符级 Diff
+- [x] Unified Diff
 - [ ] JSON Diff
-- [ ] 忽略空格
+- [x] 忽略空格
 - [ ] 忽略大小写
-- [ ] 显示新增
-- [ ] 显示删除
-- [ ] 显示修改
-- [ ] Diff 下载
+- [x] 显示新增
+- [x] 显示删除
+- [x] 显示修改
+- [x] Diff 下载
 
 ---
 
@@ -398,8 +408,8 @@ Body
 
 生成：
 
-- [ ] curl
-- [ ] JavaScript fetch
+- [x] curl
+- [x] JavaScript fetch
 - [ ] Axios
 - [ ] Python requests
 - [ ] Python httpx
@@ -413,14 +423,14 @@ Body
 
 # 13. 颜色工具
 
-- [ ] HEX → RGB
-- [ ] RGB → HEX
-- [ ] RGB → HSL
+- [x] HEX → RGB
+- [x] RGB → HEX
+- [x] RGB → HSL
 - [ ] HSL → RGB
 - [ ] HSV 转换
 - [ ] CMYK 转换
-- [ ] 颜色选择器
-- [ ] 颜色预览
+- [x] 颜色选择器
+- [x] 颜色预览
 - [ ] 随机颜色
 - [ ] 调色板生成
 - [ ] 对比色
@@ -446,16 +456,16 @@ Preview
 
 # 14. 二维码工具
 
-- [ ] 文本 → QR Code
-- [ ] URL → QR Code
+- [x] 文本 → QR Code
+- [x] URL → QR Code
 - [ ] WiFi → QR Code
 - [ ] Email → QR Code
 - [ ] vCard → QR Code
-- [ ] QR Code 下载
-- [ ] PNG
+- [x] QR Code 下载
+- [x] PNG
 - [ ] SVG
-- [ ] 自定义尺寸
-- [ ] 自定义纠错等级
+- [x] 自定义尺寸
+- [x] 自定义纠错等级
 
 同时增加：
 
@@ -498,15 +508,15 @@ and is never uploaded to the server.
 
 建议加入：
 
-- [ ] MD5
-- [ ] SHA-1
-- [ ] SHA-256
-- [ ] SHA-384
-- [ ] SHA-512
+- [x] MD5
+- [x] SHA-1
+- [x] SHA-256
+- [x] SHA-384
+- [x] SHA-512
 - [ ] SHA3
 - [ ] HMAC
 - [ ] CRC32
-- [ ] UUID Generator
+- [x] UUID Generator
 - [ ] UUID Validator
 
 注意：
@@ -571,7 +581,7 @@ MD5 / SHA-1 可以提供，但明确标记其用途，不要把它们宣传为�
 
 建议增加：
 
-- [ ] HTML 格式化
+- [x] HTML 格式化
 - [ ] HTML 压缩
 - [ ] CSS 格式化
 - [ ] CSS 压缩
@@ -667,17 +677,17 @@ MD5 / SHA-1 可以提供，但明确标记其用途，不要把它们宣传为�
 
 # 23. 时间工具
 
-- [ ] Unix Timestamp
-- [ ] Unix Timestamp Millisecond
-- [ ] 时间格式转换
-- [ ] ISO 8601
-- [ ] UTC 转本地时间
+- [x] Unix Timestamp
+- [x] Unix Timestamp Millisecond
+- [x] 时间格式转换
+- [x] ISO 8601
+- [x] UTC 转本地时间
 - [ ] 时区转换
 - [ ] 时间差计算
 - [ ] 日期加减
-- [ ] Cron Expression Generator
-- [ ] Cron Expression Parser
-- [ ] Cron Next Run
+- [x] Cron Expression Generator
+- [x] Cron Expression Parser
+- [x] Cron Next Run
 
 其中：
 
@@ -689,10 +699,10 @@ MD5 / SHA-1 可以提供，但明确标记其用途，不要把它们宣传为�
 
 建议重点加入：
 
-- [ ] JWT Decoder
-- [ ] JWT Header 查看
-- [ ] JWT Payload 查看
-- [ ] JWT 时间解析
+- [x] JWT Decoder
+- [x] JWT Header 查看
+- [x] JWT Payload 查看
+- [x] JWT 时间解析
 - [ ] JWT Generator
 - [ ] JWT Validator
 
@@ -737,7 +747,7 @@ Webhook / HTTP 请求功能必须严格控制服务器端网络访问能力，�
 
 这类工具实现简单，但使用频率很高。
 
-- [ ] UUID Generator
+- [x] UUID Generator
 - [ ] Random String Generator
 - [ ] Password Generator
 - [ ] Username Generator
@@ -820,9 +830,9 @@ ZIP：
 所有可能造成高 CPU / 高内存消耗的操作必须有：
 
 - [ ] 最大执行时间
-- [ ] 最大输入
+- [x] 最大输入
 - [ ] 最大输出
-- [ ] 最大递归深度
+- [x] 最大递归深度
 - [ ] 最大文件数量
 - [ ] 最大解压大小
 - [ ] 最大并发数
@@ -875,14 +885,15 @@ ZIP：
 
 支持：
 
-- [ ] Email 注册
+- [x] Email 注册
 - [ ] Email 验证
-- [ ] 密码登录
+- [x] 密码登录
+- [x] 用户 / 管理员认证隔离
 - [ ] 忘记密码
-- [ ] 修改密码
+- [x] 修改密码（管理员重置密码后首次登录强制修改）
 - [ ] 注销账号
-- [ ] 登录状态保持
-- [ ] 退出登录
+- [x] 登录状态保持
+- [x] 退出登录
 
 建议后期增加：
 
@@ -891,9 +902,9 @@ ZIP：
 
 ## 用户中心
 
-- [ ] 用户资料
-- [ ] 收藏工具
-- [ ] 最近使用
+- [x] 用户资料
+- [x] 收藏工具
+- [x] 最近使用
 - [ ] 使用历史
 - [ ] 我的设置
 - [ ] 深色模式设置
@@ -966,19 +977,19 @@ Cron Generator
 
 显示：
 
-- [ ] DAU
-- [ ] WAU
-- [ ] MAU
-- [ ] 注册用户
-- [ ] 活跃用户
-- [ ] 工具使用次数
-- [ ] 今日访问量
-- [ ] PV
-- [ ] UV
-- [ ] 热门工具
-- [ ] 错误率
-- [ ] API 请求量
-- [ ] 文件处理量
+- [x] DAU
+- [x] WAU
+- [x] MAU
+- [x] 注册用户
+- [x] 活跃用户
+- [x] 工具使用次数
+- [x] 今日访问量
+- [x] PV
+- [x] UV
+- [x] 热门工具
+- [x] 错误率
+- [x] API 请求量
+- [x] 文件处理量
 
 ---
 
@@ -1006,16 +1017,17 @@ Cron Generator
 
 # 35. 用户管理
 
-- [ ] 用户列表
-- [ ] 搜索用户
-- [ ] 查看用户
-- [ ] 禁用用户
-- [ ] 删除用户
-- [ ] 重置密码
-- [ ] 修改角色
-- [ ] 查看注册时间
-- [ ] 查看最后登录时间
-- [ ] 查看工具使用统计
+- [x] 创建用户
+- [x] 用户列表
+- [x] 搜索用户
+- [x] 查看用户
+- [x] 禁用用户
+- [x] 删除用户
+- [x] 重置密码
+- [x] 修改角色
+- [x] 查看注册时间
+- [x] 查看最后登录时间
+- [x] 查看工具使用统计
 
 角色：
 
@@ -1068,18 +1080,18 @@ Super Admin
 
 每个工具页面都需要：
 
-- [ ] Title
-- [ ] Description
-- [ ] Canonical
-- [ ] Open Graph
-- [ ] Sitemap
-- [ ] robots.txt
-- [ ] Structured Data
-- [ ] 面包屑
-- [ ] FAQ
-- [ ] 工具说明
+- [x] Title
+- [x] Description
+- [x] Canonical
+- [x] Open Graph
+- [x] Sitemap
+- [x] robots.txt
+- [x] Structured Data
+- [x] 面包屑
+- [x] FAQ
+- [x] 工具说明
 - [ ] 使用示例
-- [ ] Related Tools
+- [x] Related Tools
 
 ---
 
@@ -1149,11 +1161,11 @@ JSON → CSV
 
 搜索支持：
 
-- [ ] 工具名称
-- [ ] 别名
-- [ ] 标签
-- [ ] 分类
-- [ ] Description
+- [x] 工具名称
+- [x] 别名
+- [x] 标签
+- [x] 分类
+- [x] Description
 
 ---
 
@@ -1173,10 +1185,10 @@ JSON → CSV
 
 避免：
 
-- [ ] 大量 JS 首屏加载
-- [ ] 所有工具代码一次性加载
-- [ ] 不必要的第三方 SDK
-- [ ] 大型 UI 库全量加载
+- [x] 大量 JS 首屏加载
+- [x] 所有工具代码一次性加载
+- [x] 不必要的第三方 SDK
+- [x] 大型 UI 库全量加载
 
 采用：
 
@@ -1194,14 +1206,14 @@ Lazy Loading
 
 ## Web 安全
 
-- [ ] XSS 防护
-- [ ] CSRF 防护
-- [ ] SQL Injection 防护
-- [ ] SSRF 防护
+- [x] XSS 防护
+- [x] CSRF 防护
+- [x] SQL Injection 防护
+- [x] SSRF 防护
 - [ ] CORS 控制
-- [ ] CSP
+- [x] CSP
 - [ ] Rate Limit
-- [ ] 登录暴力破解限制
+- [x] 登录暴力破解限制
 - [ ] 邮箱验证码限制
 - [ ] 文件上传安全检查
 - [ ] MIME 检查
@@ -1265,13 +1277,13 @@ Premium:
 # 43. 日志与监控
 
 - [ ] Application Log
-- [ ] Error Log
-- [ ] Access Log
+- [x] Error Log
+- [x] Access Log
 - [ ] Security Log
-- [ ] Login Log
-- [ ] Admin Operation Log
+- [ ] Login Log（当前仅记录最后登录时间和失败尝试状态）
+- [x] Admin Operation Log
 - [ ] API Log
-- [ ] Tool Usage Log
+- [x] Tool Usage Log
 
 管理员操作必须记录：
 
@@ -1416,22 +1428,24 @@ and is not uploaded to our servers.
 
 每个工具开发完成后必须包含：
 
-- [ ] 正常输入测试
-- [ ] 空输入测试
-- [ ] 超长输入测试
-- [ ] 特殊字符测试
-- [ ] Unicode 测试
+> 当前已覆盖核心工具和主要业务流程，但尚未逐个工具完成以下全部输入场景。
+
+- [ ] 正常输入测试（尚未覆盖全部工具）
+- [ ] 空输入测试（尚未覆盖全部工具）
+- [ ] 超长输入测试（尚未覆盖全部工具）
+- [ ] 特殊字符测试（尚未覆盖全部工具）
+- [ ] Unicode 测试（尚未覆盖全部工具）
 - [ ] 超大文件测试
-- [ ] 错误输入测试
-- [ ] 移动端测试
-- [ ] 深色模式测试
+- [ ] 错误输入测试（尚未覆盖全部工具）
+- [ ] 移动端测试（已有核心流程覆盖，尚未逐工具覆盖）
+- [ ] 深色模式测试（已有核心流程覆盖，尚未逐工具覆盖）
 - [ ] 浏览器兼容性测试
 
 核心工具增加：
 
-- [ ] Unit Test
-- [ ] Integration Test
-- [ ] E2E Test
+- [x] Unit Test（核心工具纯函数）
+- [x] Integration Test（数据库、指标和用户管理）
+- [x] E2E Test（中英文、桌面/移动端、认证和后台）
 
 ---
 
@@ -1473,40 +1487,40 @@ Code Review
 
 ## Sprint 1
 
-- [ ] 项目初始化
-- [ ] UI 基础框架
-- [ ] 首页
-- [ ] 工具页面框架
-- [ ] 深色模式
-- [ ] 响应式设计
+- [x] 项目初始化
+- [x] UI 基础框架
+- [x] 首页
+- [x] 工具页面框架
+- [x] 深色模式
+- [x] 响应式设计
 
 ## Sprint 2
 
-- [ ] JSON Formatter
-- [ ] JSON Validator
-- [ ] Base64
-- [ ] URL Encoder
-- [ ] URL Decoder
-- [ ] Timestamp
-- [ ] UUID
+- [x] JSON Formatter
+- [x] JSON Validator
+- [x] Base64
+- [x] URL Encoder
+- [x] URL Decoder
+- [x] Timestamp
+- [x] UUID
 
 ## Sprint 3
 
-- [ ] 文本统计
-- [ ] 大小写转换
-- [ ] 文本 Diff
-- [ ] Regex Tester
-- [ ] 进制转换
-- [ ] Hash
+- [x] 文本统计
+- [x] 大小写转换
+- [x] 文本 Diff
+- [x] Regex Tester
+- [x] 进制转换
+- [x] Hash
 
 ## Sprint 4
 
-- [ ] Color Converter
-- [ ] QR Code
-- [ ] Curl Parser
-- [ ] Curl Generator
-- [ ] Cron Generator
-- [ ] JWT Decoder
+- [x] Color Converter
+- [x] QR Code
+- [x] Curl Parser
+- [x] Curl Generator
+- [x] Cron Generator
+- [x] JWT Decoder
 
 ## Sprint 5
 
@@ -1519,31 +1533,31 @@ Code Review
 
 ## Sprint 6
 
-- [ ] Email 注册
-- [ ] 登录
+- [x] Email 注册
+- [x] 登录
 - [ ] 邮箱验证
 - [ ] 找回密码
-- [ ] 用户中心
-- [ ] 收藏
+- [x] 用户中心
+- [x] 收藏
 
 ## Sprint 7
 
-- [ ] 管理后台
-- [ ] 用户管理
+- [x] 管理后台
+- [x] 用户管理
 - [ ] 工具管理
 - [ ] 系统设置
-- [ ] 使用统计
-- [ ] 操作日志
+- [x] 使用统计
+- [x] 操作日志
 
 ## Sprint 8
 
-- [ ] SEO
-- [ ] Sitemap
-- [ ] 搜索
-- [ ] Related Tools
-- [ ] FAQ
-- [ ] Analytics
-- [ ] 性能优化
+- [x] SEO
+- [x] Sitemap
+- [x] 搜索
+- [x] Related Tools
+- [x] FAQ
+- [x] Analytics
+- [x] 性能优化
 
 ## Sprint 9+
 
@@ -1710,26 +1724,26 @@ Related Tools
 
 第一版可以先上线：
 
-1. [ ] JSON Formatter
-2. [ ] JSON Validator
-3. [ ] JSON Minifier
-4. [ ] Base64 Encoder / Decoder
-5. [ ] URL Encoder / Decoder
-6. [ ] Timestamp Converter
-7. [ ] UUID Generator
-8. [ ] Hash Generator
-9. [ ] Text Counter
-10. [ ] Text Case Converter
-11. [ ] Text Diff
-12. [ ] Regex Tester
-13. [ ] Number Base Converter
-14. [ ] Color Converter
-15. [ ] QR Code Generator
-16. [ ] Curl Parser
-17. [ ] Curl Generator
-18. [ ] JWT Decoder
-19. [ ] Cron Generator
-20. [ ] HTML Formatter
+1. [x] JSON Formatter
+2. [x] JSON Validator
+3. [x] JSON Minifier
+4. [x] Base64 Encoder / Decoder
+5. [x] URL Encoder / Decoder
+6. [x] Timestamp Converter
+7. [x] UUID Generator
+8. [x] Hash Generator
+9. [x] Text Counter
+10. [x] Text Case Converter
+11. [x] Text Diff
+12. [x] Regex Tester
+13. [x] Number Base Converter
+14. [x] Color Converter
+15. [x] QR Code Generator
+16. [x] Curl Parser
+17. [x] Curl Generator
+18. [x] JWT Decoder
+19. [x] Cron Generator
+20. [x] HTML Formatter
 
 达到这一步之后就可以开始真实收集用户数据，而不是继续无限增加功能。
 
@@ -1793,19 +1807,19 @@ Curl
 
 应该满足：
 
-- [ ] 用户可以正常访问
-- [ ] 手机可以使用
-- [ ] 工具可以正常工作
-- [ ] 输入限制正常
-- [ ] 错误处理正常
-- [ ] 深色模式正常
+- [x] 用户可以正常访问
+- [x] 手机可以使用
+- [x] 工具可以正常工作
+- [x] 输入限制正常
+- [x] 错误处理正常
+- [x] 深色模式正常
 - [ ] 页面加载速度合理
-- [ ] SEO 基础完成
-- [ ] 无明显 XSS / SSRF / 文件上传漏洞
-- [ ] 工具可以被搜索引擎索引
-- [ ] Analytics 正常
-- [ ] 错误日志正常
-- [ ] 可以快速增加新工具
+- [x] SEO 基础完成
+- [x] 无明显 XSS / SSRF / 文件上传漏洞
+- [x] 工具可以被搜索引擎索引
+- [x] Analytics 正常
+- [x] 错误日志正常
+- [x] 可以快速增加新工具
 - [ ] 后台可以控制工具状态
 - [ ] Git + CI/CD 正常
 
@@ -1855,46 +1869,46 @@ Curl
 
 ### P0 —— 必须完成
 
-- [ ] 基础框架
-- [ ] 首页
-- [ ] 工具页面
-- [ ] 搜索
-- [ ] JSON
-- [ ] Base64
-- [ ] URL
-- [ ] 文本
-- [ ] Regex
-- [ ] Diff
-- [ ] 时间戳
-- [ ] 进制
-- [ ] Color
-- [ ] Curl
-- [ ] QR
-- [ ] UUID
-- [ ] 深色模式
-- [ ] 响应式
-- [ ] 安全限制
+- [x] 基础框架
+- [x] 首页
+- [x] 工具页面
+- [x] 搜索
+- [x] JSON
+- [x] Base64
+- [x] URL
+- [x] 文本
+- [x] Regex
+- [x] Diff
+- [x] 时间戳
+- [x] 进制
+- [x] Color
+- [x] Curl
+- [x] QR
+- [x] UUID
+- [x] 深色模式
+- [x] 响应式
+- [x] 安全限制
 
 ### P1 —— 第一阶段完成
 
-- [ ] 注册登录
+- [x] 注册登录
 - [ ] Email 验证
-- [ ] 收藏
-- [ ] 最近使用
-- [ ] 管理后台
+- [x] 收藏
+- [x] 最近使用
+- [x] 管理后台
 - [ ] 工具管理
-- [ ] 用户管理
-- [ ] 数据统计
-- [ ] SEO
-- [ ] Sitemap
-- [ ] Analytics
+- [x] 用户管理
+- [x] 数据统计
+- [x] SEO
+- [x] Sitemap
+- [x] Analytics
 
 ### P2 —— 用户增长后开发
 
 - [ ] ZIP
 - [ ] 图片
 - [ ] SSH
-- [ ] JWT
+- [x] JWT
 - [ ] SQL
 - [ ] Git
 - [ ] Docker

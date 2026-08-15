@@ -59,6 +59,32 @@ ADMIN_PASSWORD="a-unique-strong-password"
 
 The first process that opens an empty database with both bootstrap variables configured creates one username-based Super Admin. The password must be at least 12 characters and contain uppercase and lowercase letters, a number, and a symbol. Without those variables, public tools still run but no admin can sign in. Bootstrap variables do not overwrite an existing Super Admin. Back up the SQLite database file before upgrades.
 
+## Native deployment (without Docker)
+
+The native installer requires Node.js 22+, npm, and either `curl` or `wget`. It
+builds a standalone release, creates a persistent SQLite data directory, starts
+the server in the background, and verifies `/api/health`:
+
+```bash
+./scripts/install-native.sh
+```
+
+On first installation it creates `.env.native` with a random bootstrap admin
+password and prints the credentials once. Set `NEXT_PUBLIC_SITE_URL` in that
+file and rerun the installer before exposing the site through a public domain.
+The service listens on `127.0.0.1:8886` by default.
+
+```bash
+./scripts/native-service.sh status
+./scripts/native-service.sh logs
+./scripts/native-service.sh restart
+./scripts/native-service.sh stop
+```
+
+Native releases live under `.native/`, while application data remains under
+`data/`. See [`deploy/README.md`](deploy/README.md) for configuration, upgrades,
+reverse proxy setup, and backups.
+
 ## Docker
 
 ```bash
@@ -72,8 +98,16 @@ The production image uses Next.js standalone output, a non-root user, a read-onl
 
 ## One-click deployment
 
+Docker:
+
 ```bash
 ./scripts/deploy.sh
+```
+
+Native Node.js:
+
+```bash
+./scripts/install-native.sh
 ```
 
 See [`deploy/README.md`](deploy/README.md) for HTTPS, Nginx, updates, logs, and shutdown instructions.
@@ -88,6 +122,8 @@ See [`deploy/README.md`](deploy/README.md) for HTTPS, Nginx, updates, logs, and 
 | `ADMIN_USERNAME`        | required                | First Super Admin username                            |
 | `ADMIN_NAME`            | `DevToolbox Admin`       | First Super Admin display name                     |
 | `ADMIN_PASSWORD`        | required                | First Super Admin bootstrap password               |
+| `PORT`                  | `8886`                  | Native server port                                 |
+| `BIND_HOST`             | `127.0.0.1`             | Native server bind address                         |
 | `IMAGE_NAME`           | `web-dev-tools`         | Docker image name                                  |
 | `IMAGE_TAG`            | `latest`                | Docker image tag                                   |
 

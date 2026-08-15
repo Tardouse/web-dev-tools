@@ -1,4 +1,4 @@
-.PHONY: dev test check build deploy stop logs
+.PHONY: dev test check build deploy deploy-native stop stop-native logs logs-native status-native
 
 dev:
 	npm run dev
@@ -15,8 +15,20 @@ build:
 deploy:
 	./scripts/deploy.sh
 
+deploy-native:
+	./scripts/install-native.sh
+
 stop:
 	./scripts/stop.sh
 
+stop-native:
+	./scripts/native-service.sh stop
+
 logs:
 	docker compose logs -f --tail=100 web
+
+logs-native:
+	./scripts/native-service.sh logs
+
+status-native:
+	./scripts/native-service.sh status
