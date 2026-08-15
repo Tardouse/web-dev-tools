@@ -13,7 +13,10 @@ import { HeroSearch } from "@/components/hero-search";
 import { RecentTools } from "@/components/recent-tools";
 import { ToolCard } from "@/components/tool-card";
 import { getMessages, interpolate, isLocale, localePath } from "@/i18n";
-import { getCategories, getTools } from "@/lib/tool-registry";
+import {
+  getPublicCategories,
+  getPublicTools,
+} from "@/server/db/tool-management";
 
 export default async function HomePage({
   params,
@@ -23,8 +26,10 @@ export default async function HomePage({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const messages = getMessages(locale);
-  const tools = getTools(locale);
-  const categories = getCategories(locale);
+  const [tools, categories] = await Promise.all([
+    getPublicTools(locale),
+    getPublicCategories(locale),
+  ]);
   const featured = tools.filter((tool) => tool.featured).slice(0, 8);
   return (
     <>
@@ -33,7 +38,12 @@ export default async function HomePage({
           <span className="eyebrow">{messages.home.eyebrow}</span>
           <h1>{messages.home.title}</h1>
           <p className="hero-copy">{messages.home.description}</p>
-          <HeroSearch locale={locale} messages={messages} />
+          <HeroSearch
+            locale={locale}
+            messages={messages}
+            tools={tools}
+            categories={categories}
+          />
           <div className="hero-points">
             <span className="hero-point">
               <CheckCircle2 size={15} />
@@ -51,7 +61,7 @@ export default async function HomePage({
         </div>
       </section>
       <div className="container">
-        <RecentTools locale={locale} messages={messages} />
+        <RecentTools locale={locale} messages={messages} tools={tools} />
         <section className="section">
           <div className="section-heading">
             <div>
@@ -96,6 +106,7 @@ export default async function HomePage({
                 category={category}
                 locale={locale}
                 messages={messages}
+                count={tools.filter((tool) => tool.category === category.id).length}
                 key={category.id}
               />
             ))}

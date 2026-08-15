@@ -2,22 +2,26 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, ExternalLink, LogOut, Menu, Users, X } from "lucide-react";
+import { BarChart3, ExternalLink, LogOut, Menu, Settings, Users, Wrench, X } from "lucide-react";
 import { useState } from "react";
 import { logoutAction } from "@/app/[locale]/admin/(console)/actions";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { BrandLogo } from "@/components/brand-logo";
 import { localePath, type Locale } from "@/i18n";
 import type { SessionUser } from "@/server/db/types";
 import { roleLabel } from "@/lib/admin-ui";
+import type { SiteSettings } from "@/lib/site-settings";
 
 export function AdminShell({
   children,
   locale,
   user,
+  settings,
 }: {
   children: React.ReactNode;
   locale: Locale;
   user: SessionUser;
+  settings: SiteSettings;
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -35,14 +39,25 @@ export function AdminShell({
       icon: Users,
       exact: false,
     },
+    {
+      href: localePath(locale, "/admin/tools"),
+      label: zh ? "工具管理" : "Tool management",
+      icon: Wrench,
+      exact: false,
+    },
+    ...(user.role === "super_admin" ? [{
+      href: localePath(locale, "/admin/settings"),
+      label: zh ? "系统设置" : "System settings",
+      icon: Settings,
+      exact: false,
+    }] : []),
   ];
   return (
     <div className="admin-shell">
       <aside className={`admin-sidebar ${open ? "is-open" : ""}`}>
         <div className="admin-brand-row">
           <Link href={localePath(locale, "/admin")} className="logo">
-            <span className="logo-mark">&lt;/&gt;</span>
-            <span>DevToolbox</span>
+            <BrandLogo settings={settings} />
           </Link>
           <button
             className="icon-button admin-close"
@@ -115,4 +130,3 @@ export function AdminShell({
     </div>
   );
 }
-

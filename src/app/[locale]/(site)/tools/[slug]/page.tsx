@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ArrowRight, LockKeyhole } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ToolIcon } from "@/components/icon";
@@ -8,7 +8,14 @@ import { ToolPageClient } from "@/components/tool-page-client";
 import { RegisteredTool } from "@/components/tools/registered-tool";
 import { FavoriteToolButton } from "@/components/favorite-tool-button";
 import { formatBytes, SITE_CONFIG } from "@/lib/config";
-import { getCategory, getTool, tools } from "@/lib/tool-registry";
+import { tools } from "@/lib/tool-registry";
+import { getCurrentUser } from "@/server/auth/session";
+import { getSiteSettings } from "@/server/db/settings";
+import {
+  getPublicCategories,
+  getPublicTool,
+  getPublicTools,
+} from "@/server/db/tool-management";
 import {
   getMessages,
   interpolate,
@@ -31,7 +38,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, slug } = await params;
   if (!isLocale(locale)) return {};
-  const tool = getTool(slug, locale);
+  const tool = await getPublicTool(slug, locale);
   if (!tool) return {};
   const path = `/tools/${tool.slug}`;
   return {
@@ -68,12 +75,20 @@ export default async function ToolPage({
 }) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
-  const tool = getTool(slug, locale);
+  const [tool, publicTools, publicCategories, settings] = await Promise.all([
+    getPublicTool(slug, locale),
+    getPublicTools(locale),
+    getPublicCategories(locale),
+    getSiteSettings(),
+  ]);
   if (!tool) notFound();
+  if (tool.requiresLogin && !(await getCurrentUser())) {
+    redirect(localePath(locale, "/login"));
+  }
   const messages = getMessages(locale);
-  const category = getCategory(tool.category, locale);
+  const category = publicCategories.find((item) => item.id === tool.category);
   const related = tool.related
-    .map((relatedSlug) => getTool(relatedSlug, locale))
+    .map((relatedSlug) => publicTools.find((item) => item.slug === relatedSlug))
     .filter((item) => item !== undefined);
   const url = `${SITE_CONFIG.url}${localePath(locale, `/tools/${tool.slug}`)}`;
   const structuredData = {
@@ -85,7 +100,9 @@ export default async function ToolPage({
     inLanguage: locale === "zh" ? "zh-CN" : "en",
     applicationCategory: "DeveloperApplication",
     operatingSystem: "Any",
-    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    ...(tool.freeToUse === false
+      ? {}
+      : { offers: { "@type": "Offer", price: "0", priceCurrency: "USD" } }),
   };
   const faqData = {
     "@context": "https://schema.org",
@@ -142,7 +159,13 @@ export default async function ToolPage({
             <span className="badge">
               {messages.common.upTo} {formatBytes(tool.maxInputSize)}
             </span>
-            <span className="badge">{messages.common.noAccount}</span>
+            <span className="badge">
+              {tool.requiresLogin
+                ? locale === "zh"
+                  ? "需要登录"
+                  : "Sign-in required"
+                : messages.common.noAccount}
+            </span>
           </div>
         </div>
         <FavoriteToolButton
@@ -153,11 +176,28 @@ export default async function ToolPage({
       </header>
       <div className="tool-layout">
         <div className="tool-main">
-          <RegisteredTool
-            definition={tool}
-            locale={locale}
-            messages={messages}
-          />
+          {tool.freeToUse === false ? (
+            <div className="empty-state card paid-tool-state">
+              <LockKeyhole size={30} />
+              <h3>{locale === "zh" ? "此工具需要付费权限" : "Paid access required"}</h3>
+              <p>
+                {locale === "zh"
+                  ? "当前版本尚未开放订阅购买，请联系网站管理员获取访问方式。"
+                  : "Subscriptions are not available in this release. Contact the site administrator for access."}
+              </p>
+              {settings.contactEmail && (
+                <a className="button" href={`mailto:${settings.contactEmail}`}>
+                  {settings.contactEmail}
+                </a>
+              )}
+            </div>
+          ) : (
+            <RegisteredTool
+              definition={tool}
+              locale={locale}
+              messages={messages}
+            />
+          )}
           <div className="tool-content card content-card">
             <h2>{interpolate(messages.toolPage.howTo, { name: tool.name })}</h2>
             <ol>
@@ -203,7 +243,9 @@ export default async function ToolPage({
             <h3>{messages.toolPage.privateTitle}</h3>
             <p>{messages.toolPage.privateText}</p>
           </div>
-          <div className="ad-slot">{messages.toolPage.reserved}</div>
+          {settings.adsEnabled && (
+            <div className="ad-slot">{messages.toolPage.reserved}</div>
+          )}
         </aside>
       </div>
     </div>

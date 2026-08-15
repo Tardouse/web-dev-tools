@@ -4,6 +4,7 @@ import { createHash, randomBytes } from "node:crypto";
 import { cache } from "react";
 import { cookies, headers } from "next/headers";
 import { getDatabase, initializeDatabase } from "@/server/db/database";
+import { getSiteSettings } from "@/server/db/settings";
 import type { SessionAudience, SessionUser, UserRole, UserStatus } from "@/server/db/types";
 
 export const USER_SESSION_COOKIE = "devtoolbox-user-session";
@@ -90,6 +91,7 @@ interface SessionRow {
 async function readSession(audience: SessionAudience): Promise<SessionUser | null> {
   const token = (await cookies()).get(cookieName(audience))?.value;
   if (!token) return null;
+  const settings = await getSiteSettings();
   await initializeDatabase();
   const database = getDatabase();
   const row = database
@@ -104,7 +106,11 @@ async function readSession(audience: SessionAudience): Promise<SessionUser | nul
     )
     .get(hashOpaqueValue(token), audience) as SessionRow | undefined;
   const roleMatches = row && (audience === "admin" ? row.role !== "user" : row.role === "user");
-  const verified = row && (audience === "admin" || row.email_verified_at !== null);
+  const verified =
+    row &&
+    (audience === "admin" ||
+      !settings.emailVerificationEnabled ||
+      row.email_verified_at !== null);
   if (!row || !roleMatches || !verified || row.status !== "active" || row.session_password_version !== row.user_password_version || Date.parse(row.expires_at) <= Date.now()) {
     if (row) database.prepare("DELETE FROM sessions WHERE token_hash = ?").run(row.token_hash);
     return null;

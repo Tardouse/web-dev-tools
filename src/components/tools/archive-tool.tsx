@@ -23,8 +23,9 @@ import { ActionButton } from "./tool-actions";
 
 type ArchiveMode = "extract" | "zip" | "gzip";
 
-export function ArchiveWorkbenchTool({ locale }: ToolComponentProps) {
+export function ArchiveWorkbenchTool({ locale, definition }: ToolComponentProps) {
   const zh = locale === "zh";
+  const inputLimit = definition?.maxInputSize ?? TOOL_LIMITS.archive;
   const [mode, setMode] = useState<ArchiveMode>("extract");
   const [entries, setEntries] = useState<LocalFileEntry[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -36,11 +37,11 @@ export function ArchiveWorkbenchTool({ locale }: ToolComponentProps) {
   const [error, setError] = useState("");
 
   const bytes = async (file: File) => {
-    if (file.size > TOOL_LIMITS.archive) {
+    if (file.size > inputLimit) {
       throw new Error(
         zh
-          ? `文件不能超过 ${formatBytes(TOOL_LIMITS.archive)}。`
-          : `Files cannot exceed ${formatBytes(TOOL_LIMITS.archive)}.`,
+          ? `文件不能超过 ${formatBytes(inputLimit)}。`
+          : `Files cannot exceed ${formatBytes(inputLimit)}.`,
       );
     }
     return new Uint8Array(await file.arrayBuffer());
@@ -342,8 +343,8 @@ export function ArchiveWorkbenchTool({ locale }: ToolComponentProps) {
       <div className="workspace-footer">
         <span className="workspace-footer-meta">
           {zh
-            ? `本地处理 · 输入 ${formatBytes(TOOL_LIMITS.archive)} · 解压后 ${formatBytes(TOOL_LIMITS.maxExtractedSize)} · 500 个条目`
-            : `Local only · ${formatBytes(TOOL_LIMITS.archive)} input · ${formatBytes(TOOL_LIMITS.maxExtractedSize)} extracted · 500 entries`}
+            ? `本地处理 · 输入 ${formatBytes(inputLimit)} · 解压后 ${formatBytes(TOOL_LIMITS.maxExtractedSize)} · 500 个条目`
+            : `Local only · ${formatBytes(inputLimit)} input · ${formatBytes(TOOL_LIMITS.maxExtractedSize)} extracted · 500 entries`}
         </span>
       </div>
     </section>

@@ -5,17 +5,26 @@ import { Menu, Moon, Search, Sun, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { SearchDialog } from "@/components/search-dialog";
+import { BrandLogo } from "@/components/brand-logo";
 import { useTheme } from "@/components/providers/theme-provider";
 import { localePath, type Locale, type Messages } from "@/i18n";
+import type { SiteSettings } from "@/lib/site-settings";
+import type { ToolCategory, ToolDefinition } from "@/lib/types";
 
 export function SiteHeader({
   locale,
   messages,
   accountNavigation,
+  settings,
+  tools,
+  categories,
 }: {
   locale: Locale;
   messages: Messages;
   accountNavigation?: React.ReactNode;
+  settings: SiteSettings;
+  tools: ToolDefinition[];
+  categories: ToolCategory[];
 }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -64,8 +73,7 @@ export function SiteHeader({
             className="logo"
             aria-label={messages.nav.home}
           >
-            <span className="logo-mark">&lt;/&gt;</span>
-            <span>DevToolbox</span>
+            <BrandLogo settings={settings} />
           </Link>
           <nav
             className="header-nav"
@@ -117,6 +125,8 @@ export function SiteHeader({
         onClose={() => setSearchOpen(false)}
         locale={locale}
         messages={messages}
+        tools={tools}
+        categories={categories}
       />
     </>
   );

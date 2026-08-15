@@ -26,6 +26,8 @@ export interface ToolDefinition {
   enabled: boolean;
   sortOrder: number;
   featured?: boolean;
+  freeToUse?: boolean;
+  implementation?: string;
   seoTitle: string;
   seoDescription: string;
   related: string[];

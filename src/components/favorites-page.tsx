@@ -4,16 +4,18 @@ import { Clock3, Search, Star } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getFavorites, getRecentTools } from "@/lib/browser-storage";
-import { getTools } from "@/lib/tool-registry";
 import { ToolCard } from "@/components/tool-card";
 import { localePath, type Locale, type Messages } from "@/i18n";
+import type { ToolDefinition } from "@/lib/types";
 
 export function FavoritesPage({
   locale,
   messages,
+  tools,
 }: {
   locale: Locale;
   messages: Messages;
+  tools: ToolDefinition[];
 }) {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [recent, setRecent] = useState<string[]>([]);
@@ -26,7 +28,6 @@ export function FavoritesPage({
     window.addEventListener("devtoolbox:storage", sync);
     return () => window.removeEventListener("devtoolbox:storage", sync);
   }, []);
-  const tools = getTools(locale);
   const resolve = (slugs: string[]) =>
     slugs
       .map((slug) => tools.find((tool) => tool.slug === slug))

@@ -6,6 +6,7 @@ import { z } from "zod";
 import type { Locale } from "@/i18n";
 import { hashPassword, passwordSchema } from "@/server/auth/password";
 import { getDatabase, initializeDatabase } from "@/server/db/database";
+import { getSiteSettings } from "@/server/db/settings";
 import {
   sendAccountEmail,
   type AccountEmailPurpose,
@@ -188,6 +189,7 @@ export async function sendRegistrationVerification(
   locale: Locale,
   ip: string,
 ): Promise<AccountEmailDelivery> {
+  if (!(await getSiteSettings()).emailVerificationEnabled) return "failed";
   const request = await prepareRequest("email_verification", emailValue, ip);
   if (!request.allowed) return "limited";
   const user = getDatabase()
@@ -205,6 +207,7 @@ export async function requestEmailVerification(
   locale: Locale,
   ip: string,
 ): Promise<void> {
+  if (!(await getSiteSettings()).emailVerificationEnabled) return;
   const request = await prepareRequest("email_verification", emailValue, ip);
   if (!request.allowed) return;
   const user = getDatabase()
@@ -224,13 +227,15 @@ export async function requestPasswordReset(
 ): Promise<void> {
   const request = await prepareRequest("password_reset", emailValue, ip);
   if (!request.allowed) return;
+  const verificationEnabled = (await getSiteSettings()).emailVerificationEnabled;
   const user = getDatabase()
     .prepare(
       `SELECT id, email FROM users
        WHERE email = ? COLLATE NOCASE AND role = 'user'
-         AND status = 'active' AND email_verified_at IS NOT NULL`,
+         AND status = 'active'
+         AND (? = 0 OR email_verified_at IS NOT NULL)`,
     )
-    .get(request.email) as UserEmailRow | undefined;
+    .get(request.email, Number(verificationEnabled)) as UserEmailRow | undefined;
   if (user) await issueAndSend(user, "password_reset", locale);
 }
 

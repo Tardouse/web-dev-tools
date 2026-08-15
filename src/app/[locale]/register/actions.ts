@@ -9,7 +9,7 @@ import { getClientIp } from "@/server/auth/session";
 import { passwordSchema } from "@/server/auth/password";
 import { registerUser, registrationSchema } from "@/server/auth/user-accounts";
 
-export interface RegisterState { error?: "invalid" | "mismatch" | "exists" | "limited" }
+export interface RegisterState { error?: "invalid" | "mismatch" | "exists" | "limited" | "disabled" }
 const schema = registrationSchema.extend({
   locale: z.string().refine(isLocale),
   confirm: passwordSchema,
@@ -34,6 +34,9 @@ export async function registerAction(_state: RegisterState, formData: FormData):
   const ip = getClientIp(await headers());
   const result = await registerUser(parsed.data, ip);
   if (!result.ok) return { error: result.reason };
+  if (!result.verificationRequired) {
+    redirect(`${localePath(parsed.data.locale, "/login")}?registered=1`);
+  }
   const delivery = await sendRegistrationVerification(
     result.userId,
     result.email,

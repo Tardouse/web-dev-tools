@@ -160,6 +160,69 @@ function createDatabase(path: string): DatabaseSync {
     CREATE INDEX IF NOT EXISTS idx_account_request_limits_updated
       ON account_request_limits(updated_at);
 
+    CREATE TABLE IF NOT EXISTS tool_configurations (
+      slug TEXT PRIMARY KEY,
+      implementation_slug TEXT NOT NULL,
+      is_custom INTEGER NOT NULL CHECK (is_custom IN (0, 1)),
+      name_en TEXT NOT NULL,
+      name_zh TEXT NOT NULL,
+      short_name_en TEXT NOT NULL,
+      short_name_zh TEXT NOT NULL,
+      description_en TEXT NOT NULL,
+      description_zh TEXT NOT NULL,
+      category TEXT NOT NULL CHECK (category IN (
+        'json-data', 'encoding', 'time-number', 'text',
+        'regex', 'crypto', 'files', 'web'
+      )),
+      keywords_en TEXT NOT NULL,
+      keywords_zh TEXT NOT NULL,
+      seo_title_en TEXT NOT NULL,
+      seo_title_zh TEXT NOT NULL,
+      seo_description_en TEXT NOT NULL,
+      seo_description_zh TEXT NOT NULL,
+      max_input_size INTEGER NOT NULL CHECK (max_input_size BETWEEN 1024 AND 104857600),
+      requires_login INTEGER NOT NULL CHECK (requires_login IN (0, 1)),
+      free_to_use INTEGER NOT NULL CHECK (free_to_use IN (0, 1)),
+      enabled INTEGER NOT NULL CHECK (enabled IN (0, 1)),
+      featured INTEGER NOT NULL CHECK (featured IN (0, 1)),
+      sort_order INTEGER NOT NULL CHECK (sort_order BETWEEN 0 AND 100000),
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    ) STRICT;
+    CREATE INDEX IF NOT EXISTS idx_tool_configurations_sort
+      ON tool_configurations(enabled, sort_order, slug);
+
+    CREATE TABLE IF NOT EXISTS system_settings (
+      id INTEGER PRIMARY KEY CHECK (id = 1),
+      site_name TEXT NOT NULL,
+      logo_text TEXT NOT NULL,
+      logo_url TEXT NOT NULL,
+      description_en TEXT NOT NULL,
+      description_zh TEXT NOT NULL,
+      footer_en TEXT NOT NULL,
+      footer_zh TEXT NOT NULL,
+      legal_text TEXT NOT NULL,
+      contact_email TEXT NOT NULL,
+      registration_enabled INTEGER NOT NULL CHECK (registration_enabled IN (0, 1)),
+      email_verification_enabled INTEGER NOT NULL CHECK (email_verification_enabled IN (0, 1)),
+      default_tool_limit INTEGER NOT NULL CHECK (default_tool_limit BETWEEN 1024 AND 104857600),
+      file_upload_limit INTEGER NOT NULL CHECK (file_upload_limit BETWEEN 1024 AND 104857600),
+      anonymous_api_limit INTEGER NOT NULL CHECK (anonymous_api_limit BETWEEN 1 AND 100000),
+      user_api_limit INTEGER NOT NULL CHECK (user_api_limit BETWEEN 1 AND 100000),
+      ads_enabled INTEGER NOT NULL CHECK (ads_enabled IN (0, 1)),
+      maintenance_mode INTEGER NOT NULL CHECK (maintenance_mode IN (0, 1)),
+      updated_at TEXT NOT NULL
+    ) STRICT;
+
+    CREATE TABLE IF NOT EXISTS api_rate_limits (
+      key_hash TEXT PRIMARY KEY,
+      request_count INTEGER NOT NULL CHECK (request_count >= 1),
+      window_started_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    ) STRICT;
+    CREATE INDEX IF NOT EXISTS idx_api_rate_limits_updated
+      ON api_rate_limits(updated_at);
+
     CREATE TABLE IF NOT EXISTS tool_usage_events (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       tool_slug TEXT NOT NULL,
@@ -240,13 +303,22 @@ async function bootstrapSuperAdmin(): Promise<void> {
   }
 
   const now = new Date().toISOString();
-  database
+  const result = database
     .prepare(
-      `INSERT INTO users (
+      `INSERT OR IGNORE INTO users (
         id, email, username, name, password_hash, role, status, created_at, updated_at
       ) VALUES (?, NULL, ?, ?, ?, 'super_admin', 'active', ?, ?)`,
     )
     .run(crypto.randomUUID(), username, name, await hashPassword(password), now, now);
+  if (result.changes === 0) {
+    const concurrent = database
+      .prepare("SELECT 1 FROM users WHERE role = 'super_admin'")
+      .get();
+    if (concurrent) return;
+    throw new Error(
+      "ADMIN_USERNAME is already used by a non-Super Admin account.",
+    );
+  }
 }
 
 export function closeDatabaseForTests(): void {

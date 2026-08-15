@@ -67,8 +67,13 @@ const formatExtensions: Record<ImageFormat, string> = {
   "image/webp": "webp",
 };
 
-export function ImageWorkbenchTool({ locale, messages }: ToolComponentProps) {
+export function ImageWorkbenchTool({
+  locale,
+  messages,
+  definition,
+}: ToolComponentProps) {
   const zh = locale === "zh";
+  const inputLimit = definition?.maxInputSize ?? TOOL_LIMITS.image;
   const [tab, setTab] = useState<"file" | "base64">("file");
   const [sourceUrl, setSourceUrl] = useState("");
   const sourceObjectUrl = useRef("");
@@ -145,11 +150,11 @@ export function ImageWorkbenchTool({ locale, messages }: ToolComponentProps) {
 
   const chooseImage = async (file: File) => {
     setError("");
-    if (file.size > TOOL_LIMITS.image) {
+    if (file.size > inputLimit) {
       setError(
         zh
-          ? `图片不能超过 ${formatBytes(TOOL_LIMITS.image)}。`
-          : `Images cannot exceed ${formatBytes(TOOL_LIMITS.image)}.`,
+          ? `图片不能超过 ${formatBytes(inputLimit)}。`
+          : `Images cannot exceed ${formatBytes(inputLimit)}.`,
       );
       return;
     }
@@ -186,7 +191,7 @@ export function ImageWorkbenchTool({ locale, messages }: ToolComponentProps) {
       );
       return;
     }
-    if (value.length > Math.ceil((TOOL_LIMITS.image * 4) / 3) + 1024) {
+    if (value.length > Math.ceil((inputLimit * 4) / 3) + 1024) {
       setError(
         zh
           ? "Base64 图片超过大小限制。"
@@ -314,11 +319,11 @@ export function ImageWorkbenchTool({ locale, messages }: ToolComponentProps) {
       }
       const outputFormat = operation === "favicon" ? "image/png" : format;
       const blob = await canvasBlob(canvas, outputFormat, quality / 100);
-      if (blob.size > TOOL_LIMITS.image) {
+      if (blob.size > inputLimit) {
         throw new Error(
           zh
-            ? "处理后的图片超过 20 MB，请降低尺寸或质量。"
-            : "The processed image exceeds 20 MB; reduce its dimensions or quality.",
+            ? `处理后的图片超过 ${formatBytes(inputLimit)}，请降低尺寸或质量。`
+            : `The processed image exceeds ${formatBytes(inputLimit)}; reduce its dimensions or quality.`,
         );
       }
       if (outputObjectUrl.current) URL.revokeObjectURL(outputObjectUrl.current);
@@ -665,8 +670,8 @@ export function ImageWorkbenchTool({ locale, messages }: ToolComponentProps) {
       <div className="workspace-footer">
         <span className="workspace-footer-meta">
           {zh
-            ? `浏览器本地 Canvas 处理 · 最大 ${formatBytes(TOOL_LIMITS.image)}`
-            : `Local Canvas processing · ${formatBytes(TOOL_LIMITS.image)} maximum`}
+            ? `浏览器本地 Canvas 处理 · 最大 ${formatBytes(inputLimit)}`
+            : `Local Canvas processing · ${formatBytes(inputLimit)} maximum`}
         </span>
       </div>
     </section>

@@ -9,11 +9,11 @@ import {
   localePath,
   locales,
 } from "@/i18n";
+import { categories } from "@/lib/tool-registry";
 import {
-  categories,
-  getCategory,
-  getToolsByCategory,
-} from "@/lib/tool-registry";
+  getPublicCategories,
+  getPublicTools,
+} from "@/server/db/tool-management";
 
 export function generateStaticParams() {
   return locales.flatMap((locale) =>
@@ -27,7 +27,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, category: id } = await params;
   if (!isLocale(locale)) return {};
-  const category = getCategory(id as never, locale);
+  const category = (await getPublicCategories(locale)).find(
+    (item) => item.id === id,
+  );
   if (!category) return {};
   const path = `/categories/${category.id}`;
   return {
@@ -49,10 +51,14 @@ export default async function CategoryPage({
 }) {
   const { locale, category: id } = await params;
   if (!isLocale(locale)) notFound();
-  const category = getCategory(id as never, locale);
+  const [publicCategories, tools] = await Promise.all([
+    getPublicCategories(locale),
+    getPublicTools(locale),
+  ]);
+  const category = publicCategories.find((item) => item.id === id);
   if (!category) notFound();
   const messages = getMessages(locale);
-  const categoryTools = getToolsByCategory(category.id, locale);
+  const categoryTools = tools.filter((tool) => tool.category === category.id);
   return (
     <div className="container">
       <Breadcrumbs

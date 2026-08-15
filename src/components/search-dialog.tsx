@@ -5,27 +5,36 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ToolIcon } from "@/components/icon";
 import { interpolate, localePath, type Locale, type Messages } from "@/i18n";
-import { getCategories, getCategory, searchTools } from "@/lib/tool-registry";
+import { searchToolDefinitions } from "@/lib/tool-search";
+import type { ToolCategory, ToolDefinition } from "@/lib/types";
 
 interface SearchDialogProps {
   open: boolean;
   onClose: () => void;
   locale: Locale;
   messages: Messages;
+  tools: ToolDefinition[];
+  categories: ToolCategory[];
 }
 export function SearchDialog({
   open,
   onClose,
   locale,
   messages,
+  tools,
+  categories,
 }: SearchDialogProps) {
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const results = useMemo(
-    () => searchTools(query, locale).slice(0, 10),
-    [query, locale],
+    () => searchToolDefinitions(tools, categories, query).slice(0, 10),
+    [tools, categories, query],
+  );
+  const categoryNames = useMemo(
+    () => new Map(categories.map((category) => [category.id, category.name])),
+    [categories],
   );
   useEffect(() => {
     if (open) window.setTimeout(() => inputRef.current?.focus(), 0);
@@ -99,7 +108,7 @@ export function SearchDialog({
                   <span>{tool.description}</span>
                 </span>
                 <span className="search-result-category">
-                  {getCategory(tool.category, locale)?.name}
+                  {categoryNames.get(tool.category)}
                 </span>
                 <ArrowRight size={16} />
               </button>
@@ -114,8 +123,8 @@ export function SearchDialog({
           {!query && (
             <div className="panel-label" style={{ marginTop: 8 }}>
               {interpolate(messages.search.summary, {
-                categories: getCategories(locale).length,
-                tools: searchTools("", locale).length,
+                categories: categories.length,
+                tools: tools.length,
               })}
             </div>
           )}

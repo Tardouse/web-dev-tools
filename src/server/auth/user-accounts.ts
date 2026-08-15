@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import { z } from "zod";
 import { hashPassword, passwordSchema } from "@/server/auth/password";
 import { getDatabase, initializeDatabase } from "@/server/db/database";
+import { getSiteSettings } from "@/server/db/settings";
 
 export const registrationSchema = z.object({
   name: z.string().trim().min(2).max(80),
@@ -12,12 +13,19 @@ export const registrationSchema = z.object({
 });
 
 export type RegistrationResult =
-  | { ok: true; userId: string; email: string }
-  | { ok: false; reason: "exists" | "limited" | "invalid" };
+  | {
+      ok: true;
+      userId: string;
+      email: string;
+      verificationRequired: boolean;
+    }
+  | { ok: false; reason: "exists" | "limited" | "invalid" | "disabled" };
 
 export async function registerUser(input: unknown, ip: string): Promise<RegistrationResult> {
   const parsed = registrationSchema.safeParse(input);
   if (!parsed.success) return { ok: false, reason: "invalid" };
+  const settings = await getSiteSettings();
+  if (!settings.registrationEnabled) return { ok: false, reason: "disabled" };
   await initializeDatabase();
   const database = getDatabase();
   const key = createHash("sha256").update(`register\0${ip}`).digest("hex");
@@ -37,10 +45,18 @@ export async function registerUser(input: unknown, ip: string): Promise<Registra
     .prepare(
       `INSERT INTO users (
         id, email, username, name, password_hash, role, status,
-        must_change_password, password_version, created_at, updated_at
-      ) VALUES (?, ?, NULL, ?, ?, 'user', 'active', 0, 1, ?, ?)`,
+        must_change_password, password_version, email_verified_at, created_at, updated_at
+      ) VALUES (?, ?, NULL, ?, ?, 'user', 'active', 0, 1, ?, ?, ?)`,
     )
-    .run(id, parsed.data.email, parsed.data.name, await hashPassword(parsed.data.password), now, now);
+    .run(
+      id,
+      parsed.data.email,
+      parsed.data.name,
+      await hashPassword(parsed.data.password),
+      settings.emailVerificationEnabled ? null : now,
+      now,
+      now,
+    );
   database
     .prepare(
       `INSERT INTO login_attempts (key_hash, failures, first_failure_at, locked_until, updated_at)
@@ -48,5 +64,10 @@ export async function registerUser(input: unknown, ip: string): Promise<Registra
        ON CONFLICT(key_hash) DO UPDATE SET failures = failures + 1, updated_at = excluded.updated_at`,
     )
     .run(key, now, now);
-  return { ok: true, userId: id, email: parsed.data.email };
+  return {
+    ok: true,
+    userId: id,
+    email: parsed.data.email,
+    verificationRequired: settings.emailVerificationEnabled,
+  };
 }

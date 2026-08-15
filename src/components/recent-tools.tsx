@@ -3,16 +3,18 @@
 import { Clock3 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getRecentTools } from "@/lib/browser-storage";
-import { getTools } from "@/lib/tool-registry";
 import { ToolCard } from "@/components/tool-card";
 import type { Locale, Messages } from "@/i18n";
+import type { ToolDefinition } from "@/lib/types";
 
 export function RecentTools({
   locale,
   messages,
+  tools,
 }: {
   locale: Locale;
   messages: Messages;
+  tools: ToolDefinition[];
 }) {
   const [slugs, setSlugs] = useState<string[]>([]);
   useEffect(() => {
@@ -21,7 +23,6 @@ export function RecentTools({
     window.addEventListener("devtoolbox:storage", sync);
     return () => window.removeEventListener("devtoolbox:storage", sync);
   }, []);
-  const tools = getTools(locale);
   const recent = slugs
     .map((slug) => tools.find((tool) => tool.slug === slug))
     .filter((tool) => tool !== undefined)

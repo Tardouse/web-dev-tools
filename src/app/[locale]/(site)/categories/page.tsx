@@ -3,7 +3,10 @@ import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CategoryCard } from "@/components/category-card";
 import { getMessages, interpolate, isLocale, localePath } from "@/i18n";
-import { getCategories, getTools } from "@/lib/tool-registry";
+import {
+  getPublicCategories,
+  getPublicTools,
+} from "@/server/db/tool-management";
 
 export async function generateMetadata({
   params,
@@ -35,8 +38,10 @@ export default async function CategoriesPage({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const messages = getMessages(locale);
-  const categories = getCategories(locale);
-  const tools = getTools(locale);
+  const [categories, tools] = await Promise.all([
+    getPublicCategories(locale),
+    getPublicTools(locale),
+  ]);
   return (
     <div className="container">
       <Breadcrumbs
@@ -64,6 +69,7 @@ export default async function CategoriesPage({
               category={category}
               locale={locale}
               messages={messages}
+              count={tools.filter((tool) => tool.category === category.id).length}
               key={category.id}
             />
           ))}

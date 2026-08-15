@@ -10,6 +10,7 @@ import {
   type Locale,
 } from "@/i18n";
 import { SITE_CONFIG } from "@/lib/config";
+import { getSiteSettings } from "@/server/db/settings";
 import "../globals.css";
 import "../admin-styles.css";
 
@@ -36,19 +37,20 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale: value } = await params;
   if (!isLocale(value)) return {};
+  const settings = await getSiteSettings();
   const title =
     value === "zh"
-      ? `${SITE_CONFIG.name} — 快速、隐私优先的开发者工具箱`
-      : `${SITE_CONFIG.name} — Fast, Private Developer Utilities`;
+      ? `${settings.siteName} — 快速、隐私优先的开发者工具箱`
+      : `${settings.siteName} — Fast, Private Developer Utilities`;
   const description =
     value === "zh"
-      ? "打开即用的在线开发工具箱，大部分工具在浏览器本地运行，快速、简洁并保护隐私。"
-      : SITE_CONFIG.description;
+      ? settings.descriptionZh
+      : settings.descriptionEn;
   return {
     metadataBase: new URL(SITE_CONFIG.url),
-    applicationName: SITE_CONFIG.name,
-    icons: { icon: "/icon.svg" },
-    title: { default: title, template: `%s | ${SITE_CONFIG.name}` },
+    applicationName: settings.siteName,
+    icons: { icon: settings.logoUrl || "/icon.svg" },
+    title: { default: title, template: `%s | ${settings.siteName}` },
     description,
     keywords:
       value === "zh"
@@ -73,7 +75,7 @@ export async function generateMetadata({
       locale: value === "zh" ? "zh_CN" : "en_US",
       alternateLocale: [value === "zh" ? "en_US" : "zh_CN"],
       url: localePath(value),
-      siteName: SITE_CONFIG.name,
+      siteName: settings.siteName,
       title,
       description,
     },

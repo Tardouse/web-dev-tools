@@ -209,6 +209,12 @@ button {
     750 0.7rem/1 var(--font-mono),
     monospace;
 }
+.logo-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 .header-nav {
   display: flex;
   align-items: center;
@@ -457,6 +463,44 @@ kbd {
   border-top: 1px solid var(--border);
   color: var(--text-subtle);
   font-size: 0.83rem;
+}
+.footer-bottom .container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 20px;
+}
+.footer-bottom a {
+  color: var(--accent);
+}
+.maintenance-page {
+  display: grid;
+  place-items: center;
+  padding: 32px 20px;
+}
+.maintenance-panel {
+  width: min(520px, 100%);
+  padding: 28px;
+  text-align: center;
+}
+.maintenance-panel .logo {
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.maintenance-panel h1 {
+  margin: 0 0 8px;
+  font-size: 1.75rem;
+}
+.maintenance-panel p {
+  margin: 0 0 16px;
+  color: var(--text-muted);
+}
+.maintenance-panel > a {
+  color: var(--accent);
+  font-weight: 650;
+}
+.paid-tool-state {
+  min-height: 280px;
 }
 
 .breadcrumb {

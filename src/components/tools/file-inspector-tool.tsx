@@ -23,8 +23,9 @@ const hashAlgorithms: FileHashAlgorithm[] = [
 ];
 const sizeUnits: FileSizeUnit[] = ["B", "KB", "MB", "GB", "KiB", "MiB", "GiB"];
 
-export function FileInspectorTool({ locale }: ToolComponentProps) {
+export function FileInspectorTool({ locale, definition }: ToolComponentProps) {
   const zh = locale === "zh";
+  const inputLimit = definition?.maxInputSize ?? TOOL_LIMITS.file;
   const [file, setFile] = useState<File | null>(null);
   const [data, setData] = useState<Uint8Array | null>(null);
   const [algorithm, setAlgorithm] = useState<FileHashAlgorithm>("SHA-256");
@@ -48,11 +49,11 @@ export function FileInspectorTool({ locale }: ToolComponentProps) {
   const inspect = async (selected: File) => {
     setError("");
     setDigest("");
-    if (selected.size > TOOL_LIMITS.file) {
+    if (selected.size > inputLimit) {
       setError(
         zh
-          ? `文件不能超过 ${formatBytes(TOOL_LIMITS.file)}。`
-          : `Files cannot exceed ${formatBytes(TOOL_LIMITS.file)}.`,
+          ? `文件不能超过 ${formatBytes(inputLimit)}。`
+          : `Files cannot exceed ${formatBytes(inputLimit)}.`,
       );
       return;
     }
@@ -77,7 +78,7 @@ export function FileInspectorTool({ locale }: ToolComponentProps) {
     <section className="tool-workspace card file-tool-shell">
       <div className="workspace-header">
         <h2>{zh ? "文件检查器" : "File inspector"}</h2>
-        <span className="badge">{formatBytes(TOOL_LIMITS.file)}</span>
+        <span className="badge">{formatBytes(inputLimit)}</span>
       </div>
       {error && (
         <div className="error-banner" role="alert">

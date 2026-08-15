@@ -7,6 +7,7 @@ const e2eOutboxPath = resolve(".tmp/e2e-data/mail-outbox.jsonl");
 export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: false,
+  workers: 1,
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? "github" : "list",
   use: {

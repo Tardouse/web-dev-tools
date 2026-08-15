@@ -1,7 +1,12 @@
 import type { MetadataRoute } from "next";
 import { localePath, locales } from "@/i18n";
 import { SITE_CONFIG } from "@/lib/config";
-import { categories, tools } from "@/lib/tool-registry";
+import {
+  getPublicCategories,
+  getPublicTools,
+} from "@/server/db/tool-management";
+
+export const dynamic = "force-dynamic";
 
 function entry(
   path: string,
@@ -21,7 +26,11 @@ function entry(
   };
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [categories, tools] = await Promise.all([
+    getPublicCategories("en"),
+    getPublicTools("en"),
+  ]);
   const paths = [
     { path: "/", priority: 1, frequency: "weekly" as const },
     { path: "/tools", priority: 0.9, frequency: "weekly" as const },
@@ -31,9 +40,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
       frequency: "monthly" as const,
     })),
-    ...tools
-      .filter((tool) => tool.enabled)
-      .map((tool) => ({
+    ...tools.map((tool) => ({
         path: `/tools/${tool.slug}`,
         priority: tool.featured ? 0.9 : 0.8,
         frequency: "monthly" as const,

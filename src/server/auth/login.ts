@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { createSession, getClientIp } from "@/server/auth/session";
 import { verifyPassword } from "@/server/auth/password";
 import { getDatabase, initializeDatabase } from "@/server/db/database";
+import { getSiteSettings } from "@/server/db/settings";
 import type { SessionAudience, UserRole, UserStatus } from "@/server/db/types";
 
 const MAX_FAILURES = 5;
@@ -38,6 +39,7 @@ async function authenticate(
   identifierValue: string,
   password: string,
 ): Promise<LoginResult> {
+  const settings = await getSiteSettings();
   await initializeDatabase();
   const identifier = identifierValue.trim().toLowerCase();
   const ip = getClientIp(await headers());
@@ -79,7 +81,11 @@ async function authenticate(
     return { ok: false, reason: lockedUntil ? "locked" : "invalid" };
   }
 
-  if (audience === "user" && !user.email_verified_at) {
+  if (
+    audience === "user" &&
+    settings.emailVerificationEnabled &&
+    !user.email_verified_at
+  ) {
     database.prepare("DELETE FROM login_attempts WHERE key_hash = ?").run(key);
     return { ok: false, reason: "unverified" };
   }

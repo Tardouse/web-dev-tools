@@ -2,19 +2,19 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ToolIcon } from "@/components/icon";
 import { localePath, type Locale, type Messages } from "@/i18n";
-import { getToolsByCategory } from "@/lib/tool-registry";
 import type { ToolCategory } from "@/lib/types";
 
 export function CategoryCard({
   category,
   locale,
   messages,
+  count,
 }: {
   category: ToolCategory;
   locale: Locale;
   messages: Messages;
+  count: number;
 }) {
-  const count = getToolsByCategory(category.id, locale).length;
   return (
     <Link
       href={localePath(locale, `/categories/${category.id}`)}

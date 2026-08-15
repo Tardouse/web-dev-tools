@@ -7,7 +7,13 @@ import { registerAction, type RegisterState } from "@/app/[locale]/register/acti
 import { localePath, type Locale } from "@/i18n";
 
 const initial: RegisterState = {};
-export function RegisterForm({ locale }: { locale: Locale }) {
+export function RegisterForm({
+  locale,
+  enabled = true,
+}: {
+  locale: Locale;
+  enabled?: boolean;
+}) {
   const [state, action, pending] = useActionState(registerAction, initial);
   const zh = locale === "zh";
   const errors = {
@@ -15,7 +21,20 @@ export function RegisterForm({ locale }: { locale: Locale }) {
     mismatch: zh ? "两次输入的密码不一致。" : "The passwords do not match.",
     exists: zh ? "该邮箱已被使用。" : "That email is already in use.",
     limited: zh ? "注册请求过于频繁，请稍后再试。" : "Too many registrations. Try again later.",
+    disabled: zh ? "当前已暂停新用户注册。" : "New account registration is currently closed.",
   };
+  if (!enabled) {
+    return (
+      <div className="auth-form card auth-message">
+        <p className="form-error" role="status">{errors.disabled}</p>
+        <p className="auth-form-link">
+          <Link href={localePath(locale, "/login")}>
+            {zh ? "返回登录" : "Back to sign in"}
+          </Link>
+        </p>
+      </div>
+    );
+  }
   return <form action={action} className="auth-form card"><input type="hidden" name="locale" value={locale} />
     <label className="field-label" htmlFor="register-name">{zh ? "姓名" : "Name"}</label><input className="field-input" id="register-name" name="name" autoComplete="name" required minLength={2} maxLength={80} />
     <label className="field-label" htmlFor="register-email">{zh ? "邮箱" : "Email"}</label><input className="field-input" id="register-email" name="email" type="email" autoComplete="username" required maxLength={254} />

@@ -3,27 +3,31 @@
 import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { ToolCard } from "@/components/tool-card";
-import { getCategories, searchTools } from "@/lib/tool-registry";
+import { searchToolDefinitions } from "@/lib/tool-search";
 import type { Locale, Messages } from "@/i18n";
+import type { ToolCategory, ToolDefinition } from "@/lib/types";
 
 export function ToolsDirectory({
   initialCategory = "all",
   locale,
   messages,
+  tools,
+  categories,
 }: {
   initialCategory?: string;
   locale: Locale;
   messages: Messages;
+  tools: ToolDefinition[];
+  categories: ToolCategory[];
 }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState(initialCategory);
-  const categories = getCategories(locale);
   const results = useMemo(
     () =>
-      searchTools(query, locale).filter(
+      searchToolDefinitions(tools, categories, query).filter(
         (tool) => category === "all" || tool.category === category,
       ),
-    [query, category, locale],
+    [tools, categories, query, category],
   );
   return (
     <>

@@ -99,7 +99,8 @@ export function RegisteredTool({
   locale: Locale;
   messages: Messages;
 }) {
-  const ToolComponent = toolComponents[definition.slug];
+  const ToolComponent =
+    toolComponents[definition.implementation ?? definition.slug];
   if (!ToolComponent)
     return (
       <div className="empty-state card">

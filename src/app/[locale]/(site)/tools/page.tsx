@@ -3,7 +3,10 @@ import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ToolsDirectory } from "@/components/tools-directory";
 import { getMessages, interpolate, isLocale, localePath } from "@/i18n";
-import { getTools } from "@/lib/tool-registry";
+import {
+  getPublicCategories,
+  getPublicTools,
+} from "@/server/db/tool-management";
 
 export async function generateMetadata({
   params,
@@ -12,7 +15,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   if (!isLocale(locale)) return {};
-  const count = getTools(locale).length;
+  const count = (await getPublicTools(locale)).length;
   const title = locale === "zh" ? "全部开发者工具" : "All Developer Tools";
   const description =
     locale === "zh"
@@ -38,7 +41,10 @@ export default async function ToolsPage({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const messages = getMessages(locale);
-  const tools = getTools(locale);
+  const [tools, categories] = await Promise.all([
+    getPublicTools(locale),
+    getPublicCategories(locale),
+  ]);
   return (
     <div className="container">
       <Breadcrumbs
@@ -54,7 +60,12 @@ export default async function ToolsPage({
         <p>{messages.pages.toolsDescription}</p>
       </header>
       <section className="section-sm">
-        <ToolsDirectory locale={locale} messages={messages} />
+        <ToolsDirectory
+          locale={locale}
+          messages={messages}
+          tools={tools}
+          categories={categories}
+        />
       </section>
     </div>
   );
