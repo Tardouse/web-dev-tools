@@ -3,7 +3,7 @@ export const SITE_CONFIG = {
   shortName: "DT",
   description:
     "Fast, private developer utilities for formatting, encoding, testing, and everyday engineering work.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:8886",
   locale: "en_US",
 };
 

@@ -9,7 +9,13 @@ export function AnalyticsTracker() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!pathname || pathname.includes("/admin") || pathname.includes("/login")) {
+    if (
+      !pathname ||
+      pathname.includes("/admin") ||
+      pathname.includes("/login") ||
+      pathname.includes("/register") ||
+      pathname.includes("/account")
+    ) {
       return;
     }
     let visitorId = sessionStorage.getItem(VISITOR_KEY);

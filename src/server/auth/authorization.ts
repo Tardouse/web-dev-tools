@@ -2,7 +2,7 @@ import "server-only";
 
 import { redirect } from "next/navigation";
 import { localePath, type Locale } from "@/i18n";
-import { getCurrentUser } from "@/server/auth/session";
+import { getCurrentAdmin } from "@/server/auth/session";
 import type { SessionUser, UserRole } from "@/server/db/types";
 import { canManageUser } from "@/lib/admin-permissions";
 
@@ -18,9 +18,9 @@ export function isAdminRole(role: UserRole): boolean {
 }
 
 export async function requireAdmin(locale?: Locale): Promise<SessionUser> {
-  const user = await getCurrentUser();
+  const user = await getCurrentAdmin();
   if (!user || !isAdminRole(user.role)) {
-    if (locale) redirect(localePath(locale, "/login"));
+    if (locale) redirect(localePath(locale, "/admin/login"));
     throw new AuthorizationError("Authentication required.");
   }
   return user;

@@ -15,7 +15,7 @@ export default defineConfig({
   ],
   webServer: {
     command:
-      "rm -rf .tmp/e2e-data && mkdir -p .tmp/e2e-data && DATABASE_PATH=.tmp/e2e-data/test.sqlite ADMIN_EMAIL=admin@example.com ADMIN_NAME='DevToolbox Admin' ADMIN_PASSWORD='E2e-Admin-Password-2026!' npm run build && DATABASE_PATH=.tmp/e2e-data/test.sqlite ADMIN_EMAIL=admin@example.com ADMIN_NAME='DevToolbox Admin' ADMIN_PASSWORD='E2e-Admin-Password-2026!' PORT=3479 npm start",
+      "rm -rf .tmp/e2e-data && mkdir -p .tmp/e2e-data && DATABASE_PATH=.tmp/e2e-data/test.sqlite ADMIN_USERNAME=admin ADMIN_NAME='DevToolbox Admin' ADMIN_PASSWORD='E2e-Admin-Password-2026!' npm run build && DATABASE_PATH=.tmp/e2e-data/test.sqlite ADMIN_USERNAME=admin ADMIN_NAME='DevToolbox Admin' ADMIN_PASSWORD='E2e-Admin-Password-2026!' PORT=3479 npm start",
     url: "http://127.0.0.1:3479",
     reuseExistingServer: false,
     timeout: 120_000,

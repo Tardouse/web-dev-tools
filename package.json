@@ -5,7 +5,7 @@
   "type": "module",
   "description": "A fast, privacy-first toolbox for developers.",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 8886",
     "build": "next build",
     "start": "./scripts/start.sh",
     "lint": "eslint . --max-warnings=0",

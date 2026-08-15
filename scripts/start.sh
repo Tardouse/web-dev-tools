@@ -9,6 +9,8 @@ if [ ! -f .next/standalone/server.js ]; then
   exit 1
 fi
 
+export PORT=${PORT:-8886}
+
 mkdir -p .next/standalone/.next/static .next/standalone/public
 cp -R .next/static/. .next/standalone/.next/static/
 cp -R public/. .next/standalone/public/

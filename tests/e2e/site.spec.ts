@@ -1,14 +1,14 @@
 import { expect, test } from "@playwright/test";
 
-const adminEmail = "admin@example.com";
+const adminUsername = "admin";
 const adminPassword = "E2e-Admin-Password-2026!";
 
 async function signInAsAdmin(page: import("@playwright/test").Page, locale = "zh") {
-  await page.goto(`/${locale}/login`);
+  await page.goto(`/${locale}/admin/login`);
   await waitForHydration(page);
-  await page.getByLabel(locale === "zh" ? "邮箱" : "Email").fill(adminEmail);
+  await page.getByLabel(locale === "zh" ? "用户名" : "Username").fill(adminUsername);
   await page.getByLabel(locale === "zh" ? "密码" : "Password").fill(adminPassword);
-  await page.getByRole("button", { name: locale === "zh" ? "登录管理后台" : "Sign in to admin" }).click();
+  await page.getByRole("button", { name: locale === "zh" ? "登录" : "Sign in" }).click();
   await expect(page).toHaveURL(new RegExp(`/${locale}/admin$`));
 }
 
@@ -147,8 +147,8 @@ test("二维码和正则选项使用中文说明", async ({ page }) => {
 
 test("未登录访问后台会跳转到登录页", async ({ page }) => {
   await page.goto("/zh/admin");
-  await expect(page).toHaveURL(/\/zh\/login$/);
-  await expect(page.getByRole("heading", { name: "管理后台登录" })).toBeVisible();
+  await expect(page).toHaveURL(/\/zh\/admin\/login$/);
+  await expect(page.getByRole("heading", { name: "管理认证" })).toBeVisible();
 });
 
 test("管理员登录后可查看完整 Dashboard", async ({ page }) => {
@@ -173,9 +173,9 @@ test("用户管理可搜索并查看超级管理员详情", async ({ page }) => 
   }
   await usersLink.click();
   await expect(page.getByRole("heading", { name: "用户管理" })).toBeVisible();
-  await page.getByPlaceholder("按姓名或邮箱搜索…").fill(adminEmail);
+  await page.getByPlaceholder("按姓名、邮箱或用户名搜索…").fill(adminUsername);
   await page.getByRole("button", { name: "筛选" }).click();
-  const userLink = page.getByRole("link", { name: new RegExp(adminEmail) });
+  const userLink = page.getByRole("link", { name: new RegExp(adminUsername) });
   await expect(userLink).toBeVisible();
   await userLink.click();
   await expect(page.getByRole("heading", { name: "DevToolbox Admin" })).toBeVisible();
@@ -185,17 +185,17 @@ test("用户管理可搜索并查看超级管理员详情", async ({ page }) => 
 
 test.describe.serial("管理员登录限制", () => {
 test("管理员登录错误会返回通用错误且英文后台可用", async ({ page }) => {
-  await page.goto("/en/login");
+  await page.goto("/en/admin/login");
   await waitForHydration(page);
-  await page.getByLabel("Email").fill(adminEmail);
+  await page.getByLabel("Username").fill(adminUsername);
   await page.getByLabel("Password").fill("wrong-password");
-  await page.getByRole("button", { name: "Sign in to admin" }).click();
-  await expect(page.locator(".form-error")).toHaveText("The email or password is incorrect.");
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await expect(page.locator(".form-error")).toHaveText("The username or password is incorrect.");
   await page.reload();
   await waitForHydration(page);
-  await page.getByLabel("Email").fill(adminEmail);
+  await page.getByLabel("Username").fill(adminUsername);
   await page.getByLabel("Password").fill(adminPassword);
-  await page.getByRole("button", { name: "Sign in to admin" }).click();
+  await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
 });
 });

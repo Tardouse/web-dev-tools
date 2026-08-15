@@ -5,6 +5,7 @@ import { isLocale, localePath } from "@/i18n";
 import { requireAdmin } from "@/server/auth/authorization";
 import {
   changeUserRole,
+  createManagedUser,
   deleteUser,
   resetUserPassword,
   setUserStatus,
@@ -33,6 +34,25 @@ function message(error: unknown): string {
 function revalidate(locale: "zh" | "en", userId: string): void {
   revalidatePath(localePath(locale, "/admin/users"));
   revalidatePath(localePath(locale, `/admin/users/${userId}`));
+}
+
+export async function createUserAction(
+  _state: UserActionState,
+  formData: FormData,
+): Promise<UserActionState> {
+  const localeValue = String(formData.get("locale") ?? "zh");
+  const locale = isLocale(localeValue) ? localeValue : "zh";
+  try {
+    const actor = await requireAdmin();
+    const result = await createManagedUser(actor, {
+      name: String(formData.get("name") ?? ""),
+      email: String(formData.get("email") ?? ""),
+    });
+    revalidate(locale, result.userId);
+    return { ok: true, temporaryPassword: result.temporaryPassword };
+  } catch (error) {
+    return { error: message(error) };
+  }
 }
 
 export async function statusAction(

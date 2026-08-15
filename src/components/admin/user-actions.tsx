@@ -8,7 +8,7 @@ import {
   roleAction,
   statusAction,
   type UserActionState,
-} from "@/app/[locale]/admin/users/actions";
+} from "@/app/[locale]/admin/(console)/users/actions";
 import { useToast } from "@/components/providers/toast-provider";
 import type { Locale } from "@/i18n";
 import type { ManagedUser, SessionUser, UserRole } from "@/server/db/types";
@@ -39,6 +39,7 @@ export function UserActions({
   const { toast } = useToast();
   const prior = useRef({ statusState, roleState, resetState, deleteState });
   const zh = locale === "zh";
+  const identifier = user.username ?? user.email ?? user.name;
   const manageable = canManageUser(actor, user);
 
   useEffect(() => {
@@ -69,7 +70,7 @@ export function UserActions({
           <div className="confirm-dialog card" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
             <button className="icon-button confirm-close" onClick={() => setDialog(null)} aria-label={zh ? "关闭" : "Close"}><X size={18} /></button>
             <h2 id="confirm-title">{dialogTitle(dialog, user, locale)}</h2>
-            <p>{dialogDescription(dialog, user, locale)}</p>
+            <p>{dialogDescription(dialog, user, locale, identifier)}</p>
             {dialog === "role" && <label className="field-label">{zh ? "新角色" : "New role"}<select className="field-select" value={role} onChange={(event) => setRole(event.target.value as UserRole)}>{(["user", "admin", "super_admin"] as const).map((value) => <option value={value} key={value}>{roleLabel(value, locale)}</option>)}</select></label>}
             {dialog === "reset" && resetState.temporaryPassword && <div className="temporary-password"><span>{zh ? "临时密码（仅显示一次）" : "Temporary password (shown once)"}</span><code>{resetState.temporaryPassword}</code><button className="button button-sm" onClick={() => void navigator.clipboard.writeText(resetState.temporaryPassword ?? "")}><Clipboard size={14} />{zh ? "复制" : "Copy"}</button></div>}
             <div className="confirm-actions">
@@ -93,12 +94,12 @@ function dialogTitle(kind: ActionKind, user: ManagedUser, locale: Locale): strin
   if (kind === "reset") return zh ? "重置用户密码" : "Reset user password";
   return zh ? "永久删除用户？" : "Delete user permanently?";
 }
-function dialogDescription(kind: ActionKind, user: ManagedUser, locale: Locale): string {
+function dialogDescription(kind: ActionKind, user: ManagedUser, locale: Locale, identifier: string): string {
   const zh = locale === "zh";
-  if (kind === "status") return user.status === "active" ? (zh ? `禁用 ${user.email} 后，其所有会话会立即失效。` : `Disabling ${user.email} immediately revokes all sessions.`) : zh ? `重新允许 ${user.email} 登录。` : `Allow ${user.email} to sign in again.`;
+  if (kind === "status") return user.status === "active" ? (zh ? `禁用 ${identifier} 后，其所有会话会立即失效。` : `Disabling ${identifier} immediately revokes all sessions.`) : zh ? `重新允许 ${identifier} 登录。` : `Allow ${identifier} to sign in again.`;
   if (kind === "role") return zh ? "角色变化会撤销该用户的全部现有会话。" : "Changing the role revokes all existing sessions.";
   if (kind === "reset") return zh ? "将生成一次性临时密码、撤销会话，并要求下次登录修改密码。" : "This creates a one-time temporary password, revokes sessions, and requires a password change.";
-  return zh ? `此操作不可撤销。${user.email} 的账号、会话和关联数据将被删除。` : `This cannot be undone. ${user.email}, sessions, and associated data will be deleted.`;
+  return zh ? `此操作不可撤销。${identifier} 的账号、会话和关联数据将被删除。` : `This cannot be undone. ${identifier}, sessions, and associated data will be deleted.`;
 }
 function errorText(code: string, locale: Locale): string {
   const zh = locale === "zh";

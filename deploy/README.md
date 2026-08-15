@@ -4,7 +4,7 @@
 
 ```bash
 cp .env.example .env
-# Set NEXT_PUBLIC_SITE_URL, APP_PORT, ADMIN_EMAIL, and a strong ADMIN_PASSWORD in .env
+# Set NEXT_PUBLIC_SITE_URL, APP_PORT, ADMIN_USERNAME, and a strong ADMIN_PASSWORD in .env
 ./scripts/deploy.sh
 ```
 
@@ -32,7 +32,7 @@ The container runs as an unprivileged user, drops Linux capabilities, uses a rea
 
 ## Administration and database operations
 
-On the first start of an empty database, `ADMIN_EMAIL`, `ADMIN_NAME`, and `ADMIN_PASSWORD` create the sole Super Admin. The password must contain at least 12 characters with upper/lowercase letters, a number, and a symbol. These variables never overwrite an existing administrator. Open `/<locale>/admin` and sign in; all admin mutations are permission checked and written to the audit log.
+On the first start of an empty database, `ADMIN_USERNAME`, `ADMIN_NAME`, and `ADMIN_PASSWORD` create the sole Super Admin. The password must contain at least 12 characters with upper/lowercase letters, a number, and a symbol. These variables never overwrite an existing administrator. Open `/<locale>/admin` and sign in; all admin mutations are permission checked and written to the audit log.
 
 SQLite is persisted in the `devtoolbox-data` volume at `/data/devtoolbox.sqlite`. Back up consistently before deploying schema changes:
 

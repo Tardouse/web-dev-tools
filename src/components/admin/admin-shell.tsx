@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BarChart3, ExternalLink, LogOut, Menu, Users, X } from "lucide-react";
 import { useState } from "react";
-import { logoutAction } from "@/app/[locale]/admin/actions";
+import { logoutAction } from "@/app/[locale]/admin/(console)/actions";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { localePath, type Locale } from "@/i18n";
 import type { SessionUser } from "@/server/db/types";
@@ -79,7 +79,7 @@ export function AdminShell({
           <div className="admin-identity">
             <div>
               <strong>{user.name}</strong>
-              <span>{user.email}</span>
+              <span>{user.username}</span>
             </div>
             <span className="badge">{roleLabel(user.role, locale)}</span>
           </div>

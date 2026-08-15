@@ -12,6 +12,9 @@ import { getSessionUserById } from "@/server/db/users";
 const idSchema = z.uuid();
 const roleSchema = z.enum(["user", "admin", "super_admin"]);
 
+const emailSchema = z.email().trim().max(254);
+const nameSchema = z.string().trim().min(2).max(80);
+
 export class UserManagementError extends Error {
   constructor(
     message: string,
@@ -69,6 +72,42 @@ async function executeAudited<T>(input: {
   }
 }
 
+export async function createManagedUser(
+  actor: SessionUser,
+  input: { name: string; email: string },
+): Promise<{ userId: string; temporaryPassword: string }> {
+  const name = nameSchema.safeParse(input.name);
+  const email = emailSchema.safeParse(input.email);
+  if (!name.success || !email.success) {
+    throw new UserManagementError("Invalid user details.", "invalid");
+  }
+  await initializeDatabase();
+  const database = getDatabase();
+  const normalizedEmail = email.data.toLowerCase();
+  if (database.prepare("SELECT 1 FROM users WHERE email = ? COLLATE NOCASE").get(normalizedEmail)) {
+    throw new UserManagementError("Email already exists.", "invalid");
+  }
+  const userId = crypto.randomUUID();
+  const temporaryPassword = generateTemporaryPassword();
+  const now = new Date().toISOString();
+  database
+    .prepare(
+      `INSERT INTO users (
+        id, email, username, name, password_hash, role, status,
+        must_change_password, password_version, created_at, updated_at
+      ) VALUES (?, ?, NULL, ?, ?, 'user', 'active', 1, 1, ?, ?)`,
+    )
+    .run(userId, normalizedEmail, name.data, await hashPassword(temporaryPassword), now, now);
+  await writeAuditLog({
+    actor,
+    action: "user.create",
+    targetUserId: userId,
+    result: "success",
+    details: { targetEmail: normalizedEmail },
+  });
+  return { userId, temporaryPassword };
+}
+
 export async function setUserStatus(
   actor: SessionUser,
   userId: string,
@@ -123,11 +162,13 @@ export async function changeUserRole(
           "forbidden",
         );
       }
+      const username = role === "user" ? null : target.username ?? `admin-${target.id.slice(0, 8)}`;
       getDatabase()
         .prepare(
-          "UPDATE users SET role = ?, password_version = password_version + 1, updated_at = ? WHERE id = ?",
+          `UPDATE users SET role = ?, username = ?,
+            password_version = password_version + 1, updated_at = ? WHERE id = ?`,
         )
-        .run(role, new Date().toISOString(), userId);
+        .run(role, username, new Date().toISOString(), userId);
       await revokeUserSessions(userId);
     },
   });
@@ -187,7 +228,7 @@ export async function deleteUser(
       action: "user.delete",
       targetUserId: userId,
       result: "success",
-      details: { targetEmail: target.email, targetRole: target.role },
+      details: { targetIdentifier: target.username ?? target.email, targetRole: target.role },
     });
   } catch (error) {
     await writeAuditLog({
@@ -196,7 +237,7 @@ export async function deleteUser(
       targetUserId: userId,
       result: "failure",
       details: {
-        targetEmail: target.email,
+        targetIdentifier: target.username ?? target.email,
         reason: error instanceof Error ? error.message : "Unknown failure",
       },
     });

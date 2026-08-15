@@ -17,7 +17,7 @@ export default async function AdminLayout({
   if (!isLocale(locale)) notFound();
   const user = await requireAdmin(locale);
   if (user.mustChangePassword) {
-    redirect(localePath(locale, "/change-password"));
+    redirect(localePath(locale, "/admin/change-password"));
   }
   return (
     <AdminShell locale={locale} user={user}>

@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { KeyRound } from "lucide-react";
-import { changePasswordAction, type ChangePasswordState } from "@/app/[locale]/change-password/actions";
+import { changePasswordAction, type ChangePasswordState } from "@/app/[locale]/admin/(auth)/change-password/actions";
 import type { Locale } from "@/i18n";
 
 const initial: ChangePasswordState = {};

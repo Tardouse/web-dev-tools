@@ -19,7 +19,7 @@ export async function changePasswordAction(_state: ChangePasswordState, formData
     const actor = await requireAdmin();
     await changeOwnPassword(actor, password);
     const row = getDatabase().prepare("SELECT password_version FROM users WHERE id = ?").get(actor.id) as { password_version: number };
-    await createSession(actor.id, row.password_version);
+    await createSession(actor.id, row.password_version, "admin");
   } catch (error) {
     return { error: error instanceof Error && error.message.includes("policy") ? "policy" : "unknown" };
   }
