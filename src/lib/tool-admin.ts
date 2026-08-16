@@ -18,6 +18,9 @@ export interface ManagedToolConfiguration {
   seoDescriptionEn: string;
   seoDescriptionZh: string;
   maxInputSize: number;
+  maxOutputSize: number;
+  maxExecutionTime: number;
+  maxConcurrency: number;
   requiresLogin: boolean;
   freeToUse: boolean;
   enabled: boolean;
@@ -43,6 +46,9 @@ export interface ToolConfigurationInput {
   seoDescriptionEn: string;
   seoDescriptionZh: string;
   maxInputSize: number;
+  maxOutputSize: number;
+  maxExecutionTime: number;
+  maxConcurrency: number;
   requiresLogin: boolean;
   freeToUse: boolean;
   enabled: boolean;

@@ -90,7 +90,7 @@ describe("Webhook payload and browser response limits", () => {
   it("cancels response bodies that exceed the configured byte limit", async () => {
     await expect(
       readLimitedResponseBody(new Response("four"), 3),
-    ).rejects.toThrow("Response exceeds the 1 MB browser limit");
+    ).rejects.toThrow("Response exceeds the 3 B browser limit");
     await expect(
       readLimitedResponseBody(new Response("three"), 5),
     ).resolves.toBe("three");

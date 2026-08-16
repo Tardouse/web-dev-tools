@@ -66,6 +66,9 @@ const shared = {
   requiresLogin: false,
   processingMode: "client" as const,
   enabled: true,
+  maxOutputSize: TOOL_LIMITS.maxOutput,
+  maxExecutionTime: TOOL_LIMITS.maxExecutionTime,
+  maxConcurrency: TOOL_LIMITS.maxConcurrentExecutions,
 };
 
 export const tools: ToolDefinition[] = [
@@ -671,6 +674,7 @@ export const tools: ToolDefinition[] = [
       "Extract ZIP, TAR, and GZIP archives or create ZIP and GZIP files with strict safety limits.",
     keywords: ["zip", "unzip", "tar", "gzip", "archive", "compress", "extract"],
     maxInputSize: TOOL_LIMITS.archive,
+    maxOutputSize: TOOL_LIMITS.maxExtractedSize,
     seoTitle: "ZIP, TAR & GZIP Extractor and Compressor Online",
     seoDescription:
       "Extract ZIP, TAR, TAR.GZ, and GZIP archives or create ZIP and GZIP files locally with Zip Slip and Zip Bomb protection.",
@@ -823,15 +827,29 @@ export const tools: ToolDefinition[] = [
     sortOrder: 280,
     description:
       "Format Standard SQL, PostgreSQL, MySQL, SQLite, and SQL Server queries locally.",
-    keywords: ["sql", "formatter", "beautifier", "postgresql", "mysql", "sqlite"],
+    keywords: [
+      "sql",
+      "formatter",
+      "beautifier",
+      "postgresql",
+      "mysql",
+      "sqlite",
+    ],
     maxInputSize: TOOL_LIMITS.text,
     seoTitle: "SQL Formatter & Beautifier Online",
     seoDescription:
       "Format SQL with dialect-aware parsing and keyword case controls in your browser.",
     related: ["json-formatter", "text-diff", "api-request-builder"],
     faq: [
-      { question: "Which SQL dialects are supported?", answer: "The formatter supports Standard SQL, PostgreSQL, MySQL, SQLite, and SQL Server syntax." },
-      { question: "Are queries uploaded?", answer: "No. Parsing and formatting run entirely in your browser." },
+      {
+        question: "Which SQL dialects are supported?",
+        answer:
+          "The formatter supports Standard SQL, PostgreSQL, MySQL, SQLite, and SQL Server syntax.",
+      },
+      {
+        question: "Are queries uploaded?",
+        answer: "No. Parsing and formatting run entirely in your browser.",
+      },
     ],
   },
   {
@@ -848,9 +866,16 @@ export const tools: ToolDefinition[] = [
     keywords: ["css", "formatter", "beautifier", "minifier", "stylesheet"],
     maxInputSize: TOOL_LIMITS.text,
     seoTitle: "CSS Formatter & Minifier Online",
-    seoDescription: "Format and minify CSS locally with syntax-aware output and no uploads.",
+    seoDescription:
+      "Format and minify CSS locally with syntax-aware output and no uploads.",
     related: ["html-formatter", "javascript-formatter", "color-converter"],
-    faq: [{ question: "Does minification change CSS behavior?", answer: "The minifier uses a CSS syntax tree and applies semantics-preserving optimizations." }],
+    faq: [
+      {
+        question: "Does minification change CSS behavior?",
+        answer:
+          "The minifier uses a CSS syntax tree and applies semantics-preserving optimizations.",
+      },
+    ],
   },
   {
     ...shared,
@@ -862,13 +887,28 @@ export const tools: ToolDefinition[] = [
     icon: "FileJson2",
     featured: true,
     sortOrder: 300,
-    description: "Format or minify modern JavaScript locally with parser-backed validation.",
-    keywords: ["javascript", "js", "formatter", "beautifier", "minifier", "terser"],
+    description:
+      "Format or minify modern JavaScript locally with parser-backed validation.",
+    keywords: [
+      "javascript",
+      "js",
+      "formatter",
+      "beautifier",
+      "minifier",
+      "terser",
+    ],
     maxInputSize: TOOL_LIMITS.text,
     seoTitle: "JavaScript Formatter & Minifier Online",
-    seoDescription: "Beautify and minify JavaScript locally with modern syntax parsing and no uploads.",
+    seoDescription:
+      "Beautify and minify JavaScript locally with modern syntax parsing and no uploads.",
     related: ["html-formatter", "css-formatter", "json-formatter"],
-    faq: [{ question: "Which JavaScript syntax is supported?", answer: "The formatter accepts modern ECMAScript syntax and the minifier validates input before compression." }],
+    faq: [
+      {
+        question: "Which JavaScript syntax is supported?",
+        answer:
+          "The formatter accepts modern ECMAScript syntax and the minifier validates input before compression.",
+      },
+    ],
   },
   {
     ...shared,
@@ -880,13 +920,30 @@ export const tools: ToolDefinition[] = [
     icon: "GitBranch",
     featured: true,
     sortOrder: 310,
-    description: "Build quoted clone, reset, rebase, and cherry-pick commands, branch names, and parse Git URLs.",
-    keywords: ["git", "clone", "reset", "rebase", "cherry-pick", "branch", "github", "url"],
+    description:
+      "Build quoted clone, reset, rebase, and cherry-pick commands, branch names, and parse Git URLs.",
+    keywords: [
+      "git",
+      "clone",
+      "reset",
+      "rebase",
+      "cherry-pick",
+      "branch",
+      "github",
+      "url",
+    ],
     maxInputSize: TOOL_LIMITS.text,
     seoTitle: "Git Command & Branch Name Generator Online",
-    seoDescription: "Generate safely quoted Git commands and branch names or parse HTTPS and SSH repository URLs.",
+    seoDescription:
+      "Generate safely quoted Git commands and branch names or parse HTTPS and SSH repository URLs.",
     related: ["git-cheatsheet", "ssh-key-generator", "text-diff"],
-    faq: [{ question: "Are commands executed?", answer: "No. The workbench only generates text for you to review and copy." }],
+    faq: [
+      {
+        question: "Are commands executed?",
+        answer:
+          "No. The workbench only generates text for you to review and copy.",
+      },
+    ],
   },
   {
     ...shared,
@@ -898,13 +955,30 @@ export const tools: ToolDefinition[] = [
     icon: "Network",
     featured: true,
     sortOrder: 320,
-    description: "Inspect IPv4, IPv6, CIDR ranges, subnet masks, MAC formats, and URL components locally.",
-    keywords: ["ipv4", "ipv6", "cidr", "subnet", "ip range", "mac", "url parser", "network"],
+    description:
+      "Inspect IPv4, IPv6, CIDR ranges, subnet masks, MAC formats, and URL components locally.",
+    keywords: [
+      "ipv4",
+      "ipv6",
+      "cidr",
+      "subnet",
+      "ip range",
+      "mac",
+      "url parser",
+      "network",
+    ],
     maxInputSize: TOOL_LIMITS.text,
     seoTitle: "IP CIDR Subnet, MAC & URL Calculator",
-    seoDescription: "Calculate IPv4 and IPv6 networks, subnet ranges, MAC formats, and URL components in your browser.",
+    seoDescription:
+      "Calculate IPv4 and IPv6 networks, subnet ranges, MAC formats, and URL components in your browser.",
     related: ["http-status-reference", "curl-parser", "api-request-builder"],
-    faq: [{ question: "Does this query an IP database?", answer: "No. Address parsing and subnet calculations are mathematical and run locally." }],
+    faq: [
+      {
+        question: "Does this query an IP database?",
+        answer:
+          "No. Address parsing and subnet calculations are mathematical and run locally.",
+      },
+    ],
   },
   {
     ...shared,
@@ -916,15 +990,34 @@ export const tools: ToolDefinition[] = [
     icon: "Send",
     featured: true,
     sortOrder: 330,
-    description: "Build cURL, Fetch, and Axios requests or send them directly from your browser with strict limits.",
-    keywords: ["api", "rest", "http request", "tester", "curl", "fetch", "axios", "headers"],
+    description:
+      "Build cURL, Fetch, and Axios requests or send them directly from your browser with strict limits.",
+    keywords: [
+      "api",
+      "rest",
+      "http request",
+      "tester",
+      "curl",
+      "fetch",
+      "axios",
+      "headers",
+    ],
     maxInputSize: TOOL_LIMITS.text,
     seoTitle: "API Request Builder & REST Tester Online",
-    seoDescription: "Generate cURL, Fetch, and Axios code or test CORS-enabled APIs directly from your browser.",
+    seoDescription:
+      "Generate cURL, Fetch, and Axios code or test CORS-enabled APIs directly from your browser.",
     related: ["curl-generator", "curl-parser", "json-formatter"],
     faq: [
-      { question: "Are requests proxied through this site?", answer: "No. Requests are sent by your browser and remain subject to the destination's CORS policy." },
-      { question: "What safety limits apply?", answer: "Requests time out after 10 seconds and response bodies are limited to 1 MB." },
+      {
+        question: "Are requests proxied through this site?",
+        answer:
+          "No. Requests are sent by your browser and remain subject to the destination's CORS policy.",
+      },
+      {
+        question: "What safety limits apply?",
+        answer:
+          "Requests time out after 10 seconds and response bodies are limited to 1 MB.",
+      },
     ],
   },
   {
@@ -937,15 +1030,33 @@ export const tools: ToolDefinition[] = [
     icon: "PanelTop",
     featured: true,
     sortOrder: 380,
-    description: "Generate HTTP headers for Bearer, Basic, and API key authentication with raw, JSON, or Fetch output.",
-    keywords: ["http", "headers", "authorization", "bearer", "basic auth", "api key", "fetch"],
+    description:
+      "Generate HTTP headers for Bearer, Basic, and API key authentication with raw, JSON, or Fetch output.",
+    keywords: [
+      "http",
+      "headers",
+      "authorization",
+      "bearer",
+      "basic auth",
+      "api key",
+      "fetch",
+    ],
     maxInputSize: TOOL_LIMITS.text,
     seoTitle: "HTTP Header, Bearer & Basic Auth Generator",
-    seoDescription: "Build HTTP request headers and Authorization values for Bearer tokens, Basic Auth, and API keys locally.",
+    seoDescription:
+      "Build HTTP request headers and Authorization values for Bearer tokens, Basic Auth, and API keys locally.",
     related: ["api-request-builder", "webhook-tester", "curl-generator"],
     faq: [
-      { question: "Are credentials sent anywhere?", answer: "No. Header generation happens locally in your browser and does not make a network request." },
-      { question: "Does Basic Auth encrypt a password?", answer: "No. Basic Auth is Base64 encoding, not encryption. Only use it over HTTPS." },
+      {
+        question: "Are credentials sent anywhere?",
+        answer:
+          "No. Header generation happens locally in your browser and does not make a network request.",
+      },
+      {
+        question: "Does Basic Auth encrypt a password?",
+        answer:
+          "No. Basic Auth is Base64 encoding, not encryption. Only use it over HTTPS.",
+      },
     ],
   },
   {
@@ -958,15 +1069,33 @@ export const tools: ToolDefinition[] = [
     icon: "Webhook",
     featured: true,
     sortOrder: 390,
-    description: "Format JSON payloads, generate request code, and send outbound webhooks directly from your browser.",
-    keywords: ["webhook", "payload", "json", "http post", "tester", "curl", "callback"],
+    description:
+      "Format JSON payloads, generate request code, and send outbound webhooks directly from your browser.",
+    keywords: [
+      "webhook",
+      "payload",
+      "json",
+      "http post",
+      "tester",
+      "curl",
+      "callback",
+    ],
     maxInputSize: TOOL_LIMITS.text,
     seoTitle: "Webhook Tester & JSON Payload Formatter Online",
-    seoDescription: "Format webhook JSON, generate cURL, Fetch, or Axios code, and test CORS-enabled endpoints from your browser.",
+    seoDescription:
+      "Format webhook JSON, generate cURL, Fetch, or Axios code, and test CORS-enabled endpoints from your browser.",
     related: ["api-request-builder", "http-header-builder", "json-formatter"],
     faq: [
-      { question: "Does the request pass through this site's server?", answer: "No. The browser sends the webhook directly, subject to the destination's CORS policy." },
-      { question: "What limits apply?", answer: "Payloads use the configured tool limit, requests time out after 10 seconds, and response bodies are limited to 1 MB." },
+      {
+        question: "Does the request pass through this site's server?",
+        answer:
+          "No. The browser sends the webhook directly, subject to the destination's CORS policy.",
+      },
+      {
+        question: "What limits apply?",
+        answer:
+          "Payloads use the configured tool limit, requests time out after 10 seconds, and response bodies are limited to 1 MB.",
+      },
     ],
   },
   ...(
@@ -1213,36 +1342,161 @@ export const tools: ToolDefinition[] = [
     related: [...tool.related],
     faq: [tool.faq],
   })),
-  ...([
-    ["linux-cheatsheet", "Linux Command Cheatsheet", "Linux Commands", "Terminal", 340, ["linux", "shell", "commands", "systemd", "files", "network"], "Linux commands and configuration snippets", ["git-cheatsheet", "network-calculator", "api-request-builder"]],
-    ["git-cheatsheet", "Git Command Cheatsheet", "Git Cheatsheet", "GitCommitHorizontal", 350, ["git", "commands", "branch", "diff", "reflog", "remote"], "Git commands and recovery references", ["git-command-builder", "ssh-key-generator", "text-diff"]],
-    ["docker-cheatsheet", "Docker Command Cheatsheet", "Docker Commands", "Container", 360, ["docker", "container", "image", "compose", "build", "logs"], "Docker and Compose commands", ["linux-cheatsheet", "nginx-cheatsheet", "network-calculator"]],
-    ["nginx-cheatsheet", "Nginx Configuration Cheatsheet", "Nginx Cheatsheet", "ServerCog", 370, ["nginx", "reverse proxy", "tls", "headers", "reload", "config"], "Nginx commands and configuration snippets", ["docker-cheatsheet", "network-calculator", "http-header-builder"]],
-    ["vim-cheatsheet", "Vim Cheatsheet", "Vim Reference", "SquareTerminal", 490, ["vim", "editor", "motions", "navigation", "replace", "commands"], "Vim motions and editing commands", ["linux-cheatsheet", "bash-cheatsheet", "git-cheatsheet"]],
-    ["regex-cheatsheet", "Regex Cheatsheet", "Regex Reference", "Regex", 500, ["regex", "regular expression", "pattern", "groups", "lookaround", "quantifier"], "regular expression patterns and syntax", ["regex-tester", "text-counter", "javascript-cheatsheet"]],
-    ["bash-cheatsheet", "Bash Cheatsheet", "Bash Reference", "Shell", 510, ["bash", "shell", "script", "pipefail", "loop", "trap"], "Bash commands and scripting patterns", ["linux-cheatsheet", "vim-cheatsheet", "git-cheatsheet"]],
-    ["sql-cheatsheet", "SQL Cheatsheet", "SQL Reference", "Database", 520, ["sql", "select", "join", "group by", "transaction", "cte", "explain"], "SQL queries and statements", ["sql-formatter", "fake-json-generator", "api-request-builder"]],
-    ["javascript-cheatsheet", "JavaScript Cheatsheet", "JavaScript Reference", "FileJson2", 530, ["javascript", "js", "async", "array", "object", "modules"], "JavaScript language patterns", ["javascript-formatter", "regex-cheatsheet", "json-formatter"]],
-    ["python-cheatsheet", "Python Cheatsheet", "Python Reference", "CodeXml", 540, ["python", "venv", "pip", "comprehension", "pathlib", "json"], "Python commands and code patterns", ["bash-cheatsheet", "json-formatter", "regex-cheatsheet"]],
-    ["http-status-code-cheatsheet", "HTTP Status Code Cheatsheet", "HTTP Status Codes", "CircleGauge", 550, ["http", "status code", "200", "404", "429", "500", "response"], "HTTP response status codes", ["http-status-reference", "http-header-builder", "api-request-builder"]],
-    ["css-cheatsheet", "CSS Cheatsheet", "CSS Reference", "Braces", 560, ["css", "flexbox", "grid", "clamp", "media query", "layout"], "CSS layout and styling snippets", ["css-formatter", "color-converter", "html-formatter"]],
-  ] as const).map(([slug, name, shortName, icon, sortOrder, keywords, subject, related]) => ({
-    ...shared,
-    id: slug,
-    slug,
-    name,
-    shortName,
-    category: "web" as const,
-    icon,
-    sortOrder,
-    description: `Search practical ${subject} by task.`,
-    keywords: [...keywords],
-    maxInputSize: TOOL_LIMITS.text,
-    seoTitle: `${name} — Searchable Reference`,
-    seoDescription: `Search and copy practical ${shortName.toLowerCase()} by task with a fast local reference.`,
-    related: [...related],
-    faq: [{ question: "Are entries executed automatically?", answer: "No. Entries are reference text that you can review and copy." }],
-  })),
+  ...(
+    [
+      [
+        "linux-cheatsheet",
+        "Linux Command Cheatsheet",
+        "Linux Commands",
+        "Terminal",
+        340,
+        ["linux", "shell", "commands", "systemd", "files", "network"],
+        "Linux commands and configuration snippets",
+        ["git-cheatsheet", "network-calculator", "api-request-builder"],
+      ],
+      [
+        "git-cheatsheet",
+        "Git Command Cheatsheet",
+        "Git Cheatsheet",
+        "GitCommitHorizontal",
+        350,
+        ["git", "commands", "branch", "diff", "reflog", "remote"],
+        "Git commands and recovery references",
+        ["git-command-builder", "ssh-key-generator", "text-diff"],
+      ],
+      [
+        "docker-cheatsheet",
+        "Docker Command Cheatsheet",
+        "Docker Commands",
+        "Container",
+        360,
+        ["docker", "container", "image", "compose", "build", "logs"],
+        "Docker and Compose commands",
+        ["linux-cheatsheet", "nginx-cheatsheet", "network-calculator"],
+      ],
+      [
+        "nginx-cheatsheet",
+        "Nginx Configuration Cheatsheet",
+        "Nginx Cheatsheet",
+        "ServerCog",
+        370,
+        ["nginx", "reverse proxy", "tls", "headers", "reload", "config"],
+        "Nginx commands and configuration snippets",
+        ["docker-cheatsheet", "network-calculator", "http-header-builder"],
+      ],
+      [
+        "vim-cheatsheet",
+        "Vim Cheatsheet",
+        "Vim Reference",
+        "SquareTerminal",
+        490,
+        ["vim", "editor", "motions", "navigation", "replace", "commands"],
+        "Vim motions and editing commands",
+        ["linux-cheatsheet", "bash-cheatsheet", "git-cheatsheet"],
+      ],
+      [
+        "regex-cheatsheet",
+        "Regex Cheatsheet",
+        "Regex Reference",
+        "Regex",
+        500,
+        [
+          "regex",
+          "regular expression",
+          "pattern",
+          "groups",
+          "lookaround",
+          "quantifier",
+        ],
+        "regular expression patterns and syntax",
+        ["regex-tester", "text-counter", "javascript-cheatsheet"],
+      ],
+      [
+        "bash-cheatsheet",
+        "Bash Cheatsheet",
+        "Bash Reference",
+        "Shell",
+        510,
+        ["bash", "shell", "script", "pipefail", "loop", "trap"],
+        "Bash commands and scripting patterns",
+        ["linux-cheatsheet", "vim-cheatsheet", "git-cheatsheet"],
+      ],
+      [
+        "sql-cheatsheet",
+        "SQL Cheatsheet",
+        "SQL Reference",
+        "Database",
+        520,
+        ["sql", "select", "join", "group by", "transaction", "cte", "explain"],
+        "SQL queries and statements",
+        ["sql-formatter", "fake-json-generator", "api-request-builder"],
+      ],
+      [
+        "javascript-cheatsheet",
+        "JavaScript Cheatsheet",
+        "JavaScript Reference",
+        "FileJson2",
+        530,
+        ["javascript", "js", "async", "array", "object", "modules"],
+        "JavaScript language patterns",
+        ["javascript-formatter", "regex-cheatsheet", "json-formatter"],
+      ],
+      [
+        "python-cheatsheet",
+        "Python Cheatsheet",
+        "Python Reference",
+        "CodeXml",
+        540,
+        ["python", "venv", "pip", "comprehension", "pathlib", "json"],
+        "Python commands and code patterns",
+        ["bash-cheatsheet", "json-formatter", "regex-cheatsheet"],
+      ],
+      [
+        "http-status-code-cheatsheet",
+        "HTTP Status Code Cheatsheet",
+        "HTTP Status Codes",
+        "CircleGauge",
+        550,
+        ["http", "status code", "200", "404", "429", "500", "response"],
+        "HTTP response status codes",
+        ["http-status-reference", "http-header-builder", "api-request-builder"],
+      ],
+      [
+        "css-cheatsheet",
+        "CSS Cheatsheet",
+        "CSS Reference",
+        "Braces",
+        560,
+        ["css", "flexbox", "grid", "clamp", "media query", "layout"],
+        "CSS layout and styling snippets",
+        ["css-formatter", "color-converter", "html-formatter"],
+      ],
+    ] as const
+  ).map(
+    ([slug, name, shortName, icon, sortOrder, keywords, subject, related]) => ({
+      ...shared,
+      id: slug,
+      slug,
+      name,
+      shortName,
+      category: "web" as const,
+      icon,
+      sortOrder,
+      description: `Search practical ${subject} by task.`,
+      keywords: [...keywords],
+      maxInputSize: TOOL_LIMITS.text,
+      seoTitle: `${name} — Searchable Reference`,
+      seoDescription: `Search and copy practical ${shortName.toLowerCase()} by task with a fast local reference.`,
+      related: [...related],
+      faq: [
+        {
+          question: "Are entries executed automatically?",
+          answer:
+            "No. Entries are reference text that you can review and copy.",
+        },
+      ],
+    }),
+  ),
 ];
 
 export function getTool(

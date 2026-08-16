@@ -1,19 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CircleAlert, Download, KeyRound, ShieldCheck } from "lucide-react";
 import { downloadText } from "@/lib/clipboard";
 import {
-  generateSshKey,
   type EcdsaKeySize,
   type GeneratedSshKey,
   type RsaKeySize,
   type SshKeyAlgorithm,
 } from "@/lib/tools";
 import type { ToolComponentProps } from "@/lib/types";
+import { localizeToolError } from "@/i18n/errors";
+import { isToolTaskCancellation, runToolWorker } from "@/lib/tool-execution";
 import { ActionButton, CopyButton } from "./tool-actions";
 
-export function SshKeyGeneratorTool({ locale, messages }: ToolComponentProps) {
+export function SshKeyGeneratorTool({
+  definition,
+  locale,
+  messages,
+}: ToolComponentProps) {
   const zh = locale === "zh";
   const [algorithm, setAlgorithm] = useState<SshKeyAlgorithm>("ED25519");
   const [rsaSize, setRsaSize] = useState<RsaKeySize>(3072);
@@ -23,26 +28,43 @@ export function SshKeyGeneratorTool({ locale, messages }: ToolComponentProps) {
   const [result, setResult] = useState<GeneratedSshKey | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const execution = useRef<AbortController | null>(null);
+  useEffect(() => () => execution.current?.abort(), []);
   const generate = async () => {
+    execution.current?.abort();
+    const controller = new AbortController();
+    execution.current = controller;
     setBusy(true);
     setError("");
     setResult(null);
     try {
-      setResult(
-        await generateSshKey({
-          algorithm,
-          size: algorithm === "RSA" ? rsaSize : ecdsaSize,
-          comment,
-          passphrase:
-            algorithm === "ED25519" ? undefined : passphrase || undefined,
-        }),
+      const generated = await runToolWorker<GeneratedSshKey>(
+        {
+          operation: "ssh-key",
+          options: {
+            algorithm,
+            size: algorithm === "RSA" ? rsaSize : ecdsaSize,
+            comment,
+            passphrase:
+              algorithm === "ED25519" ? undefined : passphrase || undefined,
+          },
+        },
+        definition,
+        controller.signal,
       );
+      if (!controller.signal.aborted) setResult(generated);
     } catch (caught) {
+      if (isToolTaskCancellation(caught)) return;
       setError(
-        caught instanceof Error ? caught.message : "SSH key generation failed.",
+        caught instanceof Error
+          ? localizeToolError(caught.message, messages)
+          : "SSH key generation failed.",
       );
     } finally {
-      setBusy(false);
+      if (execution.current === controller) {
+        execution.current = null;
+        setBusy(false);
+      }
     }
   };
   const basename =

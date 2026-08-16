@@ -1,14 +1,13 @@
 "use client";
 
+import { CircleAlert } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
-import {
-  compareText,
-  createSideBySideDiff,
-  toUnifiedLikeDiff,
-  type DiffLine,
-} from "@/lib/tools";
+import { type DiffLine } from "@/lib/tools";
+import type { DiffWorkerResult } from "@/lib/tool-worker-protocol";
+import { localizeToolError } from "@/i18n/errors";
 import { CopyButton, DownloadButton } from "./tool-actions";
 import type { ToolComponentProps } from "@/lib/types";
+import { useLiveWorkerResult } from "./use-live-worker-result";
 
 function DiffPane({
   label,
@@ -75,7 +74,7 @@ function DiffPane({
   );
 }
 
-export function DiffTool({ messages, locale }: ToolComponentProps) {
+export function DiffTool({ definition, messages, locale }: ToolComponentProps) {
   const [before, setBefore] = useState(
     "const status = 'draft';\nconsole.log(status);\n",
   );
@@ -84,17 +83,22 @@ export function DiffTool({ messages, locale }: ToolComponentProps) {
   );
   const [mode, setMode] = useState<"lines" | "characters">("lines");
   const [ignoreWhitespace, setIgnoreWhitespace] = useState(false);
-  const result = useMemo(() => {
-    try {
-      const parts = compareText(before, after, mode, ignoreWhitespace);
-      return {
-        model: createSideBySideDiff(before, after, ignoreWhitespace),
-        text: toUnifiedLikeDiff(parts),
-      };
-    } catch {
-      return { model: { left: [], right: [] }, text: "" };
-    }
-  }, [before, after, mode, ignoreWhitespace]);
+  const request = useMemo(
+    () =>
+      ({
+        operation: "diff",
+        before,
+        after,
+        mode,
+        ignoreWhitespace,
+      }) as const,
+    [after, before, ignoreWhitespace, mode],
+  );
+  const worker = useLiveWorkerResult<DiffWorkerResult>(request, definition);
+  const result = worker.value ?? {
+    model: { left: [], right: [] },
+    text: "",
+  };
   return (
     <section className="tool-workspace card">
       <div className="workspace-header">
@@ -130,6 +134,12 @@ export function DiffTool({ messages, locale }: ToolComponentProps) {
           />
         </div>
       </div>
+      {worker.error && (
+        <div className="error-banner" role="alert">
+          <CircleAlert size={17} />
+          {localizeToolError(worker.error, messages)}
+        </div>
+      )}
       <div className="diff-workspace" data-testid="inline-diff">
         <DiffPane
           label={messages.tool.original}

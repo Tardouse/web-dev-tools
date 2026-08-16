@@ -52,6 +52,13 @@ function input(formData: FormData) {
     seoDescriptionEn: String(formData.get("seoDescriptionEn") ?? ""),
     seoDescriptionZh: String(formData.get("seoDescriptionZh") ?? ""),
     maxInputSize: Math.round(Number(formData.get("maxInputMb")) * 1024 * 1024),
+    maxOutputSize: Math.round(
+      Number(formData.get("maxOutputMb")) * 1024 * 1024,
+    ),
+    maxExecutionTime: Math.round(
+      Number(formData.get("maxExecutionSeconds")) * 1_000,
+    ),
+    maxConcurrency: Number(formData.get("maxConcurrency")),
     requiresLogin: bool(formData, "requiresLogin"),
     freeToUse: bool(formData, "freeToUse"),
     enabled: bool(formData, "enabled"),

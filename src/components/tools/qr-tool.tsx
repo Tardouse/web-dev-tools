@@ -4,44 +4,62 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import QRCode from "qrcode";
 import { CircleAlert, Download } from "lucide-react";
+import { byteLength, formatBytes, TOOL_LIMITS } from "@/lib/config";
+import { localizeToolError } from "@/i18n/errors";
+import { isToolTaskCancellation, runToolTask } from "@/lib/tool-execution";
 import type { ToolComponentProps } from "@/lib/types";
 
-export function QrCodeTool({ messages }: ToolComponentProps) {
+export function QrCodeTool({ definition, messages }: ToolComponentProps) {
   const [input, setInput] = useState("https://example.com");
   const [size, setSize] = useState(256);
   const [level, setLevel] = useState<"L" | "M" | "Q" | "H">("M");
   const [url, setUrl] = useState("");
   const [error, setError] = useState("");
   useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
     const timer = window.setTimeout(async () => {
       if (!input) {
         setUrl("");
         return;
       }
       try {
-        const result = await QRCode.toDataURL(input, {
-          width: size,
-          margin: 2,
-          errorCorrectionLevel: level,
-          color: { dark: "#0f172a", light: "#ffffff" },
-        });
-        if (!cancelled) {
+        const inputLimit = definition?.maxInputSize ?? TOOL_LIMITS.text;
+        const inputSize = byteLength(input);
+        if (inputSize > inputLimit) {
+          throw new Error(
+            `Input is ${formatBytes(inputSize)}. The limit for this tool is ${formatBytes(inputLimit)}.`,
+          );
+        }
+        const result = await runToolTask(
+          () =>
+            QRCode.toDataURL(input, {
+              width: size,
+              margin: 2,
+              errorCorrectionLevel: level,
+              color: { dark: "#0f172a", light: "#ffffff" },
+            }),
+          definition,
+          controller.signal,
+        );
+        if (!controller.signal.aborted) {
           setUrl(result);
           setError("");
         }
       } catch (caught) {
-        if (!cancelled)
-          setError(
-            caught instanceof Error ? caught.message : "QR generation failed.",
-          );
+        if (isToolTaskCancellation(caught)) return;
+        setUrl("");
+        setError(
+          caught instanceof Error
+            ? localizeToolError(caught.message, messages)
+            : "QR generation failed.",
+        );
       }
     }, 100);
     return () => {
-      cancelled = true;
+      controller.abort();
       window.clearTimeout(timer);
     };
-  }, [input, size, level]);
+  }, [definition, input, level, messages, size]);
   const download = () => {
     const anchor = document.createElement("a");
     anchor.href = url;

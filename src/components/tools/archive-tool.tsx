@@ -10,20 +10,19 @@ import {
 } from "lucide-react";
 import { downloadBytes } from "@/lib/clipboard";
 import { formatBytes, TOOL_LIMITS } from "@/lib/config";
-import {
-  createGzipArchive,
-  createZipArchive,
-  extractGzipArchive,
-  extractTarArchive,
-  extractZipArchive,
-  type LocalFileEntry,
-} from "@/lib/tools";
+import type { LocalFileEntry } from "@/lib/tools";
+import { runToolWorker } from "@/lib/tool-execution";
+import { localizeToolError } from "@/i18n/errors";
 import type { ToolComponentProps } from "@/lib/types";
 import { ActionButton } from "./tool-actions";
 
 type ArchiveMode = "extract" | "zip" | "gzip";
 
-export function ArchiveWorkbenchTool({ locale, definition }: ToolComponentProps) {
+export function ArchiveWorkbenchTool({
+  locale,
+  definition,
+  messages,
+}: ToolComponentProps) {
   const zh = locale === "zh";
   const inputLimit = definition?.maxInputSize ?? TOOL_LIMITS.archive;
   const [mode, setMode] = useState<ArchiveMode>("extract");
@@ -54,31 +53,37 @@ export function ArchiveWorkbenchTool({ locale, definition }: ToolComponentProps)
     try {
       const data = await bytes(file);
       const lower = file.name.toLowerCase();
-      let result: LocalFileEntry[];
-      if (lower.endsWith(".zip")) {
-        result = extractZipArchive(data);
-      } else if (lower.endsWith(".tar")) {
-        result = await extractTarArchive(data);
-      } else if (lower.endsWith(".tar.gz") || lower.endsWith(".tgz")) {
-        result = await extractTarArchive(extractGzipArchive(data));
-      } else if (lower.endsWith(".gz") || file.type === "application/gzip") {
-        result = [
-          {
-            name: file.name.replace(/\.gz$/i, "") || "decompressed-file",
-            data: extractGzipArchive(data),
-          },
-        ];
-      } else {
+      const format = lower.endsWith(".zip")
+        ? "zip"
+        : lower.endsWith(".tar")
+          ? "tar"
+          : lower.endsWith(".tar.gz") || lower.endsWith(".tgz")
+            ? "tar-gzip"
+            : lower.endsWith(".gz") || file.type === "application/gzip"
+              ? "gzip"
+              : null;
+      if (!format) {
         throw new Error(
           zh
             ? "请选择 ZIP、TAR、TAR.GZ 或 GZIP 文件。"
             : "Choose a ZIP, TAR, TAR.GZ, or GZIP file.",
         );
       }
+      const result = await runToolWorker<LocalFileEntry[]>(
+        {
+          operation: "archive-extract",
+          data,
+          format,
+          filename: file.name,
+        },
+        definition,
+      );
       setEntries(result);
     } catch (caught) {
       setError(
-        caught instanceof Error ? caught.message : "Archive extraction failed.",
+        caught instanceof Error
+          ? localizeToolError(caught.message, messages)
+          : "Archive extraction failed.",
       );
     } finally {
       setBusy(false);
@@ -95,11 +100,16 @@ export function ArchiveWorkbenchTool({ locale, definition }: ToolComponentProps)
           data: await bytes(file),
         })),
       );
-      const archive = createZipArchive(files);
+      const archive = await runToolWorker<Uint8Array>(
+        { operation: "archive-create-zip", files },
+        definition,
+      );
       downloadBytes(archive, "devtoolbox-files.zip", "application/zip");
     } catch (caught) {
       setError(
-        caught instanceof Error ? caught.message : "ZIP creation failed.",
+        caught instanceof Error
+          ? localizeToolError(caught.message, messages)
+          : "ZIP creation failed.",
       );
     } finally {
       setBusy(false);
@@ -112,20 +122,22 @@ export function ArchiveWorkbenchTool({ locale, definition }: ToolComponentProps)
     setError("");
     try {
       const data = await bytes(gzipFile);
+      const output = await runToolWorker<Uint8Array>(
+        { operation: "archive-gzip", data, action: gzipAction },
+        definition,
+      );
       if (gzipAction === "compress") {
-        downloadBytes(
-          createGzipArchive(data),
-          `${gzipFile.name}.gz`,
-          "application/gzip",
-        );
+        downloadBytes(output, `${gzipFile.name}.gz`, "application/gzip");
       } else {
         const filename =
           gzipFile.name.replace(/\.gz$/i, "") || "decompressed-file";
-        downloadBytes(extractGzipArchive(data), filename);
+        downloadBytes(output, filename);
       }
     } catch (caught) {
       setError(
-        caught instanceof Error ? caught.message : "GZIP operation failed.",
+        caught instanceof Error
+          ? localizeToolError(caught.message, messages)
+          : "GZIP operation failed.",
       );
     } finally {
       setBusy(false);

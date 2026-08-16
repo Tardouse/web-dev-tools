@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { interpolate } from "@/i18n";
-import { hashText, type HashAlgorithm } from "@/lib/tools";
+import type { HashAlgorithm } from "@/lib/tools";
 import type { ToolComponentProps } from "@/lib/types";
 import { TextWorkbench } from "./text-workbench";
 
@@ -15,20 +15,20 @@ const algorithms: HashAlgorithm[] = [
 ];
 export function HashTool({ definition, messages }: ToolComponentProps) {
   const [algorithm, setAlgorithm] = useState<HashAlgorithm>("SHA-256");
-  const transform = useCallback(
-    (input: string) => hashText(input, algorithm),
+  const workerTask = useCallback(
+    (input: string) => ({ operation: "hash", input, algorithm }) as const,
     [algorithm],
   );
   return (
     <>
       <TextWorkbench
         messages={messages}
-        transform={transform}
+        workerTask={workerTask}
         initialInput="developer-tools"
         actionLabel={`${messages.tool.generate} ${algorithm}`}
         outputLabel={interpolate(messages.tool.digest, { algorithm })}
         filename={`${algorithm.toLowerCase()}.txt`}
-        maxInputSize={definition?.maxInputSize}
+        definition={definition}
         options={
           <select
             className="select"

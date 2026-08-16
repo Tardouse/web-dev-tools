@@ -22,6 +22,9 @@ export interface ToolDefinition {
   aliases?: string[];
   requiresLogin: boolean;
   maxInputSize: number;
+  maxOutputSize: number;
+  maxExecutionTime: number;
+  maxConcurrency: number;
   processingMode: ProcessingMode;
   enabled: boolean;
   sortOrder: number;

@@ -3,6 +3,8 @@
 import { CircleAlert, RefreshCw } from "lucide-react";
 import { useState } from "react";
 import { byteLength, formatBytes, TOOL_LIMITS } from "@/lib/config";
+import { localizeToolError } from "@/i18n/errors";
+import { runToolTask } from "@/lib/tool-execution";
 import {
   generateFakeJson,
   generateLorem,
@@ -118,6 +120,7 @@ export function RandomGeneratorTool({
   const [colors, setColors] = useState<RandomColor[]>([]);
   const [entropy, setEntropy] = useState<number | null>(null);
   const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
   const output = colors.length
     ? colors.map((color) => color[colorFormat]).join("\n")
     : textOutput;
@@ -129,76 +132,86 @@ export function RandomGeneratorTool({
     setError("");
   };
 
-  const generate = () => {
+  const generate = async () => {
+    setBusy(true);
     setError("");
     setEntropy(null);
     setColors([]);
     try {
-      if (kind === "random-string-generator") {
-        setTextOutput(
-          generateRandomString({
+      const result = await runToolTask(() => {
+        let generatedText = "";
+        let generatedColors: RandomColor[] = [];
+        let generatedEntropy: number | null = null;
+        if (kind === "random-string-generator") {
+          generatedText = generateRandomString({
             length,
             uppercase,
             lowercase,
             digits,
             symbols,
             excludeAmbiguous,
-          }),
-        );
-      } else if (kind === "password-generator") {
-        const result = generatePassword({
-          length,
-          uppercase,
-          lowercase,
-          digits,
-          symbols,
-          excludeAmbiguous,
-        });
-        setTextOutput(result.value);
-        setEntropy(result.entropyBits);
-      } else if (kind === "username-generator") {
-        setTextOutput(
-          generateUsernames({
+          });
+        } else if (kind === "password-generator") {
+          const password = generatePassword({
+            length,
+            uppercase,
+            lowercase,
+            digits,
+            symbols,
+            excludeAmbiguous,
+          });
+          generatedText = password.value;
+          generatedEntropy = password.entropyBits;
+        } else if (kind === "username-generator") {
+          generatedText = generateUsernames({
             count,
             separator,
             includeDigits: includeUsernameDigits,
-          }).join("\n"),
-        );
-      } else if (kind === "lorem-ipsum-generator") {
-        setTextOutput(generateLorem(loremMode, amount));
-      } else if (kind === "fake-json-generator") {
-        setTextOutput(generateFakeJson(count));
-      } else if (kind === "mock-data-generator") {
-        setTextOutput(generateMockCsv(count));
-      } else if (kind === "random-number-generator") {
-        setTextOutput(
-          generateRandomNumbers({
+          }).join("\n");
+        } else if (kind === "lorem-ipsum-generator") {
+          generatedText = generateLorem(loremMode, amount);
+        } else if (kind === "fake-json-generator") {
+          generatedText = generateFakeJson(count);
+        } else if (kind === "mock-data-generator") {
+          generatedText = generateMockCsv(count);
+        } else if (kind === "random-number-generator") {
+          generatedText = generateRandomNumbers({
             minimum,
             maximum,
             count,
             integer,
             decimals,
             unique,
-          }).join("\n"),
-        );
-      } else if (kind === "random-date-generator") {
-        setTextOutput(
-          generateRandomDates({
+          }).join("\n");
+        } else if (kind === "random-date-generator") {
+          generatedText = generateRandomDates({
             start: startDate,
             end: endDate,
             count,
             format: dateFormat,
-          }).join("\n"),
-        );
-      } else {
-        const generated = generateRandomColors(count);
-        setColors(generated);
-        setTextOutput("");
-      }
+          }).join("\n");
+        } else {
+          generatedColors = generateRandomColors(count);
+        }
+        return {
+          text: generatedText,
+          colors: generatedColors,
+          entropy: generatedEntropy,
+        };
+      }, definition);
+      setTextOutput(result.text);
+      setColors(result.colors);
+      setEntropy(result.entropy);
     } catch (caught) {
       setTextOutput("");
       setColors([]);
-      setError(caught instanceof Error ? caught.message : "Generation failed.");
+      setError(
+        caught instanceof Error
+          ? localizeToolError(caught.message, messages)
+          : "Generation failed.",
+      );
+    } finally {
+      setBusy(false);
     }
   };
 
@@ -519,8 +532,13 @@ export function RandomGeneratorTool({
         <span className="workspace-footer-meta">
           Web Crypto · {zh ? "本地生成" : "Generated locally"}
         </span>
-        <ActionButton onClick={generate} icon={RefreshCw} primary>
-          {zh ? "生成" : "Generate"}
+        <ActionButton
+          onClick={() => void generate()}
+          icon={RefreshCw}
+          primary
+          disabled={busy}
+        >
+          {busy ? (zh ? "生成中…" : "Generating…") : zh ? "生成" : "Generate"}
         </ActionButton>
       </div>
     </section>

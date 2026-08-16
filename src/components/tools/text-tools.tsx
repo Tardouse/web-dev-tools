@@ -1,25 +1,53 @@
 "use client";
 
+import { CircleAlert } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import {
-  convertCase,
-  countText,
   formatHtmlFallback,
   type CaseMode,
+  type TextMetrics,
 } from "@/lib/tools";
+import { localizeToolError } from "@/i18n/errors";
 import type { ToolComponentProps } from "@/lib/types";
 import { TextWorkbench } from "./text-workbench";
+import { useLiveWorkerResult } from "./use-live-worker-result";
 
-export function TextCounterTool({ messages, locale }: ToolComponentProps) {
+const emptyMetrics: TextMetrics = {
+  characters: 0,
+  charactersNoSpaces: 0,
+  words: 0,
+  lines: 0,
+  bytes: 0,
+  chineseCharacters: 0,
+  numbers: 0,
+  spaces: 0,
+};
+
+export function TextCounterTool({
+  definition,
+  messages,
+  locale,
+}: ToolComponentProps) {
   const [input, setInput] = useState(
     "Build useful tools, protect user privacy, and keep the interface fast.",
   );
-  const metrics = useMemo(() => countText(input), [input]);
+  const request = useMemo(
+    () => ({ operation: "text-count", input }) as const,
+    [input],
+  );
+  const result = useLiveWorkerResult<TextMetrics>(request, definition);
+  const metrics = result.value ?? emptyMetrics;
   return (
     <section className="tool-workspace card">
       <div className="workspace-header">
         <h2>{messages.tool.liveAnalysis}</h2>
       </div>
+      {result.error && (
+        <div className="error-banner" role="alert">
+          <CircleAlert size={17} />
+          {localizeToolError(result.error, messages)}
+        </div>
+      )}
       <div className="metrics-grid">
         {Object.entries({
           [messages.metrics.characters]: metrics.characters,
@@ -73,17 +101,17 @@ export function CaseConverterTool({
   messages,
 }: ToolComponentProps) {
   const [mode, setMode] = useState<CaseMode>("camel");
-  const transform = useCallback(
-    (input: string) => convertCase(input, mode),
+  const workerTask = useCallback(
+    (input: string) => ({ operation: "case-convert", input, mode }) as const,
     [mode],
   );
   return (
     <TextWorkbench
       messages={messages}
-      transform={transform}
+      workerTask={workerTask}
       initialInput="developer tools make daily work easier"
       actionLabel={messages.tool.convert}
-      maxInputSize={definition?.maxInputSize}
+      definition={definition}
       options={
         <select
           className="select"
@@ -129,7 +157,7 @@ export function HtmlFormatterTool({
       }
       actionLabel={messages.tool.formatHtml}
       filename="formatted.html"
-      maxInputSize={definition?.maxInputSize}
+      definition={definition}
     />
   );
 }

@@ -310,6 +310,10 @@ export const en = {
   },
   errors: {
     inputTooLarge: "Input is {size}. The limit for this tool is {limit}.",
+    outputTooLarge: "Output is {size}. The limit for this tool is {limit}.",
+    executionTimeout: "The operation exceeded the {limit} execution limit.",
+    executionConcurrency:
+      "No more than {limit} tool operations can run at once.",
     enterJson: "Enter JSON to continue.",
     invalidJson: "Invalid JSON: {detail}",
     jsonDepth: "JSON nesting exceeds the maximum depth of {depth}.",

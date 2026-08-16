@@ -24,21 +24,39 @@ function getDatabasePath(): string {
   return normalizeDatabasePath(process.env.DATABASE_PATH);
 }
 
-function hasColumn(database: DatabaseSync, table: string, column: string): boolean {
-  const rows = database.prepare(`PRAGMA table_info(${table})`).all() as unknown as Array<{
+function hasColumn(
+  database: DatabaseSync,
+  table: string,
+  column: string,
+): boolean {
+  const rows = database
+    .prepare(`PRAGMA table_info(${table})`)
+    .all() as unknown as Array<{
     name: string;
   }>;
   return rows.some((row) => row.name === column);
 }
 
-function uniqueUsername(database: DatabaseSync, value: string, userId?: string): string {
-  const normalized = value.replace(/[^A-Za-z0-9._-]/g, "-").replace(/^[^A-Za-z]+/, "").slice(0, 32) || "admin";
-  const base = usernamePattern.test(normalized) ? normalized : `admin-${normalized}`.slice(0, 32);
+function uniqueUsername(
+  database: DatabaseSync,
+  value: string,
+  userId?: string,
+): string {
+  const normalized =
+    value
+      .replace(/[^A-Za-z0-9._-]/g, "-")
+      .replace(/^[^A-Za-z]+/, "")
+      .slice(0, 32) || "admin";
+  const base = usernamePattern.test(normalized)
+    ? normalized
+    : `admin-${normalized}`.slice(0, 32);
   let candidate = base;
   let suffix = 1;
   while (
     database
-      .prepare("SELECT 1 FROM users WHERE username = ? COLLATE NOCASE AND (? IS NULL OR id <> ?)")
+      .prepare(
+        "SELECT 1 FROM users WHERE username = ? COLLATE NOCASE AND (? IS NULL OR id <> ?)",
+      )
       .get(candidate, userId ?? null, userId ?? null)
   ) {
     const ending = `-${suffix++}`;
@@ -58,7 +76,9 @@ function migrateDatabase(database: DatabaseSync): void {
     database.exec("ALTER TABLE users ADD COLUMN username TEXT COLLATE NOCASE;");
   }
   const admins = database
-    .prepare("SELECT id, email FROM users WHERE role IN ('admin', 'super_admin') AND username IS NULL")
+    .prepare(
+      "SELECT id, email FROM users WHERE role IN ('admin', 'super_admin') AND username IS NULL",
+    )
     .all() as unknown as Array<{ id: string; email: string | null }>;
   for (const admin of admins) {
     const configured = process.env.ADMIN_USERNAME?.trim();
@@ -73,7 +93,9 @@ function migrateDatabase(database: DatabaseSync): void {
   );
 
   if (!hasColumn(database, "sessions", "audience")) {
-    database.exec("ALTER TABLE sessions ADD COLUMN audience TEXT NOT NULL DEFAULT 'user';");
+    database.exec(
+      "ALTER TABLE sessions ADD COLUMN audience TEXT NOT NULL DEFAULT 'user';",
+    );
     database.exec(
       `UPDATE sessions SET audience = 'admin' WHERE user_id IN (
         SELECT id FROM users WHERE role IN ('admin', 'super_admin')
@@ -81,10 +103,29 @@ function migrateDatabase(database: DatabaseSync): void {
     );
   }
   if (!hasColumn(database, "admin_audit_logs", "actor_identifier")) {
-    database.exec("ALTER TABLE admin_audit_logs ADD COLUMN actor_identifier TEXT;");
+    database.exec(
+      "ALTER TABLE admin_audit_logs ADD COLUMN actor_identifier TEXT;",
+    );
     if (hasColumn(database, "admin_audit_logs", "actor_email")) {
-      database.exec("UPDATE admin_audit_logs SET actor_identifier = actor_email;");
+      database.exec(
+        "UPDATE admin_audit_logs SET actor_identifier = actor_email;",
+      );
     }
+  }
+  if (!hasColumn(database, "tool_configurations", "max_output_size")) {
+    database.exec(
+      "ALTER TABLE tool_configurations ADD COLUMN max_output_size INTEGER NOT NULL DEFAULT 10485760 CHECK (max_output_size BETWEEN 1024 AND 104857600);",
+    );
+  }
+  if (!hasColumn(database, "tool_configurations", "max_execution_time")) {
+    database.exec(
+      "ALTER TABLE tool_configurations ADD COLUMN max_execution_time INTEGER NOT NULL DEFAULT 10000 CHECK (max_execution_time BETWEEN 100 AND 120000);",
+    );
+  }
+  if (!hasColumn(database, "tool_configurations", "max_concurrency")) {
+    database.exec(
+      "ALTER TABLE tool_configurations ADD COLUMN max_concurrency INTEGER NOT NULL DEFAULT 2 CHECK (max_concurrency BETWEEN 1 AND 16);",
+    );
   }
 }
 
@@ -181,6 +222,9 @@ function createDatabase(path: string): DatabaseSync {
       seo_description_en TEXT NOT NULL,
       seo_description_zh TEXT NOT NULL,
       max_input_size INTEGER NOT NULL CHECK (max_input_size BETWEEN 1024 AND 104857600),
+      max_output_size INTEGER NOT NULL CHECK (max_output_size BETWEEN 1024 AND 104857600),
+      max_execution_time INTEGER NOT NULL CHECK (max_execution_time BETWEEN 100 AND 120000),
+      max_concurrency INTEGER NOT NULL CHECK (max_concurrency BETWEEN 1 AND 16),
       requires_login INTEGER NOT NULL CHECK (requires_login IN (0, 1)),
       free_to_use INTEGER NOT NULL CHECK (free_to_use IN (0, 1)),
       enabled INTEGER NOT NULL CHECK (enabled IN (0, 1)),
@@ -271,7 +315,10 @@ function createDatabase(path: string): DatabaseSync {
 
 export function getDatabase(): DatabaseSync {
   const path = getDatabasePath();
-  if (!globalDatabase.devToolboxDatabase || globalDatabase.devToolboxDatabasePath !== path) {
+  if (
+    !globalDatabase.devToolboxDatabase ||
+    globalDatabase.devToolboxDatabasePath !== path
+  ) {
     globalDatabase.devToolboxDatabase?.close();
     globalDatabase.devToolboxDatabase = createDatabase(path);
     globalDatabase.devToolboxDatabasePath = path;
@@ -288,7 +335,9 @@ export async function initializeDatabase(): Promise<void> {
 
 async function bootstrapSuperAdmin(): Promise<void> {
   const database = getDatabase();
-  const row = database.prepare("SELECT COUNT(*) AS count FROM users WHERE role = 'super_admin'").get() as { count: number };
+  const row = database
+    .prepare("SELECT COUNT(*) AS count FROM users WHERE role = 'super_admin'")
+    .get() as { count: number };
   if (row.count > 0) return;
 
   const username = process.env.ADMIN_USERNAME?.trim();
@@ -296,10 +345,14 @@ async function bootstrapSuperAdmin(): Promise<void> {
   const name = process.env.ADMIN_NAME?.trim() || "DevToolbox Admin";
   if (!username || !password) return;
   if (!usernamePattern.test(username)) {
-    throw new Error("ADMIN_USERNAME must be 3-32 characters, start with a letter, and contain only letters, numbers, dot, underscore, or hyphen.");
+    throw new Error(
+      "ADMIN_USERNAME must be 3-32 characters, start with a letter, and contain only letters, numbers, dot, underscore, or hyphen.",
+    );
   }
   if (!isStrongPassword(password)) {
-    throw new Error("ADMIN_PASSWORD must have 12+ characters with uppercase, lowercase, number, and symbol.");
+    throw new Error(
+      "ADMIN_PASSWORD must have 12+ characters with uppercase, lowercase, number, and symbol.",
+    );
   }
 
   const now = new Date().toISOString();
@@ -309,7 +362,14 @@ async function bootstrapSuperAdmin(): Promise<void> {
         id, email, username, name, password_hash, role, status, created_at, updated_at
       ) VALUES (?, NULL, ?, ?, ?, 'super_admin', 'active', ?, ?)`,
     )
-    .run(crypto.randomUUID(), username, name, await hashPassword(password), now, now);
+    .run(
+      crypto.randomUUID(),
+      username,
+      name,
+      await hashPassword(password),
+      now,
+      now,
+    );
   if (result.changes === 0) {
     const concurrent = database
       .prepare("SELECT 1 FROM users WHERE role = 'super_admin'")

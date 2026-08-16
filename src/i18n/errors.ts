@@ -37,6 +37,22 @@ export function localizeToolError(message: string, messages: Messages): string {
         interpolate(messages.errors.inputTooLarge, { size: m[1], limit: m[2] }),
     ],
     [
+      /^Output is (.+)\. The limit for this tool is (.+)\.$/,
+      (m) =>
+        interpolate(messages.errors.outputTooLarge, {
+          size: m[1],
+          limit: m[2],
+        }),
+    ],
+    [
+      /^Tool execution exceeded the (.+) limit\.$/,
+      (m) => interpolate(messages.errors.executionTimeout, { limit: m[1] }),
+    ],
+    [
+      /^No more than (\d+) tool operations can run at once\.$/,
+      (m) => interpolate(messages.errors.executionConcurrency, { limit: m[1] }),
+    ],
+    [
       /^Invalid JSON: (.+)$/s,
       (m) => interpolate(messages.errors.invalidJson, { detail: m[1] }),
     ],

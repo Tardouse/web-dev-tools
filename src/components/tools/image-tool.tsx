@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import { downloadBytes } from "@/lib/clipboard";
 import { formatBytes, TOOL_LIMITS } from "@/lib/config";
+import { runToolTask } from "@/lib/tool-execution";
+import { localizeToolError } from "@/i18n/errors";
 import {
   analyzeImageColors,
   centerCropRect,
@@ -74,6 +76,7 @@ export function ImageWorkbenchTool({
 }: ToolComponentProps) {
   const zh = locale === "zh";
   const inputLimit = definition?.maxInputSize ?? TOOL_LIMITS.image;
+  const outputLimit = definition?.maxOutputSize ?? TOOL_LIMITS.maxOutput;
   const [tab, setTab] = useState<"file" | "base64">("file");
   const [sourceUrl, setSourceUrl] = useState("");
   const sourceObjectUrl = useRef("");
@@ -218,124 +221,138 @@ export function ImageWorkbenchTool({
     setBusy(true);
     setError("");
     try {
-      const image = await loadImage(sourceUrl);
-      let source = {
-        x: 0,
-        y: 0,
-        width: image.naturalWidth,
-        height: image.naturalHeight,
-      };
-      let dimensions;
-      if (operation === "favicon") {
-        source = centerCropRect(image.naturalWidth, image.naturalHeight, 1, 1);
-        dimensions = { width: 32, height: 32 };
-      } else if (operation === "crop") {
-        const [aspectWidth, aspectHeight] = cropAspect.split(":").map(Number);
-        source = centerCropRect(
-          image.naturalWidth,
-          image.naturalHeight,
-          aspectWidth,
-          aspectHeight,
-        );
-        dimensions = fitImageDimensions(
+      const result = await runToolTask(async (signal) => {
+        const image = await loadImage(sourceUrl);
+        if (signal.aborted) throw signal.reason;
+        let source = {
+          x: 0,
+          y: 0,
+          width: image.naturalWidth,
+          height: image.naturalHeight,
+        };
+        let dimensions;
+        if (operation === "favicon") {
+          source = centerCropRect(
+            image.naturalWidth,
+            image.naturalHeight,
+            1,
+            1,
+          );
+          dimensions = { width: 32, height: 32 };
+        } else if (operation === "crop") {
+          const [aspectWidth, aspectHeight] = cropAspect.split(":").map(Number);
+          source = centerCropRect(
+            image.naturalWidth,
+            image.naturalHeight,
+            aspectWidth,
+            aspectHeight,
+          );
+          dimensions = fitImageDimensions(
+            source.width,
+            source.height,
+            maxWidth,
+            maxHeight,
+            true,
+          );
+        } else {
+          dimensions = fitImageDimensions(
+            image.naturalWidth,
+            image.naturalHeight,
+            maxWidth,
+            maxHeight,
+            preserveAspect,
+          );
+        }
+        if (dimensions.width * dimensions.height > 25_000_000) {
+          throw new Error(
+            zh
+              ? "输出图片不能超过 2500 万像素。"
+              : "Output images cannot exceed 25 million pixels.",
+          );
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = dimensions.width;
+        canvas.height = dimensions.height;
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        if (!context) throw new Error("Canvas is unavailable in this browser.");
+        if (format === "image/jpeg") {
+          context.fillStyle = "#ffffff";
+          context.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        context.imageSmoothingEnabled = true;
+        context.imageSmoothingQuality = "high";
+        context.drawImage(
+          image,
+          source.x,
+          source.y,
           source.width,
           source.height,
-          maxWidth,
-          maxHeight,
-          true,
-        );
-      } else {
-        dimensions = fitImageDimensions(
-          image.naturalWidth,
-          image.naturalHeight,
-          maxWidth,
-          maxHeight,
-          preserveAspect,
-        );
-      }
-      if (dimensions.width * dimensions.height > 25_000_000) {
-        throw new Error(
-          zh
-            ? "输出图片不能超过 2500 万像素。"
-            : "Output images cannot exceed 25 million pixels.",
-        );
-      }
-      const canvas = document.createElement("canvas");
-      canvas.width = dimensions.width;
-      canvas.height = dimensions.height;
-      const context = canvas.getContext("2d", { willReadFrequently: true });
-      if (!context) throw new Error("Canvas is unavailable in this browser.");
-      if (format === "image/jpeg") {
-        context.fillStyle = "#ffffff";
-        context.fillRect(0, 0, canvas.width, canvas.height);
-      }
-      context.imageSmoothingEnabled = true;
-      context.imageSmoothingQuality = "high";
-      context.drawImage(
-        image,
-        source.x,
-        source.y,
-        source.width,
-        source.height,
-        0,
-        0,
-        dimensions.width,
-        dimensions.height,
-      );
-      const analysisCanvas = document.createElement("canvas");
-      const analysisScale = Math.min(
-        1,
-        256 / Math.max(canvas.width, canvas.height),
-      );
-      analysisCanvas.width = Math.max(
-        1,
-        Math.round(canvas.width * analysisScale),
-      );
-      analysisCanvas.height = Math.max(
-        1,
-        Math.round(canvas.height * analysisScale),
-      );
-      const analysisContext = analysisCanvas.getContext("2d", {
-        willReadFrequently: true,
-      });
-      if (analysisContext) {
-        analysisContext.drawImage(
-          canvas,
           0,
           0,
-          analysisCanvas.width,
-          analysisCanvas.height,
+          dimensions.width,
+          dimensions.height,
         );
-        setColors(
-          analyzeImageColors(
+        const analysisCanvas = document.createElement("canvas");
+        const analysisScale = Math.min(
+          1,
+          256 / Math.max(canvas.width, canvas.height),
+        );
+        analysisCanvas.width = Math.max(
+          1,
+          Math.round(canvas.width * analysisScale),
+        );
+        analysisCanvas.height = Math.max(
+          1,
+          Math.round(canvas.height * analysisScale),
+        );
+        let colorAnalysis: ImageColorAnalysis | null = null;
+        const analysisContext = analysisCanvas.getContext("2d", {
+          willReadFrequently: true,
+        });
+        if (analysisContext) {
+          analysisContext.drawImage(
+            canvas,
+            0,
+            0,
+            analysisCanvas.width,
+            analysisCanvas.height,
+          );
+          colorAnalysis = analyzeImageColors(
             analysisContext.getImageData(
               0,
               0,
               analysisCanvas.width,
               analysisCanvas.height,
             ).data,
-          ),
-        );
-      }
-      const outputFormat = operation === "favicon" ? "image/png" : format;
-      const blob = await canvasBlob(canvas, outputFormat, quality / 100);
-      if (blob.size > inputLimit) {
-        throw new Error(
-          zh
-            ? `处理后的图片超过 ${formatBytes(inputLimit)}，请降低尺寸或质量。`
-            : `The processed image exceeds ${formatBytes(inputLimit)}; reduce its dimensions or quality.`,
-        );
-      }
+          );
+        }
+        const outputFormat = operation === "favicon" ? "image/png" : format;
+        const blob = await canvasBlob(canvas, outputFormat, quality / 100);
+        if (signal.aborted) throw signal.reason;
+        if (blob.size > outputLimit) {
+          throw new Error(
+            zh
+              ? `处理后的图片超过 ${formatBytes(outputLimit)}，请降低尺寸或质量。`
+              : `The processed image exceeds ${formatBytes(outputLimit)}; reduce its dimensions or quality.`,
+          );
+        }
+        const base64Value = await blobDataUrl(blob);
+        if (signal.aborted) throw signal.reason;
+        return { blob, dimensions, colorAnalysis, base64Value };
+      }, definition);
       if (outputObjectUrl.current) URL.revokeObjectURL(outputObjectUrl.current);
-      const url = URL.createObjectURL(blob);
+      const url = URL.createObjectURL(result.blob);
       outputObjectUrl.current = url;
       setOutputUrl(url);
-      setOutputBlob(blob);
-      setOutputDimensions(dimensions);
-      setBase64(await blobDataUrl(blob));
+      setOutputBlob(result.blob);
+      setOutputDimensions(result.dimensions);
+      setColors(result.colorAnalysis);
+      setBase64(result.base64Value);
     } catch (caught) {
       setError(
-        caught instanceof Error ? caught.message : "Image processing failed.",
+        caught instanceof Error
+          ? localizeToolError(caught.message, messages)
+          : "Image processing failed.",
       );
     } finally {
       setBusy(false);

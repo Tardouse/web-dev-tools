@@ -2,25 +2,21 @@
 
 import { useMemo, useState } from "react";
 import { CircleAlert, ShieldCheck } from "lucide-react";
-import { decodeJwt } from "@/lib/tools";
+import type { DecodedJwt } from "@/lib/tools";
 import { CopyButton } from "./tool-actions";
 import type { ToolComponentProps } from "@/lib/types";
 import { localizeToolError } from "@/i18n/errors";
+import { useLiveWorkerResult } from "./use-live-worker-result";
 
 const demo =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkRldmVsb3BlciIsImlhdCI6MTUxNjIzOTAyMn0.invalid-signature";
-export function JwtTool({ messages }: ToolComponentProps) {
+export function JwtTool({ definition, messages }: ToolComponentProps) {
   const [input, setInput] = useState(demo);
-  const result = useMemo(() => {
-    try {
-      return { value: decodeJwt(input), error: "" };
-    } catch (error) {
-      return {
-        value: null,
-        error: error instanceof Error ? error.message : "Decode failed.",
-      };
-    }
-  }, [input]);
+  const request = useMemo(
+    () => ({ operation: "jwt-decode", input }) as const,
+    [input],
+  );
+  const result = useLiveWorkerResult<DecodedJwt>(request, definition);
   return (
     <section className="tool-workspace card">
       <div className="success-banner error-banner">

@@ -1,0 +1,129 @@
+import {
+  createGzipArchive,
+  createZipArchive,
+  extractGzipArchive,
+  extractTarArchive,
+  extractZipArchive,
+  type LocalFileEntry,
+} from "@/lib/tools/archive";
+import {
+  formatSqlQuery,
+  formatWebCode,
+  minifyWebCode,
+} from "@/lib/tools/code-workbench";
+import {
+  decodeBase64,
+  decodeJwt,
+  decodeUrl,
+  encodeBase64,
+  encodeUrl,
+} from "@/lib/tools/encoding";
+import {
+  compareText,
+  createSideBySideDiff,
+  toUnifiedLikeDiff,
+} from "@/lib/tools/diff";
+import { formatJson, minifyJson, validateJson } from "@/lib/tools/json";
+import { convertBase } from "@/lib/tools/number-color";
+import { hashText, testRegex } from "@/lib/tools/security";
+import { hashFileBytes } from "@/lib/tools/file";
+import { generateSshKey } from "@/lib/tools/ssh";
+import { convertCase, countText } from "@/lib/tools/text";
+import type {
+  DiffWorkerResult,
+  NumberBaseWorkerResult,
+  ToolWorkerRequest,
+  ToolWorkerResult,
+} from "@/lib/tool-worker-protocol";
+
+export async function executeToolWorkerRequest(
+  request: ToolWorkerRequest,
+): Promise<ToolWorkerResult> {
+  switch (request.operation) {
+    case "json-format":
+      return formatJson(request.input, request.indent);
+    case "json-minify":
+      return minifyJson(request.input);
+    case "json-validate":
+      return validateJson(request.input);
+    case "base64-encode":
+      return encodeBase64(request.input);
+    case "base64-decode":
+      return decodeBase64(request.input);
+    case "url-encode":
+      return encodeUrl(request.input);
+    case "url-decode":
+      return decodeUrl(request.input);
+    case "hash":
+      return hashText(request.input, request.algorithm);
+    case "case-convert":
+      return convertCase(request.input, request.mode);
+    case "text-count":
+      return countText(request.input);
+    case "jwt-decode":
+      return decodeJwt(request.input);
+    case "web-code":
+      if (request.action === "format") {
+        return formatWebCode(request.input, request.language);
+      }
+      if (request.language === "html") {
+        throw new Error("HTML minification requires a document context.");
+      }
+      return minifyWebCode(request.input, request.language);
+    case "sql-format":
+      return formatSqlQuery(
+        request.input,
+        request.dialect,
+        request.keywordCase,
+      );
+    case "regex-test":
+      return testRegex(request.pattern, request.flags, request.input);
+    case "diff": {
+      const parts = compareText(
+        request.before,
+        request.after,
+        request.mode,
+        request.ignoreWhitespace,
+      );
+      const result: DiffWorkerResult = {
+        model: createSideBySideDiff(
+          request.before,
+          request.after,
+          request.ignoreWhitespace,
+        ),
+        text: toUnifiedLikeDiff(parts),
+      };
+      return result;
+    }
+    case "number-base":
+      return {
+        value: convertBase(request.input, request.from, request.to),
+        conversions: request.targets.map((base) => ({
+          base,
+          value: convertBase(request.input, request.from, base),
+        })),
+      } satisfies NumberBaseWorkerResult;
+    case "archive-extract": {
+      if (request.format === "zip") return extractZipArchive(request.data);
+      if (request.format === "tar") return extractTarArchive(request.data);
+      if (request.format === "tar-gzip") {
+        return extractTarArchive(extractGzipArchive(request.data));
+      }
+      const entry: LocalFileEntry = {
+        name: request.filename.replace(/\.gz$/i, "") || "decompressed-file",
+        data: extractGzipArchive(request.data),
+      };
+      return [entry];
+    }
+    case "archive-create-zip":
+      return createZipArchive(request.files);
+    case "archive-gzip":
+      return request.action === "compress"
+        ? createGzipArchive(request.data)
+        : extractGzipArchive(request.data);
+    case "file-hash":
+      return hashFileBytes(request.data, request.algorithm);
+    case "ssh-key":
+      return generateSshKey(request.options);
+  }
+}

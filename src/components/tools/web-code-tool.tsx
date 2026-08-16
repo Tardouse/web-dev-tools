@@ -16,11 +16,17 @@ type Operation = "format" | "minify" | "encode" | "decode";
 const examples: Record<WebCodeLanguage, string> = {
   html: '<main class="app"><h1>Hello</h1><p>Local web tools</p></main>',
   css: ".app{display:grid;gap:1rem}.app h1{color:#2563eb;margin:0}",
-  javascript: "const tools=['sql','git'];tools.forEach((tool)=>console.log(tool));",
+  javascript:
+    "const tools=['sql','git'];tools.forEach((tool)=>console.log(tool));",
 };
 
-export function WebCodeTool({ definition, locale, messages }: ToolComponentProps) {
-  const implementation = definition?.implementation ?? definition?.slug ?? "html-formatter";
+export function WebCodeTool({
+  definition,
+  locale,
+  messages,
+}: ToolComponentProps) {
+  const implementation =
+    definition?.implementation ?? definition?.slug ?? "html-formatter";
   const language: WebCodeLanguage = implementation.startsWith("css")
     ? "css"
     : implementation.startsWith("javascript")
@@ -48,6 +54,24 @@ export function WebCodeTool({ definition, locale, messages }: ToolComponentProps
     },
     [language, operation],
   );
+  const workerTask = useCallback(
+    (input: string) => {
+      if (
+        operation === "encode" ||
+        operation === "decode" ||
+        (language === "html" && operation === "minify")
+      ) {
+        return null;
+      }
+      return {
+        operation: "web-code",
+        input,
+        language,
+        action: operation,
+      } as const;
+    },
+    [language, operation],
+  );
   const title =
     language === "html"
       ? zh
@@ -67,8 +91,9 @@ export function WebCodeTool({ definition, locale, messages }: ToolComponentProps
       initialInput={examples[language]}
       actionLabel={labels[operation]}
       filename={`result.${language === "javascript" ? "js" : language}`}
-      maxInputSize={definition?.maxInputSize}
+      definition={definition}
       transform={transform}
+      workerTask={workerTask}
       options={
         <label className="field inline compact-tool-option">
           <span className="sr-only">{zh ? "操作" : "Operation"}</span>
@@ -78,7 +103,9 @@ export function WebCodeTool({ definition, locale, messages }: ToolComponentProps
             onChange={(event) => setOperation(event.target.value as Operation)}
           >
             {operations.map((item) => (
-              <option value={item} key={item}>{labels[item]}</option>
+              <option value={item} key={item}>
+                {labels[item]}
+              </option>
             ))}
           </select>
         </label>

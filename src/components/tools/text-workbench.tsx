@@ -1,10 +1,17 @@
 "use client";
 
 import { CircleAlert } from "lucide-react";
-import { useCallback, useState } from "react";
-import { byteLength, formatBytes } from "@/lib/config";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { byteLength, formatBytes, TOOL_LIMITS } from "@/lib/config";
 import type { Messages } from "@/i18n";
 import { localizeToolError } from "@/i18n/errors";
+import {
+  isToolTaskCancellation,
+  runToolTask,
+  runToolWorker,
+} from "@/lib/tool-execution";
+import type { ToolWorkerRequest } from "@/lib/tool-worker-protocol";
+import type { ToolDefinition } from "@/lib/types";
 import {
   ClearButton,
   CopyButton,
@@ -22,8 +29,9 @@ interface TextWorkbenchProps {
   initialInput?: string;
   actionLabel?: string;
   filename?: string;
-  maxInputSize?: number;
-  transform: (input: string) => string | Promise<string>;
+  definition?: ToolDefinition;
+  transform?: (input: string) => string | Promise<string>;
+  workerTask?: (input: string) => ToolWorkerRequest | null;
   options?: React.ReactNode;
 }
 export function TextWorkbench({
@@ -36,10 +44,12 @@ export function TextWorkbench({
   initialInput = "",
   actionLabel,
   filename = "result.txt",
-  maxInputSize = 1024 * 1024,
+  definition,
   transform,
+  workerTask,
   options,
 }: TextWorkbenchProps) {
+  const maxInputSize = definition?.maxInputSize ?? TOOL_LIMITS.text;
   const resolvedTitle = title ?? messages.common.workspace;
   const resolvedInput = inputLabel ?? messages.common.input;
   const resolvedOutput = outputLabel ?? messages.common.output;
@@ -47,7 +57,12 @@ export function TextWorkbench({
   const [output, setOutput] = useState("");
   const [error, setError] = useState("");
   const [running, setRunning] = useState(false);
+  const execution = useRef<AbortController | null>(null);
+  useEffect(() => () => execution.current?.abort(), []);
   const run = useCallback(async () => {
+    execution.current?.abort();
+    const controller = new AbortController();
+    execution.current = controller;
     setRunning(true);
     setError("");
     const inputSize = byteLength(input);
@@ -59,12 +74,25 @@ export function TextWorkbench({
           messages,
         ),
       );
+      execution.current = null;
       setRunning(false);
       return;
     }
     try {
-      setOutput(await transform(input));
+      const request = workerTask?.(input);
+      const result = request
+        ? await runToolWorker<string>(request, definition, controller.signal)
+        : await runToolTask(
+            () => {
+              if (!transform) throw new Error("Tool operation is unavailable.");
+              return transform(input);
+            },
+            definition,
+            controller.signal,
+          );
+      if (!controller.signal.aborted) setOutput(result);
     } catch (caught) {
+      if (isToolTaskCancellation(caught)) return;
       setOutput("");
       setError(
         caught instanceof Error
@@ -72,10 +100,16 @@ export function TextWorkbench({
           : messages.workbench.operationFailed,
       );
     } finally {
-      setRunning(false);
+      if (execution.current === controller) {
+        execution.current = null;
+        setRunning(false);
+      }
     }
-  }, [input, maxInputSize, transform, messages]);
+  }, [definition, input, maxInputSize, messages, transform, workerTask]);
   const clear = () => {
+    execution.current?.abort();
+    execution.current = null;
+    setRunning(false);
     setInput("");
     setOutput("");
     setError("");

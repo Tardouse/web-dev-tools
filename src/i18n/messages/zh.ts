@@ -304,6 +304,9 @@ export const zh: Messages = {
   },
   errors: {
     inputTooLarge: "输入大小为 {size}，此工具的上限为 {limit}。",
+    outputTooLarge: "输出大小为 {size}，此工具的上限为 {limit}。",
+    executionTimeout: "操作超过 {limit} 的执行时间上限。",
+    executionConcurrency: "最多只能同时执行 {limit} 个工具操作。",
     enterJson: "请输入 JSON 后继续。",
     invalidJson: "JSON 无效：{detail}",
     jsonDepth: "JSON 嵌套超过最大深度 {depth}。",

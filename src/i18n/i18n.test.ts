@@ -7,6 +7,7 @@ import {
   switchLocalePath,
 } from "./index";
 import { hasChineseToolTranslation } from "./tool-metadata";
+import { localizeToolError } from "./errors";
 import {
   categories,
   getCategories,
@@ -46,5 +47,23 @@ describe("localization", () => {
         (tool) => tool.slug === "qr-code-generator",
       ),
     ).toBe(true);
+  });
+  it("localizes unified execution limit failures", () => {
+    const messages = getMessages("zh");
+    expect(
+      localizeToolError("Tool execution exceeded the 10 s limit.", messages),
+    ).toBe("操作超过 10 s 的执行时间上限。");
+    expect(
+      localizeToolError(
+        "Output is 12.0 MB. The limit for this tool is 10.0 MB.",
+        messages,
+      ),
+    ).toBe("输出大小为 12.0 MB，此工具的上限为 10.0 MB。");
+    expect(
+      localizeToolError(
+        "No more than 2 tool operations can run at once.",
+        messages,
+      ),
+    ).toBe("最多只能同时执行 2 个工具操作。");
   });
 });

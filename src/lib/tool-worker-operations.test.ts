@@ -1,0 +1,209 @@
+import { packTar } from "modern-tar";
+import { describe, expect, it } from "vitest";
+import { executeToolWorkerRequest } from "./tool-worker-operations";
+import type {
+  DiffWorkerResult,
+  NumberBaseWorkerResult,
+} from "./tool-worker-protocol";
+import type { LocalFileEntry } from "./tools/archive";
+
+const encode = (value: string) => new TextEncoder().encode(value);
+const decode = (value: Uint8Array) => new TextDecoder().decode(value);
+
+describe("tool worker operations", () => {
+  it("runs JSON, encoding, hashing, case, text, and JWT operations", async () => {
+    await expect(
+      executeToolWorkerRequest({
+        operation: "json-format",
+        input: '{"ok":true}',
+        indent: 2,
+      }),
+    ).resolves.toContain('"ok": true');
+    await expect(
+      executeToolWorkerRequest({
+        operation: "json-minify",
+        input: '{ "ok": true }',
+      }),
+    ).resolves.toBe('{"ok":true}');
+    await expect(
+      executeToolWorkerRequest({
+        operation: "json-validate",
+        input: "[1,2]",
+      }),
+    ).resolves.toContain("Root type: array");
+    await expect(
+      executeToolWorkerRequest({ operation: "base64-encode", input: "世界" }),
+    ).resolves.toBe("5LiW55WM");
+    await expect(
+      executeToolWorkerRequest({
+        operation: "base64-decode",
+        input: "5LiW55WM",
+      }),
+    ).resolves.toBe("世界");
+    await expect(
+      executeToolWorkerRequest({ operation: "url-encode", input: "a b" }),
+    ).resolves.toBe("a%20b");
+    await expect(
+      executeToolWorkerRequest({ operation: "url-decode", input: "a%20b" }),
+    ).resolves.toBe("a b");
+    await expect(
+      executeToolWorkerRequest({
+        operation: "hash",
+        input: "abc",
+        algorithm: "MD5",
+      }),
+    ).resolves.toBe("900150983cd24fb0d6963f7d28e17f72");
+    await expect(
+      executeToolWorkerRequest({
+        operation: "case-convert",
+        input: "hello world",
+        mode: "camel",
+      }),
+    ).resolves.toBe("helloWorld");
+    await expect(
+      executeToolWorkerRequest({
+        operation: "text-count",
+        input: "Hello 世界",
+      }),
+    ).resolves.toMatchObject({ characters: 8, chineseCharacters: 2, words: 2 });
+    await expect(
+      executeToolWorkerRequest({
+        operation: "jwt-decode",
+        input: "eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjMifQ.signature",
+      }),
+    ).resolves.toMatchObject({ payload: { sub: "123" } });
+  });
+
+  it("formats web code and SQL inside the worker boundary", async () => {
+    await expect(
+      executeToolWorkerRequest({
+        operation: "web-code",
+        input: ".app{color:red;margin:0}",
+        language: "css",
+        action: "format",
+      }),
+    ).resolves.toContain("color: red");
+    await expect(
+      executeToolWorkerRequest({
+        operation: "web-code",
+        input: ".app { color: red; margin: 0; }",
+        language: "css",
+        action: "minify",
+      }),
+    ).resolves.toBe(".app{color:red;margin:0}");
+    await expect(
+      executeToolWorkerRequest({
+        operation: "sql-format",
+        input: "select id from users where active=1",
+        dialect: "sql",
+        keywordCase: "upper",
+      }),
+    ).resolves.toContain("SELECT");
+  });
+
+  it("computes regex, diff, and arbitrary-base results", async () => {
+    const regex = await executeToolWorkerRequest({
+      operation: "regex-test",
+      pattern: "item-(\\d+)",
+      flags: "g",
+      input: "item-7 item-9",
+    });
+    expect(regex).toMatchObject({
+      matches: [
+        { value: "item-7", groups: ["7"] },
+        { value: "item-9", groups: ["9"] },
+      ],
+    });
+
+    const diff = (await executeToolWorkerRequest({
+      operation: "diff",
+      before: "old\n",
+      after: "new\n",
+      mode: "lines",
+      ignoreWhitespace: false,
+    })) as DiffWorkerResult;
+    expect(diff.text).toContain("-old");
+    expect(diff.model.left[0].tone).toBe("modified");
+
+    const number = (await executeToolWorkerRequest({
+      operation: "number-base",
+      input: "255",
+      from: 10,
+      to: 16,
+      targets: [2, 16],
+    })) as NumberBaseWorkerResult;
+    expect(number).toEqual({
+      value: "ff",
+      conversions: [
+        { base: 2, value: "11111111" },
+        { base: 16, value: "ff" },
+      ],
+    });
+  });
+
+  it("creates and extracts ZIP, TAR, and GZIP payloads", async () => {
+    const files: LocalFileEntry[] = [
+      { name: "docs/readme.txt", data: encode("worker zip") },
+    ];
+    const zip = (await executeToolWorkerRequest({
+      operation: "archive-create-zip",
+      files,
+    })) as Uint8Array;
+    const zipEntries = (await executeToolWorkerRequest({
+      operation: "archive-extract",
+      data: zip,
+      format: "zip",
+      filename: "files.zip",
+    })) as LocalFileEntry[];
+    expect(zipEntries[0].name).toBe("docs/readme.txt");
+    expect(decode(zipEntries[0].data)).toBe("worker zip");
+
+    const tar = await packTar([
+      { header: { name: "worker.txt", size: 3 }, body: "tar" },
+    ]);
+    const tarEntries = (await executeToolWorkerRequest({
+      operation: "archive-extract",
+      data: tar,
+      format: "tar",
+      filename: "files.tar",
+    })) as LocalFileEntry[];
+    expect(decode(tarEntries[0].data)).toBe("tar");
+
+    const gzip = (await executeToolWorkerRequest({
+      operation: "archive-gzip",
+      data: encode("worker gzip"),
+      action: "compress",
+    })) as Uint8Array;
+    const gzipEntries = (await executeToolWorkerRequest({
+      operation: "archive-extract",
+      data: gzip,
+      format: "gzip",
+      filename: "message.txt.gz",
+    })) as LocalFileEntry[];
+    expect(gzipEntries[0].name).toBe("message.txt");
+    expect(decode(gzipEntries[0].data)).toBe("worker gzip");
+  });
+
+  it("hashes files and generates SSH keys inside the worker boundary", async () => {
+    await expect(
+      executeToolWorkerRequest({
+        operation: "file-hash",
+        data: encode("abc"),
+        algorithm: "SHA-256",
+      }),
+    ).resolves.toBe(
+      "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+    );
+
+    await expect(
+      executeToolWorkerRequest({
+        operation: "ssh-key",
+        options: { algorithm: "ED25519", comment: "worker@example.com" },
+      }),
+    ).resolves.toMatchObject({
+      algorithm: "ED25519",
+      bits: 256,
+      privateFormat: "OpenSSH",
+    });
+  });
+});

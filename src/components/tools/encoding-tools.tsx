@@ -1,27 +1,29 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { decodeBase64, decodeUrl, encodeBase64, encodeUrl } from "@/lib/tools";
 import type { ToolComponentProps } from "@/lib/types";
 import { TextWorkbench } from "./text-workbench";
 
 export function Base64Tool({ definition, messages }: ToolComponentProps) {
   const [mode, setMode] = useState<"encode" | "decode">("encode");
-  const transform = useCallback(
+  const workerTask = useCallback(
     (input: string) =>
-      mode === "encode" ? encodeBase64(input) : decodeBase64(input),
+      ({
+        operation: mode === "encode" ? "base64-encode" : "base64-decode",
+        input,
+      }) as const,
     [mode],
   );
   return (
     <TextWorkbench
       messages={messages}
-      transform={transform}
+      workerTask={workerTask}
       initialInput="Hello, developer! 👋"
       actionLabel={
         mode === "encode" ? messages.tool.encode : messages.tool.decode
       }
       filename="base64.txt"
-      maxInputSize={definition?.maxInputSize}
+      definition={definition}
       options={
         <div className="segmented">
           <button
@@ -43,29 +45,35 @@ export function Base64Tool({ definition, messages }: ToolComponentProps) {
 }
 
 export function UrlEncoderTool({ definition, messages }: ToolComponentProps) {
-  const transform = useCallback((input: string) => encodeUrl(input), []);
+  const workerTask = useCallback(
+    (input: string) => ({ operation: "url-encode", input }) as const,
+    [],
+  );
   return (
     <TextWorkbench
       messages={messages}
-      transform={transform}
+      workerTask={workerTask}
       initialInput="https://example.com/search?q=developer tools&lang=en"
       actionLabel={messages.tool.encodeUrl}
       filename="encoded-url.txt"
-      maxInputSize={definition?.maxInputSize}
+      definition={definition}
     />
   );
 }
 
 export function UrlDecoderTool({ definition, messages }: ToolComponentProps) {
-  const transform = useCallback((input: string) => decodeUrl(input), []);
+  const workerTask = useCallback(
+    (input: string) => ({ operation: "url-decode", input }) as const,
+    [],
+  );
   return (
     <TextWorkbench
       messages={messages}
-      transform={transform}
+      workerTask={workerTask}
       initialInput="https%3A%2F%2Fexample.com%2Fsearch%3Fq%3Ddeveloper%20tools"
       actionLabel={messages.tool.decodeUrl}
       filename="decoded-url.txt"
-      maxInputSize={definition?.maxInputSize}
+      definition={definition}
     />
   );
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { formatJson, minifyJson, validateJson } from "@/lib/tools";
 import type { ToolComponentProps } from "@/lib/types";
 import { TextWorkbench } from "./text-workbench";
 
@@ -13,18 +12,18 @@ export function JsonFormatterTool({
   messages,
 }: ToolComponentProps) {
   const [indent, setIndent] = useState(2);
-  const transform = useCallback(
-    (input: string) => formatJson(input, indent),
+  const workerTask = useCallback(
+    (input: string) => ({ operation: "json-format", input, indent }) as const,
     [indent],
   );
   return (
     <TextWorkbench
       messages={messages}
-      transform={transform}
+      workerTask={workerTask}
       initialInput={example}
       actionLabel={messages.tool.formatJson}
       filename="formatted.json"
-      maxInputSize={definition?.maxInputSize}
+      definition={definition}
       options={
         <label className="field-label">
           {messages.tool.indent}{" "}
@@ -47,30 +46,36 @@ export function JsonValidatorTool({
   definition,
   messages,
 }: ToolComponentProps) {
-  const transform = useCallback((input: string) => validateJson(input), []);
+  const workerTask = useCallback(
+    (input: string) => ({ operation: "json-validate", input }) as const,
+    [],
+  );
   return (
     <TextWorkbench
       messages={messages}
-      transform={transform}
+      workerTask={workerTask}
       initialInput={example}
       actionLabel={messages.tool.validate}
       outputLabel={messages.tool.validationResult}
       filename="validation.txt"
-      maxInputSize={definition?.maxInputSize}
+      definition={definition}
     />
   );
 }
 
 export function JsonMinifierTool({ definition, messages }: ToolComponentProps) {
-  const transform = useCallback((input: string) => minifyJson(input), []);
+  const workerTask = useCallback(
+    (input: string) => ({ operation: "json-minify", input }) as const,
+    [],
+  );
   return (
     <TextWorkbench
       messages={messages}
-      transform={transform}
+      workerTask={workerTask}
       initialInput={JSON.stringify(JSON.parse(example), null, 2)}
       actionLabel={messages.tool.minifyJson}
       filename="minified.json"
-      maxInputSize={definition?.maxInputSize}
+      definition={definition}
     />
   );
 }

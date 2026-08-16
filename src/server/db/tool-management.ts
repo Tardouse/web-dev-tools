@@ -3,19 +3,12 @@ import "server-only";
 import { z } from "zod";
 import type { Locale } from "@/i18n";
 import { localizeCategory, localizeTool } from "@/i18n/tool-metadata";
-import {
-  categories,
-  tools as coreTools,
-} from "@/lib/tool-registry";
+import { categories, tools as coreTools } from "@/lib/tool-registry";
 import type {
   ManagedToolConfiguration,
   ToolConfigurationInput,
 } from "@/lib/tool-admin";
-import type {
-  ToolCategory,
-  ToolCategoryId,
-  ToolDefinition,
-} from "@/lib/types";
+import type { ToolCategory, ToolCategoryId, ToolDefinition } from "@/lib/types";
 import { writeAuditLog } from "@/server/db/audit";
 import { getDatabase, initializeDatabase } from "@/server/db/database";
 import { getSiteSettings } from "@/server/db/settings";
@@ -55,7 +48,18 @@ export const toolConfigurationSchema = z.object({
   seoTitleZh: shortText(3, 120),
   seoDescriptionEn: shortText(10, 300),
   seoDescriptionZh: shortText(5, 300),
-  maxInputSize: z.number().int().min(1024).max(100 * 1024 * 1024),
+  maxInputSize: z
+    .number()
+    .int()
+    .min(1024)
+    .max(100 * 1024 * 1024),
+  maxOutputSize: z
+    .number()
+    .int()
+    .min(1024)
+    .max(100 * 1024 * 1024),
+  maxExecutionTime: z.number().int().min(100).max(120_000),
+  maxConcurrency: z.number().int().min(1).max(16),
   requiresLogin: z.boolean(),
   freeToUse: z.boolean(),
   enabled: z.boolean(),
@@ -81,6 +85,9 @@ interface ToolRow {
   seo_description_en: string;
   seo_description_zh: string;
   max_input_size: number;
+  max_output_size: number;
+  max_execution_time: number;
+  max_concurrency: number;
   requires_login: number;
   free_to_use: number;
   enabled: number;
@@ -134,6 +141,9 @@ function coreConfiguration(tool: ToolDefinition): ManagedToolConfiguration {
     seoDescriptionEn: tool.seoDescription,
     seoDescriptionZh: zh.seoDescription,
     maxInputSize: tool.maxInputSize,
+    maxOutputSize: tool.maxOutputSize,
+    maxExecutionTime: tool.maxExecutionTime,
+    maxConcurrency: tool.maxConcurrency,
     requiresLogin: tool.requiresLogin,
     freeToUse: tool.freeToUse ?? true,
     enabled: tool.enabled,
@@ -162,6 +172,9 @@ function rowConfiguration(row: ToolRow): ManagedToolConfiguration {
     seoDescriptionEn: row.seo_description_en,
     seoDescriptionZh: row.seo_description_zh,
     maxInputSize: row.max_input_size,
+    maxOutputSize: row.max_output_size,
+    maxExecutionTime: row.max_execution_time,
+    maxConcurrency: row.max_concurrency,
     requiresLogin: row.requires_login === 1,
     freeToUse: row.free_to_use === 1,
     enabled: row.enabled === 1,
@@ -171,7 +184,9 @@ function rowConfiguration(row: ToolRow): ManagedToolConfiguration {
   };
 }
 
-async function configurationMap(): Promise<Map<string, ManagedToolConfiguration>> {
+async function configurationMap(): Promise<
+  Map<string, ManagedToolConfiguration>
+> {
   await initializeDatabase();
   const rows = getDatabase()
     .prepare("SELECT * FROM tool_configurations")
@@ -188,7 +203,8 @@ export async function listManagedTools(): Promise<ManagedToolConfiguration[]> {
     if (row.source === "custom") result.push(row);
   }
   return result.sort(
-    (left, right) => left.sortOrder - right.sortOrder || left.slug.localeCompare(right.slug),
+    (left, right) =>
+      left.sortOrder - right.sortOrder || left.slug.localeCompare(right.slug),
   );
 }
 
@@ -237,20 +253,23 @@ function toDefinition(
       config.category === "files"
         ? Math.min(config.maxInputSize, fileUploadLimit)
         : config.maxInputSize,
+    maxOutputSize: config.maxOutputSize,
+    maxExecutionTime: config.maxExecutionTime,
+    maxConcurrency: config.maxConcurrency,
     enabled: config.enabled,
     featured: config.featured,
     sortOrder: config.sortOrder,
     seoTitle: zh ? config.seoTitleZh : config.seoTitleEn,
-    seoDescription: zh
-      ? config.seoDescriptionZh
-      : config.seoDescriptionEn,
+    seoDescription: zh ? config.seoDescriptionZh : config.seoDescriptionEn,
     related: localizedImplementation.related.filter(
       (related) => related !== config.slug,
     ),
   };
 }
 
-export async function getPublicTools(locale: Locale): Promise<ToolDefinition[]> {
+export async function getPublicTools(
+  locale: Locale,
+): Promise<ToolDefinition[]> {
   const [managed, settings] = await Promise.all([
     listManagedTools(),
     getSiteSettings(),
@@ -260,7 +279,8 @@ export async function getPublicTools(locale: Locale): Promise<ToolDefinition[]> 
     .map((tool) => toDefinition(tool, locale, settings.fileUploadLimit))
     .filter((tool): tool is ToolDefinition => tool !== null)
     .sort(
-      (left, right) => left.sortOrder - right.sortOrder || left.slug.localeCompare(right.slug),
+      (left, right) =>
+        left.sortOrder - right.sortOrder || left.slug.localeCompare(right.slug),
     );
 }
 
@@ -283,7 +303,10 @@ export async function getPublicCategories(
 
 function assertActor(actor: SessionUser): void {
   if (actor.role !== "admin" && actor.role !== "super_admin") {
-    throw new ToolManagementError("Administrator access required.", "forbidden");
+    throw new ToolManagementError(
+      "Administrator access required.",
+      "forbidden",
+    );
   }
 }
 
@@ -339,9 +362,10 @@ function saveConfiguration(
         slug, implementation_slug, is_custom, name_en, name_zh,
         short_name_en, short_name_zh, description_en, description_zh,
         category, keywords_en, keywords_zh, seo_title_en, seo_title_zh,
-        seo_description_en, seo_description_zh, max_input_size, requires_login,
-        free_to_use, enabled, featured, sort_order, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        seo_description_en, seo_description_zh, max_input_size, max_output_size,
+        max_execution_time, max_concurrency, requires_login, free_to_use,
+        enabled, featured, sort_order, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT(slug) DO UPDATE SET
         implementation_slug = excluded.implementation_slug,
         name_en = excluded.name_en, name_zh = excluded.name_zh,
@@ -355,6 +379,9 @@ function saveConfiguration(
         seo_description_en = excluded.seo_description_en,
         seo_description_zh = excluded.seo_description_zh,
         max_input_size = excluded.max_input_size,
+        max_output_size = excluded.max_output_size,
+        max_execution_time = excluded.max_execution_time,
+        max_concurrency = excluded.max_concurrency,
         requires_login = excluded.requires_login,
         free_to_use = excluded.free_to_use, enabled = excluded.enabled,
         featured = excluded.featured, sort_order = excluded.sort_order,
@@ -378,6 +405,9 @@ function saveConfiguration(
       value.seoDescriptionEn,
       value.seoDescriptionZh,
       value.maxInputSize,
+      value.maxOutputSize,
+      value.maxExecutionTime,
+      value.maxConcurrency,
       Number(value.requiresLogin),
       Number(value.freeToUse),
       Number(value.enabled),
@@ -460,7 +490,9 @@ export async function deleteManagedTool(
           "core_delete",
         );
       }
-      getDatabase().prepare("DELETE FROM tool_configurations WHERE slug = ?").run(slug);
+      getDatabase()
+        .prepare("DELETE FROM tool_configurations WHERE slug = ?")
+        .run(slug);
     },
   });
 }
@@ -476,9 +508,14 @@ export async function resetManagedTool(
     slug,
     operation: () => {
       if (!coreTools.some((tool) => tool.slug === slug)) {
-        throw new ToolManagementError("Only core tools can be restored.", "invalid");
+        throw new ToolManagementError(
+          "Only core tools can be restored.",
+          "invalid",
+        );
       }
-      getDatabase().prepare("DELETE FROM tool_configurations WHERE slug = ?").run(slug);
+      getDatabase()
+        .prepare("DELETE FROM tool_configurations WHERE slug = ?")
+        .run(slug);
     },
   });
 }

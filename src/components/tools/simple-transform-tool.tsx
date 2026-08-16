@@ -34,7 +34,7 @@ export function SimpleTransformTool({
       inputLabel={inputLabel}
       outputLabel={outputLabel}
       filename={filename}
-      maxInputSize={definition?.maxInputSize}
+      definition={definition}
     />
   );
 }

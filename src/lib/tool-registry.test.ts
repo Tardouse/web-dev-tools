@@ -7,7 +7,13 @@ describe("tool registry", () => {
     expect(new Set(tools.map((tool) => tool.slug)).size).toBe(tools.length);
     expect(
       tools.every(
-        (tool) => tool.seoTitle && tool.faq.length && tool.maxInputSize > 0,
+        (tool) =>
+          tool.seoTitle &&
+          tool.faq.length &&
+          tool.maxInputSize > 0 &&
+          tool.maxOutputSize > 0 &&
+          tool.maxExecutionTime > 0 &&
+          tool.maxConcurrency > 0,
       ),
     ).toBe(true);
   });

@@ -5,9 +5,10 @@ import type { ToolComponentProps } from "@/lib/types";
 import { localizeToolError } from "@/i18n/errors";
 import { interpolate } from "@/i18n";
 import { CircleAlert } from "lucide-react";
-import { testRegex } from "@/lib/tools";
+import type { RegexResult } from "@/lib/tools";
+import { useLiveWorkerResult } from "./use-live-worker-result";
 
-export function RegexTool({ messages }: ToolComponentProps) {
+export function RegexTool({ definition, messages }: ToolComponentProps) {
   const [pattern, setPattern] = useState(
     "\\b[a-zA-Z]+@[a-zA-Z]+\\.[a-zA-Z]{2,}\\b",
   );
@@ -15,16 +16,11 @@ export function RegexTool({ messages }: ToolComponentProps) {
   const [input, setInput] = useState(
     "Contact dev@example.com or support@example.org for help.",
   );
-  const result = useMemo(() => {
-    try {
-      return { value: testRegex(pattern, flags, input), error: "" };
-    } catch (error) {
-      return {
-        value: null,
-        error: error instanceof Error ? error.message : "Regex failed.",
-      };
-    }
-  }, [pattern, flags, input]);
+  const request = useMemo(
+    () => ({ operation: "regex-test", pattern, flags, input }) as const,
+    [flags, input, pattern],
+  );
+  const result = useLiveWorkerResult<RegexResult>(request, definition);
   const toggleFlag = (flag: string) =>
     setFlags((current) =>
       current.includes(flag) ? current.replace(flag, "") : current + flag,
@@ -73,6 +69,7 @@ export function RegexTool({ messages }: ToolComponentProps) {
           </div>
           <textarea
             className="editor"
+            aria-label={messages.tool.testString}
             value={input}
             onChange={(event) => setInput(event.target.value)}
           />

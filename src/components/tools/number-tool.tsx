@@ -2,30 +2,38 @@
 
 import { useMemo, useState } from "react";
 import { CircleAlert } from "lucide-react";
-import { convertBase } from "@/lib/tools";
 import { CopyButton } from "./tool-actions";
 import type { ToolComponentProps } from "@/lib/types";
 import { localizeToolError } from "@/i18n/errors";
+import type { NumberBaseWorkerResult } from "@/lib/tool-worker-protocol";
+import { useLiveWorkerResult } from "./use-live-worker-result";
 
-export function NumberBaseTool({ messages }: ToolComponentProps) {
+const commonBases = [2, 8, 10, 16, 36];
+
+export function NumberBaseTool({ definition, messages }: ToolComponentProps) {
   const [input, setInput] = useState("255");
   const [from, setFrom] = useState(10);
   const [to, setTo] = useState(16);
-  const result = useMemo(() => {
-    try {
-      return { value: convertBase(input, from, to), error: "" };
-    } catch (error) {
-      return {
-        value: "",
-        error: error instanceof Error ? error.message : "Conversion failed.",
-      };
-    }
-  }, [input, from, to]);
+  const request = useMemo(
+    () =>
+      ({
+        operation: "number-base",
+        input,
+        from,
+        to,
+        targets: commonBases,
+      }) as const,
+    [from, input, to],
+  );
+  const result = useLiveWorkerResult<NumberBaseWorkerResult>(
+    request,
+    definition,
+  );
   return (
     <section className="tool-workspace card">
       <div className="workspace-header">
         <h2>{messages.tool.baseConverter}</h2>
-        <CopyButton messages={messages} value={result.value} />
+        <CopyButton messages={messages} value={result.value?.value ?? ""} />
       </div>
       {result.error && (
         <div className="error-banner">
@@ -80,15 +88,14 @@ export function NumberBaseTool({ messages }: ToolComponentProps) {
               whiteSpace: "pre-wrap",
             }}
           >
-            {result.value || "—"}
+            {result.value?.value || "—"}
           </pre>
         </div>
         <div className="option-row">
-          {[2, 8, 10, 16, 36].map((base) => {
-            let value = "—";
-            try {
-              value = convertBase(input, from, base);
-            } catch {}
+          {commonBases.map((base) => {
+            const value =
+              result.value?.conversions.find((item) => item.base === base)
+                ?.value ?? "—";
             return (
               <span className="badge mono" key={base}>
                 base {base}: {value}

@@ -1,18 +1,19 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CircleAlert, FileSearch, Hash } from "lucide-react";
 import { formatBytes, TOOL_LIMITS } from "@/lib/config";
 import {
   convertFileSize,
   createHexPreview,
   detectTextEncodings,
-  hashFileBytes,
   resolveFileMime,
   type FileHashAlgorithm,
   type FileSizeUnit,
 } from "@/lib/tools";
 import type { ToolComponentProps } from "@/lib/types";
+import { localizeToolError } from "@/i18n/errors";
+import { isToolTaskCancellation, runToolWorker } from "@/lib/tool-execution";
 
 const hashAlgorithms: FileHashAlgorithm[] = [
   "SHA-256",
@@ -23,7 +24,11 @@ const hashAlgorithms: FileHashAlgorithm[] = [
 ];
 const sizeUnits: FileSizeUnit[] = ["B", "KB", "MB", "GB", "KiB", "MiB", "GiB"];
 
-export function FileInspectorTool({ locale, definition }: ToolComponentProps) {
+export function FileInspectorTool({
+  locale,
+  definition,
+  messages,
+}: ToolComponentProps) {
   const zh = locale === "zh";
   const inputLimit = definition?.maxInputSize ?? TOOL_LIMITS.file;
   const [file, setFile] = useState<File | null>(null);
@@ -33,6 +38,8 @@ export function FileInspectorTool({ locale, definition }: ToolComponentProps) {
   const [error, setError] = useState("");
   const [sizeValue, setSizeValue] = useState(1);
   const [sizeUnit, setSizeUnit] = useState<FileSizeUnit>("MiB");
+  const hashExecution = useRef<AbortController | null>(null);
+  useEffect(() => () => hashExecution.current?.abort(), []);
   const convertedSizes = useMemo(
     () => convertFileSize(sizeValue, sizeUnit),
     [sizeValue, sizeUnit],
@@ -45,6 +52,37 @@ export function FileInspectorTool({ locale, definition }: ToolComponentProps) {
       hex: createHexPreview(data),
     };
   }, [file, data]);
+
+  const calculateDigest = async (
+    value: Uint8Array,
+    nextAlgorithm: FileHashAlgorithm,
+  ) => {
+    hashExecution.current?.abort();
+    const controller = new AbortController();
+    hashExecution.current = controller;
+    setDigest("");
+    try {
+      const result = await runToolWorker<string>(
+        {
+          operation: "file-hash",
+          data: value.slice(),
+          algorithm: nextAlgorithm,
+        },
+        definition,
+        controller.signal,
+      );
+      if (!controller.signal.aborted) setDigest(result);
+    } catch (caught) {
+      if (isToolTaskCancellation(caught)) return;
+      setError(
+        caught instanceof Error
+          ? localizeToolError(caught.message, messages)
+          : "File hashing failed.",
+      );
+    } finally {
+      if (hashExecution.current === controller) hashExecution.current = null;
+    }
+  };
 
   const inspect = async (selected: File) => {
     setError("");
@@ -61,7 +99,7 @@ export function FileInspectorTool({ locale, definition }: ToolComponentProps) {
       const next = new Uint8Array(await selected.arrayBuffer());
       setFile(selected);
       setData(next);
-      setDigest(await hashFileBytes(next, algorithm));
+      await calculateDigest(next, algorithm);
     } catch (caught) {
       setError(
         caught instanceof Error ? caught.message : "File inspection failed.",
@@ -71,7 +109,8 @@ export function FileInspectorTool({ locale, definition }: ToolComponentProps) {
 
   const rehash = async (nextAlgorithm: FileHashAlgorithm) => {
     setAlgorithm(nextAlgorithm);
-    if (data) setDigest(await hashFileBytes(data, nextAlgorithm));
+    setError("");
+    if (data) await calculateDigest(data, nextAlgorithm);
   };
 
   return (

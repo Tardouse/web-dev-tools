@@ -18,6 +18,7 @@
 - Sprint 10：HTTP Header/Auth 生成与浏览器 Webhook 测试已完成，包含 Payload 格式化、统一超时/响应限制和 Header 注入防护，并通过桌面/移动端 E2E
 - Sprint 11：随机字符串、密码、用户名、Lorem Ipsum、Fake JSON、Mock CSV、数字、日期与颜色生成器已完成，包含 Web Crypto、安全字符集、集中限制和长输出滚动，并通过桌面/移动端 E2E
 - Sprint 12：Vim、Regex、Bash、SQL、JavaScript、Python、HTTP 状态码与 CSS 速查已完成，包含 94 条双语可搜索参考内容，并通过桌面/移动端 E2E
+- Sprint 13：统一最大执行时间、最大输出和最大并发限制已完成，支持后台逐工具配置、旧数据库迁移、可终止 Web Worker、请求取消与双语错误，并通过桌面/移动端 E2E
 - 用户与后台：已完成 Email 注册验证、登录与密码恢复、用户/管理员认证隔离、收藏与最近使用、运营 Dashboard 和用户管理
 - 工程化：已具备单元、集成和 E2E 测试、GitHub Actions CI 及生产部署配置；实际域名、HTTPS 证书和 CD 尚未落地
 
@@ -838,13 +839,13 @@ ZIP：
 
 所有可能造成高 CPU / 高内存消耗的操作必须有：
 
-- [ ] 最大执行时间
+- [x] 最大执行时间
 - [x] 最大输入
-- [ ] 最大输出
+- [x] 最大输出
 - [x] 最大递归深度
 - [x] 最大文件数量
 - [x] 最大解压大小
-- [ ] 最大并发数
+- [x] 最大并发数
 
 ---
 
@@ -1606,6 +1607,13 @@ Code Review
 - [x] JavaScript / Python / HTTP Status Code / CSS Cheatsheet
 - [x] 双语条目搜索、复制、空状态与独立 SEO 页面
 - [x] 长代码安全换行与桌面/移动端 E2E
+
+## Sprint 13
+
+- [x] 统一最大执行时间、最大输出和最大并发限制
+- [x] 后台逐工具配置、SQLite 持久化与旧数据库迁移
+- [x] 高耗时本地计算使用可终止 Web Worker，请求任务支持 AbortSignal
+- [x] 双语限制错误、单元/集成测试与桌面/移动端 E2E
 
 ---
 

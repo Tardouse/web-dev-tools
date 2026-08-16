@@ -1,6 +1,10 @@
 // @vitest-environment node
 
 import { randomUUID } from "node:crypto";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { DatabaseSync } from "node:sqlite";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_SITE_SETTINGS } from "@/lib/site-settings";
 import { tools as coreTools } from "@/lib/tool-registry";
@@ -197,6 +201,47 @@ describe("system settings", () => {
 });
 
 describe("tool management", () => {
+  it("migrates execution limits into an existing tool configuration table", async () => {
+    closeDatabaseForTests();
+    const directory = mkdtempSync(join(tmpdir(), "devtoolbox-limits-"));
+    const databasePath = join(directory, "legacy.sqlite");
+    const legacy = new DatabaseSync(databasePath);
+    legacy.exec(`
+      CREATE TABLE tool_configurations (
+        slug TEXT PRIMARY KEY,
+        max_input_size INTEGER NOT NULL,
+        enabled INTEGER NOT NULL,
+        sort_order INTEGER NOT NULL
+      );
+      INSERT INTO tool_configurations (slug, max_input_size, enabled, sort_order)
+      VALUES ('legacy-tool', 1048576, 1, 1);
+    `);
+    legacy.close();
+    process.env.DATABASE_PATH = databasePath;
+    try {
+      await initializeDatabase();
+      expect(
+        getDatabase()
+          .prepare(
+            `SELECT max_output_size, max_execution_time, max_concurrency
+             FROM tool_configurations WHERE slug = 'legacy-tool'`,
+          )
+          .get(),
+      ).toEqual({
+        max_output_size: 10 * 1024 * 1024,
+        max_execution_time: 10_000,
+        max_concurrency: 2,
+      });
+    } finally {
+      closeDatabaseForTests();
+      rmSync(directory, { recursive: true, force: true });
+      process.env.DATABASE_PATH = ":memory:";
+      await initializeDatabase();
+      addActor(superAdmin);
+      addActor(admin);
+    }
+  });
+
   it("overrides, disables, and restores a core tool", async () => {
     const original = await getManagedTool("json-formatter");
     expect(original).toMatchObject({ source: "core", customized: false });
@@ -230,7 +275,8 @@ describe("tool management", () => {
       nameZh: "团队 JSON 格式化",
       shortNameEn: "Team JSON",
       shortNameZh: "团队 JSON",
-      descriptionEn: "Format shared JSON fixtures with the standard formatter engine.",
+      descriptionEn:
+        "Format shared JSON fixtures with the standard formatter engine.",
       descriptionZh: "使用标准格式化引擎处理团队共享的 JSON 数据。",
       category: "json-data",
       keywordsEn: ["json", "team"],
@@ -240,6 +286,9 @@ describe("tool management", () => {
       seoDescriptionEn: "Format team JSON fixtures locally in your browser.",
       seoDescriptionZh: "在浏览器本地格式化团队 JSON 数据。",
       maxInputSize: 2 * 1024 * 1024,
+      maxOutputSize: 4 * 1024 * 1024,
+      maxExecutionTime: 5_000,
+      maxConcurrency: 1,
       requiresLogin: true,
       freeToUse: true,
       enabled: true,
@@ -251,6 +300,9 @@ describe("tool management", () => {
       implementation: "json-formatter",
       name: "团队 JSON 格式化",
       requiresLogin: true,
+      maxOutputSize: 4 * 1024 * 1024,
+      maxExecutionTime: 5_000,
+      maxConcurrency: 1,
     });
     expect((await getPublicTools("en")).length).toBe(coreTools.length + 1);
     expect(
