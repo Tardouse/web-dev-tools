@@ -6,14 +6,16 @@
 
 ### 当前交付概览
 
-- 第一版建议工具：20 / 20 已完成，仓库实际注册 37 个独立工具
+- 第一版建议工具：20 / 20 已完成，仓库实际注册 39 个独立工具
 - P0 必须项：19 / 19 已完成
 - P1 第一阶段项：11 / 11 已完成
+- P2 用户增长项：11 / 11 已完成
 - Sprint 5：图片、归档、文件检查、SSH Key、MIME Type 与 HTTP Status Code 已完成，并通过桌面/移动端 E2E
 - Sprint 6：邮箱验证与找回密码已完成，包含单次令牌、双重限流、SMTP / 测试 outbox 和会话撤销，并通过桌面/移动端 E2E
 - Sprint 7：工具管理与系统设置已完成，包含双语工具配置、访问策略、全局站点开关、容量/API 限额和维护模式，并通过桌面/移动端 E2E
 - Sprint 8：SEO、Sitemap、搜索、相关推荐、FAQ、Analytics 与按需加载已完成，并通过聚合 E2E 验收
 - Sprint 9：SQL、Web 代码处理、Git、网络分析、浏览器 API 请求与 Linux/Git/Docker/Nginx 速查已完成，并通过桌面/移动端 E2E
+- Sprint 10：HTTP Header/Auth 生成与浏览器 Webhook 测试已完成，包含 Payload 格式化、统一超时/响应限制和 Header 注入防护，并通过桌面/移动端 E2E
 - 用户与后台：已完成 Email 注册验证、登录与密码恢复、用户/管理员认证隔离、收藏与最近使用、运营 Dashboard 和用户管理
 - 工程化：已具备单元、集成和 E2E 测试、GitHub Actions CI 及生产部署配置；实际域名、HTTPS 证书和 CD 尚未落地
 
@@ -737,12 +739,12 @@ Generate
 - [x] HTTP Request Builder
 - [x] API Request Generator
 - [x] REST API Tester
-- [ ] HTTP Header Generator
-- [ ] Authorization Header Generator
-- [ ] Bearer Token Generator
-- [ ] Basic Auth Generator
-- [ ] Webhook Tester
-- [ ] Webhook Payload Formatter
+- [x] HTTP Header Generator
+- [x] Authorization Header Generator
+- [x] Bearer Token Generator
+- [x] Basic Auth Generator
+- [x] Webhook Tester
+- [x] Webhook Payload Formatter
 
 Webhook / HTTP 请求功能必须严格控制服务器端网络访问能力，优先采用浏览器端请求。
 
@@ -1579,6 +1581,15 @@ Code Review
 - [x] 网络工具
 - [x] API 工具
 
+## Sprint 10
+
+- [x] HTTP Header Generator
+- [x] Authorization / Bearer / Basic Auth Generator
+- [x] Webhook Tester
+- [x] Webhook Payload Formatter
+- [x] 浏览器直连、超时与响应大小限制
+- [x] Header 注入防护
+
 ---
 
 # 51. 工具开发统一规范
@@ -1920,7 +1931,7 @@ Curl
 - [x] Linux
 - [x] Nginx
 - [x] API Tester
-- [ ] Webhook
+- [x] Webhook
 
 ### P3 —— 商业化
 

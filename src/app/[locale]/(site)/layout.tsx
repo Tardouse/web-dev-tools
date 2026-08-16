@@ -57,7 +57,9 @@ export default async function SiteLayout({
         settings={settings}
         tools={tools}
         categories={categories}
-        accountNavigation={<AccountNavigation locale={locale} />}
+        accountNavigation={
+          <AccountNavigation key="account-navigation" locale={locale} />
+        }
       />
       <main className="page-shell">{children}</main>
       <SiteFooter

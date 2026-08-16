@@ -3,6 +3,7 @@
 import { CircleAlert, Send } from "lucide-react";
 import { useMemo, useState } from "react";
 import { byteLength, formatBytes } from "@/lib/config";
+import { sendBrowserRequest } from "@/lib/tools/browser-request";
 import {
   generateApiSnippet,
   parseHeaderLines,
@@ -10,27 +11,6 @@ import {
 } from "@/lib/tools/developer-tools";
 import type { ToolComponentProps } from "@/lib/types";
 import { ActionButton, CopyButton } from "./tool-actions";
-
-const MAX_RESPONSE_BYTES = 1024 * 1024;
-
-async function responseText(response: Response): Promise<string> {
-  if (!response.body) return "";
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder();
-  let size = 0;
-  let result = "";
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    size += value.byteLength;
-    if (size > MAX_RESPONSE_BYTES) {
-      await reader.cancel();
-      throw new Error("Response exceeds the 1 MB browser limit.");
-    }
-    result += decoder.decode(value, { stream: true });
-  }
-  return result + decoder.decode();
-}
 
 export function ApiRequestBuilderTool({ definition, locale, messages }: ToolComponentProps) {
   const zh = locale === "zh";
@@ -60,30 +40,11 @@ export function ApiRequestBuilderTool({ definition, locale, messages }: ToolComp
     setPending(true);
     setError("");
     setResponse(null);
-    const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 10_000);
-    const started = performance.now();
     try {
-      const hasBody = body.length > 0 && !["GET", "HEAD"].includes(method);
-      const result = await fetch(config.value.url, {
-        method,
-        headers: config.value.headers,
-        ...(hasBody ? { body } : {}),
-        credentials: "omit",
-        cache: "no-store",
-        signal: controller.signal,
-      });
-      const text = await responseText(result);
-      setResponse({
-        status: `${result.status} ${result.statusText}`.trim(),
-        duration: Math.round(performance.now() - started),
-        headers: [...result.headers.entries()].map(([name, value]) => `${name}: ${value}`).join("\n"),
-        body: text,
-      });
+      setResponse(await sendBrowserRequest(config.value));
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Request failed.");
     } finally {
-      window.clearTimeout(timeout);
       setPending(false);
     }
   };

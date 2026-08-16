@@ -186,6 +186,7 @@ export function parseHeaderLines(value: string): Record<string, string> {
     const name = line.slice(0, separator).trim();
     const headerValue = line.slice(separator + 1).trim();
     if (!/^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/.test(name)) throw new Error(`Invalid header name: ${name}`);
+    if (/[\r\n]/.test(headerValue)) throw new Error(`Invalid header value: ${name}`);
     headers[name] = headerValue;
   }
   return headers;

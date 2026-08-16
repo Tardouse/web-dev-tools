@@ -1453,6 +1453,33 @@
   color: var(--text-muted);
   font-size: 0.8rem;
 }
+.header-builder-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.header-field-wide {
+  grid-column: 1 / -1;
+}
+.header-builder-grid textarea {
+  min-height: 96px;
+}
+.header-builder-output {
+  min-height: 210px;
+}
+.webhook-request-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 8px;
+  padding: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.webhook-payload-label {
+  gap: 10px;
+}
 
 @media (max-width: 900px) {
   .category-grid {
@@ -1649,14 +1676,18 @@
     width: 100%;
   }
   .developer-workbench .workspace-header,
-  .api-workbench .workspace-header {
+  .api-workbench .workspace-header,
+  .header-builder-workbench .workspace-header,
+  .webhook-workbench .workspace-header {
     align-items: stretch;
     flex-direction: column;
   }
   .developer-form-grid,
   .network-result-grid,
   .api-editor-grid,
-  .api-request-line {
+  .api-request-line,
+  .header-builder-grid,
+  .webhook-request-line {
     grid-template-columns: 1fr;
   }
   .developer-field-wide {
@@ -1676,5 +1707,15 @@
   }
   .api-request-line .button {
     width: 100%;
+  }
+  .header-field-wide {
+    grid-column: auto;
+  }
+  .webhook-request-line .button {
+    width: 100%;
+  }
+  .webhook-payload-label {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

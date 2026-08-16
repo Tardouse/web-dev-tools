@@ -538,6 +538,30 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
       { question: "有哪些安全限制？", answer: "请求 10 秒后超时，响应正文最大为 1 MB。" },
     ],
   },
+  "http-header-builder": {
+    name: "HTTP Header 与认证生成器",
+    shortName: "Header 生成器",
+    description: "生成 Bearer、Basic Auth 和 API Key 请求头，并输出 Header Lines、JSON 或 Fetch 格式。",
+    keywords: ["http", "header", "请求头", "authorization", "bearer", "basic auth", "api key"],
+    seoTitle: "HTTP Header、Bearer 与 Basic Auth 在线生成",
+    seoDescription: "在浏览器本地生成 HTTP 请求头，以及 Bearer Token、Basic Auth 和 API Key 认证值。",
+    faq: [
+      { question: "认证信息会发送到网络吗？", answer: "不会。Header 生成完全在浏览器本地完成，不会发起网络请求。" },
+      { question: "Basic Auth 会加密密码吗？", answer: "不会。Basic Auth 只是 Base64 编码，并非加密，必须配合 HTTPS 使用。" },
+    ],
+  },
+  "webhook-tester": {
+    name: "Webhook 测试与 Payload 格式化",
+    shortName: "Webhook 测试",
+    description: "格式化 JSON Payload、生成请求代码，并从浏览器直接发送出站 Webhook。",
+    keywords: ["webhook", "payload", "json", "http post", "测试", "curl", "回调"],
+    seoTitle: "Webhook 在线测试与 JSON Payload 格式化",
+    seoDescription: "格式化 Webhook JSON，生成 cURL、Fetch 或 Axios 代码，并从浏览器测试支持 CORS 的目标地址。",
+    faq: [
+      { question: "请求会经过本站服务器吗？", answer: "不会。Webhook 由浏览器直接发送，并遵从目标服务的 CORS 策略。" },
+      { question: "有哪些限制？", answer: "Payload 使用后台配置的工具上限，请求 10 秒后超时，响应正文最大为 1 MB。" },
+    ],
+  },
   "linux-cheatsheet": {
     name: "Linux 命令速查",
     shortName: "Linux 命令",

@@ -107,6 +107,14 @@ const toolComponents: Record<string, ComponentType<ToolComponentProps>> = {
   "api-request-builder": dynamic(() =>
     import("./api-tool").then((module) => module.ApiRequestBuilderTool),
   ),
+  "http-header-builder": dynamic(() =>
+    import("./header-builder-tool").then(
+      (module) => module.HttpHeaderBuilderTool,
+    ),
+  ),
+  "webhook-tester": dynamic(() =>
+    import("./webhook-tool").then((module) => module.WebhookTesterTool),
+  ),
   "linux-cheatsheet": dynamic(() =>
     import("./cheatsheet-tool").then(
       (module) => module.DeveloperCheatsheetTool,
