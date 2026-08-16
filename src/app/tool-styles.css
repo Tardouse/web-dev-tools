@@ -354,6 +354,95 @@
   color: var(--text-subtle);
   font-size: 0.76rem;
 }
+.json-tree-scroll {
+  min-height: 430px;
+  max-height: 620px;
+  overflow: auto;
+  background: var(--surface);
+  padding-block: 5px;
+  font-family: var(--font-mono), monospace;
+}
+.json-tree-row {
+  --json-tree-indent: 0px;
+  min-height: 34px;
+  display: grid;
+  grid-template-columns: 24px minmax(64px, 150px) auto minmax(70px, 1fr) 28px;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 7px 3px calc(7px + var(--json-tree-indent));
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 62%, transparent);
+}
+.json-tree-row:hover {
+  background: var(--surface-muted);
+}
+.json-tree-toggle,
+.json-tree-toggle-spacer,
+.json-tree-path {
+  width: 24px;
+  height: 24px;
+}
+.json-tree-toggle-spacer {
+  display: block;
+}
+.json-tree-key,
+.json-tree-value {
+  min-width: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0;
+}
+.json-tree-key {
+  overflow: hidden;
+  color: var(--text);
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.json-tree-value {
+  overflow-wrap: anywhere;
+  color: var(--text-muted);
+}
+.json-tree-type {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 1px 5px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface-elevated);
+  color: var(--text-subtle);
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.json-tree-type-string {
+  color: var(--success);
+}
+.json-tree-type-number {
+  color: var(--accent);
+}
+.json-tree-type-boolean,
+.json-tree-type-null {
+  color: var(--warning);
+}
+.json-tree-more {
+  margin: 5px 8px 5px calc(39px + var(--json-tree-indent));
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.json-tree-stats {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+}
+.json-tree-stats span + span::before {
+  content: "/";
+  margin-inline-end: 10px;
+  color: var(--border-strong);
+}
 .error-banner {
   display: flex;
   gap: 9px;
@@ -1387,7 +1476,9 @@
 .network-result-grid dd {
   margin: 0;
   overflow-wrap: anywhere;
-  font: 0.82rem/1.55 var(--font-mono), monospace;
+  font:
+    0.82rem/1.55 var(--font-mono),
+    monospace;
 }
 .cheatsheet-list {
   display: grid;
@@ -1646,6 +1737,13 @@
   .workspace-panel + .workspace-panel {
     border-left: 0;
     border-top: 1px solid var(--border);
+  }
+  .json-tree-row {
+    grid-template-columns: 24px minmax(48px, 100px) auto minmax(56px, 1fr) 28px;
+    gap: 5px;
+  }
+  .json-tree-scroll {
+    min-height: 380px;
   }
   .editor {
     min-height: 270px;

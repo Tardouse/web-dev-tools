@@ -1,8 +1,12 @@
 export async function copyToClipboard(value: string): Promise<void> {
   if (!value) return;
   if (navigator.clipboard?.writeText) {
-    await navigator.clipboard.writeText(value);
-    return;
+    try {
+      await navigator.clipboard.writeText(value);
+      return;
+    } catch {
+      // Fall through for browsers that expose Clipboard API but deny access.
+    }
   }
 
   const textarea = document.createElement("textarea");
@@ -11,8 +15,9 @@ export async function copyToClipboard(value: string): Promise<void> {
   textarea.style.opacity = "0";
   document.body.appendChild(textarea);
   textarea.select();
-  document.execCommand("copy");
+  const copied = document.execCommand("copy");
   textarea.remove();
+  if (!copied) throw new Error("Clipboard access was denied.");
 }
 
 export function downloadText(

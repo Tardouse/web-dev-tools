@@ -24,6 +24,12 @@ import {
   toUnifiedLikeDiff,
 } from "@/lib/tools/diff";
 import { formatJson, minifyJson, validateJson } from "@/lib/tools/json";
+import {
+  createJsonTree,
+  jsonToCsv,
+  jsonToXml,
+  jsonToYaml,
+} from "@/lib/tools/json-conversion";
 import { convertBase } from "@/lib/tools/number-color";
 import { hashText, testRegex } from "@/lib/tools/security";
 import { hashFileBytes } from "@/lib/tools/file";
@@ -46,6 +52,14 @@ export async function executeToolWorkerRequest(
       return minifyJson(request.input);
     case "json-validate":
       return validateJson(request.input);
+    case "json-to-yaml":
+      return jsonToYaml(request.input);
+    case "json-to-xml":
+      return jsonToXml(request.input);
+    case "json-to-csv":
+      return jsonToCsv(request.input);
+    case "json-tree":
+      return createJsonTree(request.input);
     case "base64-encode":
       return encodeBase64(request.input);
     case "base64-decode":

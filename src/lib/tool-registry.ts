@@ -156,6 +156,130 @@ export const tools: ToolDefinition[] = [
   },
   {
     ...shared,
+    id: "json-to-yaml",
+    slug: "json-to-yaml",
+    name: "JSON to YAML Converter",
+    shortName: "JSON to YAML",
+    category: "json-data",
+    icon: "FileJson2",
+    sortOrder: 31,
+    description:
+      "Convert JSON objects and arrays to readable YAML while preserving scalar types.",
+    keywords: ["json", "yaml", "convert", "serialize", "configuration"],
+    aliases: ["json yaml converter", "json2yaml"],
+    maxInputSize: TOOL_LIMITS.json,
+    seoTitle: "JSON to YAML Converter Online",
+    seoDescription:
+      "Convert JSON to readable YAML locally in your browser with type preservation and strict input limits.",
+    related: ["json-formatter", "json-to-xml", "json-tree-viewer"],
+    faq: [
+      {
+        question: "Are strings, booleans, and numbers preserved?",
+        answer:
+          "Yes. The converter parses JSON first and serializes the resulting values with YAML's corresponding scalar types.",
+      },
+      {
+        question: "Is conversion performed on the server?",
+        answer:
+          "No. Conversion runs inside a time-limited Web Worker in your browser.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "json-to-xml",
+    slug: "json-to-xml",
+    name: "JSON to XML Converter",
+    shortName: "JSON to XML",
+    category: "json-data",
+    icon: "FileCode2",
+    sortOrder: 32,
+    description:
+      "Convert JSON to valid XML with explicit value types and lossless property names.",
+    keywords: ["json", "xml", "convert", "serialize", "data"],
+    aliases: ["json xml converter", "json2xml"],
+    maxInputSize: TOOL_LIMITS.json,
+    seoTitle: "JSON to XML Converter Online",
+    seoDescription:
+      "Convert JSON to escaped, typed XML locally while preserving arrays, null values, and arbitrary property names.",
+    related: ["json-to-yaml", "json-to-csv", "json-tree-viewer"],
+    faq: [
+      {
+        question: "How are JSON property names represented?",
+        answer:
+          "Each property becomes a property element with a name attribute, so spaces and other keys remain lossless and valid XML.",
+      },
+      {
+        question: "How are arrays and null values represented?",
+        answer:
+          "Arrays use repeated item elements, while every value includes an explicit type attribute, including null.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "json-to-csv",
+    slug: "json-to-csv",
+    name: "JSON to CSV Converter",
+    shortName: "JSON to CSV",
+    category: "json-data",
+    icon: "Table2",
+    sortOrder: 33,
+    description:
+      "Convert JSON arrays or objects to RFC-style CSV with safe spreadsheet values.",
+    keywords: ["json", "csv", "spreadsheet", "table", "convert"],
+    aliases: ["json csv converter", "json2csv"],
+    maxInputSize: TOOL_LIMITS.json,
+    seoTitle: "JSON to CSV Converter Online",
+    seoDescription:
+      "Convert JSON rows to CSV locally with union headers, nested value preservation, and formula injection protection.",
+    related: ["json-to-yaml", "json-to-xml", "fake-json-generator"],
+    faq: [
+      {
+        question: "What JSON shape works best?",
+        answer:
+          "An array of objects creates one row per object. A single object creates one row, and scalar arrays use a value column.",
+      },
+      {
+        question: "What happens to nested objects and arrays?",
+        answer:
+          "Nested values are preserved as JSON text inside a CSV cell, and spreadsheet formula prefixes are escaped.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "json-tree-viewer",
+    slug: "json-tree-viewer",
+    name: "JSON Tree Viewer",
+    shortName: "JSON Tree",
+    category: "json-data",
+    icon: "ListTree",
+    sortOrder: 34,
+    description:
+      "Explore JSON as an expandable tree with types, counts, depth statistics, and copyable JSONPath values.",
+    keywords: ["json", "tree", "viewer", "inspect", "jsonpath", "structure"],
+    aliases: ["json explorer", "json inspector"],
+    maxInputSize: TOOL_LIMITS.json,
+    seoTitle: "JSON Tree Viewer Online — Explore JSON Structure",
+    seoDescription:
+      "Inspect JSON in an expandable local tree with value types, node statistics, paged children, and copyable JSONPath values.",
+    related: ["json-formatter", "json-validator", "json-to-yaml"],
+    faq: [
+      {
+        question: "Can the viewer handle large arrays?",
+        answer:
+          "Yes. Parsing is limited and runs in a Web Worker, while child nodes render in pages of 100 to keep the interface responsive.",
+      },
+      {
+        question: "Can I copy a node path?",
+        answer:
+          "Yes. Every row has a copy action for its JSONPath, including quoted keys and array indexes.",
+      },
+    ],
+  },
+  {
+    ...shared,
     id: "base64",
     slug: "base64",
     name: "Base64 Encoder / Decoder",

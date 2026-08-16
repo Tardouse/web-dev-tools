@@ -79,6 +79,89 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
       },
     ],
   },
+  "json-to-yaml": {
+    name: "JSON 转 YAML",
+    shortName: "JSON 转 YAML",
+    description: "将 JSON 对象和数组转换为易读的 YAML，并保留基础值类型。",
+    keywords: ["json", "yaml", "转换", "序列化", "配置"],
+    seoTitle: "JSON 转 YAML 在线转换器",
+    seoDescription:
+      "在浏览器本地将 JSON 转为易读 YAML，保留值类型并应用严格输入限制。",
+    faq: [
+      {
+        question: "字符串、布尔值和数字会保留类型吗？",
+        answer: "会。工具先解析 JSON，再用 YAML 对应的基础类型序列化结果。",
+      },
+      {
+        question: "转换会发送到服务器吗？",
+        answer: "不会。转换在浏览器内受时间限制的 Web Worker 中完成。",
+      },
+    ],
+  },
+  "json-to-xml": {
+    name: "JSON 转 XML",
+    shortName: "JSON 转 XML",
+    description: "将 JSON 转换为有效 XML，显式保留值类型和完整属性名。",
+    keywords: ["json", "xml", "转换", "序列化", "数据"],
+    seoTitle: "JSON 转 XML 在线转换器",
+    seoDescription:
+      "在本地将 JSON 转为经过转义且带类型的 XML，保留数组、null 和任意属性名。",
+    faq: [
+      {
+        question: "JSON 属性名如何表示？",
+        answer:
+          "每个属性使用带 name 特性的 property 元素表示，因此空格等特殊键名也能无损保留并符合 XML 规范。",
+      },
+      {
+        question: "数组和 null 如何表示？",
+        answer:
+          "数组使用重复的 item 元素，每个值都带有明确的 type 特性，包括 null。",
+      },
+    ],
+  },
+  "json-to-csv": {
+    name: "JSON 转 CSV",
+    shortName: "JSON 转 CSV",
+    description: "将 JSON 数组或对象转换为适合表格使用的安全 CSV。",
+    keywords: ["json", "csv", "表格", "转换", "数据"],
+    seoTitle: "JSON 转 CSV 在线转换器",
+    seoDescription:
+      "在本地将 JSON 行转换为 CSV，支持合并表头、嵌套值和公式注入防护。",
+    faq: [
+      {
+        question: "哪种 JSON 结构最适合转换？",
+        answer:
+          "对象数组会按对象生成多行；单个对象生成一行；基础值数组会使用 value 列。",
+      },
+      {
+        question: "嵌套对象和数组如何处理？",
+        answer:
+          "嵌套值会作为 JSON 文本保存在单元格中，并对电子表格公式前缀进行转义。",
+      },
+    ],
+  },
+  "json-tree-viewer": {
+    name: "JSON 树查看器",
+    shortName: "JSON 树",
+    description:
+      "以可展开树浏览 JSON，显示类型、数量、深度统计并复制 JSONPath。",
+    keywords: ["json", "树", "查看", "检查", "jsonpath", "结构"],
+    seoTitle: "JSON 树在线查看器 — 浏览 JSON 结构",
+    seoDescription:
+      "使用可展开的本地树检查 JSON，查看值类型、节点统计、分页子项并复制 JSONPath。",
+    faq: [
+      {
+        question: "可以处理大型数组吗？",
+        answer:
+          "可以。解析在受限制的 Web Worker 中运行，子节点每次渲染 100 项以保持界面响应。",
+      },
+      {
+        question: "可以复制节点路径吗？",
+        answer:
+          "可以。每一行都能复制对应 JSONPath，包括带引号的键名和数组索引。",
+      },
+    ],
+  },
   base64: {
     name: "Base64 编码 / 解码",
     shortName: "Base64",
@@ -481,13 +564,20 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
   "sql-formatter": {
     name: "SQL 格式化与美化",
     shortName: "SQL 格式化",
-    description: "在本地格式化 Standard SQL、PostgreSQL、MySQL、SQLite 与 SQL Server 查询。",
+    description:
+      "在本地格式化 Standard SQL、PostgreSQL、MySQL、SQLite 与 SQL Server 查询。",
     keywords: ["sql", "格式化", "美化", "postgresql", "mysql", "sqlite"],
     seoTitle: "SQL 在线格式化与美化",
     seoDescription: "在浏览器中按 SQL 方言格式化查询并调整关键字大小写。",
     faq: [
-      { question: "支持哪些 SQL 方言？", answer: "支持 Standard SQL、PostgreSQL、MySQL、SQLite 与 SQL Server。" },
-      { question: "查询会上传吗？", answer: "不会。解析和格式化完全在浏览器本地运行。" },
+      {
+        question: "支持哪些 SQL 方言？",
+        answer: "支持 Standard SQL、PostgreSQL、MySQL、SQLite 与 SQL Server。",
+      },
+      {
+        question: "查询会上传吗？",
+        answer: "不会。解析和格式化完全在浏览器本地运行。",
+      },
     ],
   },
   "css-formatter": {
@@ -496,8 +586,14 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
     description: "使用语法解析器在本地格式化或压缩 CSS。",
     keywords: ["css", "格式化", "美化", "压缩", "样式表"],
     seoTitle: "CSS 在线格式化与压缩",
-    seoDescription: "在浏览器本地格式化和压缩 CSS，提供语法感知输出且无需上传。",
-    faq: [{ question: "压缩会改变 CSS 行为吗？", answer: "压缩器基于 CSS 语法树执行保持语义的优化。" }],
+    seoDescription:
+      "在浏览器本地格式化和压缩 CSS，提供语法感知输出且无需上传。",
+    faq: [
+      {
+        question: "压缩会改变 CSS 行为吗？",
+        answer: "压缩器基于 CSS 语法树执行保持语义的优化。",
+      },
+    ],
   },
   "javascript-formatter": {
     name: "JavaScript 格式化与压缩",
@@ -505,61 +601,150 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
     description: "使用语法解析器在本地格式化或压缩现代 JavaScript。",
     keywords: ["javascript", "js", "格式化", "美化", "压缩", "terser"],
     seoTitle: "JavaScript 在线格式化与压缩",
-    seoDescription: "在浏览器本地美化和压缩 JavaScript，支持现代语法且无需上传。",
-    faq: [{ question: "支持哪些 JavaScript 语法？", answer: "格式化器支持现代 ECMAScript，压缩前也会验证输入语法。" }],
+    seoDescription:
+      "在浏览器本地美化和压缩 JavaScript，支持现代语法且无需上传。",
+    faq: [
+      {
+        question: "支持哪些 JavaScript 语法？",
+        answer: "格式化器支持现代 ECMAScript，压缩前也会验证输入语法。",
+      },
+    ],
   },
   "git-command-builder": {
     name: "Git 命令工作台",
     shortName: "Git 命令",
-    description: "生成带安全引用的 clone、reset、rebase、cherry-pick 命令和分支名，并解析 Git URL。",
-    keywords: ["git", "clone", "reset", "rebase", "cherry-pick", "分支", "github", "url"],
+    description:
+      "生成带安全引用的 clone、reset、rebase、cherry-pick 命令和分支名，并解析 Git URL。",
+    keywords: [
+      "git",
+      "clone",
+      "reset",
+      "rebase",
+      "cherry-pick",
+      "分支",
+      "github",
+      "url",
+    ],
     seoTitle: "Git 命令与分支名在线生成",
-    seoDescription: "生成安全引用的 Git 命令和分支名，或解析 HTTPS 与 SSH 仓库 URL。",
-    faq: [{ question: "会自动执行命令吗？", answer: "不会。工作台只生成供您检查和复制的文本。" }],
+    seoDescription:
+      "生成安全引用的 Git 命令和分支名，或解析 HTTPS 与 SSH 仓库 URL。",
+    faq: [
+      {
+        question: "会自动执行命令吗？",
+        answer: "不会。工作台只生成供您检查和复制的文本。",
+      },
+    ],
   },
   "network-calculator": {
     name: "IP、CIDR、MAC 与 URL 计算器",
     shortName: "网络计算器",
-    description: "在本地分析 IPv4、IPv6、CIDR 范围、子网掩码、MAC 格式和 URL 组成。",
-    keywords: ["ipv4", "ipv6", "cidr", "子网", "ip 范围", "mac", "url 解析", "网络"],
+    description:
+      "在本地分析 IPv4、IPv6、CIDR 范围、子网掩码、MAC 格式和 URL 组成。",
+    keywords: [
+      "ipv4",
+      "ipv6",
+      "cidr",
+      "子网",
+      "ip 范围",
+      "mac",
+      "url 解析",
+      "网络",
+    ],
     seoTitle: "IP CIDR 子网、MAC 与 URL 在线计算",
-    seoDescription: "在浏览器中计算 IPv4/IPv6 网络、子网范围、MAC 格式与 URL 组成。",
-    faq: [{ question: "会查询 IP 数据库吗？", answer: "不会。地址解析和子网计算均为浏览器本地数学运算。" }],
+    seoDescription:
+      "在浏览器中计算 IPv4/IPv6 网络、子网范围、MAC 格式与 URL 组成。",
+    faq: [
+      {
+        question: "会查询 IP 数据库吗？",
+        answer: "不会。地址解析和子网计算均为浏览器本地数学运算。",
+      },
+    ],
   },
   "api-request-builder": {
     name: "API 请求构建与测试",
     shortName: "API 测试",
-    description: "生成 cURL、Fetch 和 Axios 请求，或在严格限制下从浏览器直接发送。",
-    keywords: ["api", "rest", "http 请求", "测试", "curl", "fetch", "axios", "headers"],
+    description:
+      "生成 cURL、Fetch 和 Axios 请求，或在严格限制下从浏览器直接发送。",
+    keywords: [
+      "api",
+      "rest",
+      "http 请求",
+      "测试",
+      "curl",
+      "fetch",
+      "axios",
+      "headers",
+    ],
     seoTitle: "API 请求构建与 REST 在线测试",
-    seoDescription: "生成 cURL、Fetch、Axios 代码，或从浏览器直接测试启用 CORS 的 API。",
+    seoDescription:
+      "生成 cURL、Fetch、Axios 代码，或从浏览器直接测试启用 CORS 的 API。",
     faq: [
-      { question: "请求会通过本站服务器代理吗？", answer: "不会。请求由浏览器直接发送，并遵从目标服务的 CORS 策略。" },
-      { question: "有哪些安全限制？", answer: "请求 10 秒后超时，响应正文最大为 1 MB。" },
+      {
+        question: "请求会通过本站服务器代理吗？",
+        answer: "不会。请求由浏览器直接发送，并遵从目标服务的 CORS 策略。",
+      },
+      {
+        question: "有哪些安全限制？",
+        answer: "请求 10 秒后超时，响应正文最大为 1 MB。",
+      },
     ],
   },
   "http-header-builder": {
     name: "HTTP Header 与认证生成器",
     shortName: "Header 生成器",
-    description: "生成 Bearer、Basic Auth 和 API Key 请求头，并输出 Header Lines、JSON 或 Fetch 格式。",
-    keywords: ["http", "header", "请求头", "authorization", "bearer", "basic auth", "api key"],
+    description:
+      "生成 Bearer、Basic Auth 和 API Key 请求头，并输出 Header Lines、JSON 或 Fetch 格式。",
+    keywords: [
+      "http",
+      "header",
+      "请求头",
+      "authorization",
+      "bearer",
+      "basic auth",
+      "api key",
+    ],
     seoTitle: "HTTP Header、Bearer 与 Basic Auth 在线生成",
-    seoDescription: "在浏览器本地生成 HTTP 请求头，以及 Bearer Token、Basic Auth 和 API Key 认证值。",
+    seoDescription:
+      "在浏览器本地生成 HTTP 请求头，以及 Bearer Token、Basic Auth 和 API Key 认证值。",
     faq: [
-      { question: "认证信息会发送到网络吗？", answer: "不会。Header 生成完全在浏览器本地完成，不会发起网络请求。" },
-      { question: "Basic Auth 会加密密码吗？", answer: "不会。Basic Auth 只是 Base64 编码，并非加密，必须配合 HTTPS 使用。" },
+      {
+        question: "认证信息会发送到网络吗？",
+        answer: "不会。Header 生成完全在浏览器本地完成，不会发起网络请求。",
+      },
+      {
+        question: "Basic Auth 会加密密码吗？",
+        answer:
+          "不会。Basic Auth 只是 Base64 编码，并非加密，必须配合 HTTPS 使用。",
+      },
     ],
   },
   "webhook-tester": {
     name: "Webhook 测试与 Payload 格式化",
     shortName: "Webhook 测试",
-    description: "格式化 JSON Payload、生成请求代码，并从浏览器直接发送出站 Webhook。",
-    keywords: ["webhook", "payload", "json", "http post", "测试", "curl", "回调"],
+    description:
+      "格式化 JSON Payload、生成请求代码，并从浏览器直接发送出站 Webhook。",
+    keywords: [
+      "webhook",
+      "payload",
+      "json",
+      "http post",
+      "测试",
+      "curl",
+      "回调",
+    ],
     seoTitle: "Webhook 在线测试与 JSON Payload 格式化",
-    seoDescription: "格式化 Webhook JSON，生成 cURL、Fetch 或 Axios 代码，并从浏览器测试支持 CORS 的目标地址。",
+    seoDescription:
+      "格式化 Webhook JSON，生成 cURL、Fetch 或 Axios 代码，并从浏览器测试支持 CORS 的目标地址。",
     faq: [
-      { question: "请求会经过本站服务器吗？", answer: "不会。Webhook 由浏览器直接发送，并遵从目标服务的 CORS 策略。" },
-      { question: "有哪些限制？", answer: "Payload 使用后台配置的工具上限，请求 10 秒后超时，响应正文最大为 1 MB。" },
+      {
+        question: "请求会经过本站服务器吗？",
+        answer: "不会。Webhook 由浏览器直接发送，并遵从目标服务的 CORS 策略。",
+      },
+      {
+        question: "有哪些限制？",
+        answer:
+          "Payload 使用后台配置的工具上限，请求 10 秒后超时，响应正文最大为 1 MB。",
+      },
     ],
   },
   "random-string-generator": {
@@ -704,7 +889,12 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
     keywords: ["linux", "shell", "命令", "systemd", "文件", "网络"],
     seoTitle: "Linux 命令在线速查",
     seoDescription: "按任务快速搜索并复制实用 Linux 命令。",
-    faq: [{ question: "会自动执行命令吗？", answer: "不会。所有条目都只是供您检查和复制的参考文本。" }],
+    faq: [
+      {
+        question: "会自动执行命令吗？",
+        answer: "不会。所有条目都只是供您检查和复制的参考文本。",
+      },
+    ],
   },
   "git-cheatsheet": {
     name: "Git 命令速查",
@@ -713,7 +903,12 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
     keywords: ["git", "命令", "分支", "diff", "reflog", "远端"],
     seoTitle: "Git 命令在线速查",
     seoDescription: "按任务快速搜索并复制实用 Git 命令。",
-    faq: [{ question: "会自动执行命令吗？", answer: "不会。所有条目都只是供您检查和复制的参考文本。" }],
+    faq: [
+      {
+        question: "会自动执行命令吗？",
+        answer: "不会。所有条目都只是供您检查和复制的参考文本。",
+      },
+    ],
   },
   "docker-cheatsheet": {
     name: "Docker 命令速查",
@@ -722,7 +917,12 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
     keywords: ["docker", "容器", "镜像", "compose", "构建", "日志"],
     seoTitle: "Docker 命令在线速查",
     seoDescription: "按任务快速搜索并复制实用 Docker 与 Compose 命令。",
-    faq: [{ question: "会自动执行命令吗？", answer: "不会。所有条目都只是供您检查和复制的参考文本。" }],
+    faq: [
+      {
+        question: "会自动执行命令吗？",
+        answer: "不会。所有条目都只是供您检查和复制的参考文本。",
+      },
+    ],
   },
   "nginx-cheatsheet": {
     name: "Nginx 配置速查",
@@ -731,7 +931,12 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
     keywords: ["nginx", "反向代理", "tls", "headers", "重载", "配置"],
     seoTitle: "Nginx 配置在线速查",
     seoDescription: "按任务快速搜索并复制实用 Nginx 命令与配置片段。",
-    faq: [{ question: "会自动修改配置吗？", answer: "不会。所有条目都只是供您检查和复制的参考文本。" }],
+    faq: [
+      {
+        question: "会自动修改配置吗？",
+        answer: "不会。所有条目都只是供您检查和复制的参考文本。",
+      },
+    ],
   },
   "vim-cheatsheet": {
     name: "Vim 命令速查",
@@ -740,7 +945,12 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
     keywords: ["vim", "编辑器", "命令", "导航", "替换", "快捷键"],
     seoTitle: "Vim 常用命令在线速查",
     seoDescription: "搜索并复制常用 Vim 导航、编辑、搜索、替换和文件命令。",
-    faq: [{ question: "会修改本地文件吗？", answer: "不会。页面只提供可搜索和复制的 Vim 命令参考。" }],
+    faq: [
+      {
+        question: "会修改本地文件吗？",
+        answer: "不会。页面只提供可搜索和复制的 Vim 命令参考。",
+      },
+    ],
   },
   "regex-cheatsheet": {
     name: "正则表达式速查",
@@ -748,8 +958,14 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
     description: "按锚点、字符类、分组、环视和量词查找常用正则语法。",
     keywords: ["regex", "正则表达式", "模式", "分组", "环视", "量词"],
     seoTitle: "正则表达式语法在线速查",
-    seoDescription: "搜索并复制常用正则表达式锚点、字符类、分组、边界和量词模式。",
-    faq: [{ question: "这些模式会自动运行吗？", answer: "不会。可复制模式到正则测试器中按实际输入验证。" }],
+    seoDescription:
+      "搜索并复制常用正则表达式锚点、字符类、分组、边界和量词模式。",
+    faq: [
+      {
+        question: "这些模式会自动运行吗？",
+        answer: "不会。可复制模式到正则测试器中按实际输入验证。",
+      },
+    ],
   },
   "bash-cheatsheet": {
     name: "Bash 脚本速查",
@@ -757,8 +973,14 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
     description: "查找 Bash 安全选项、参数、循环、输入、清理和条件分支示例。",
     keywords: ["bash", "shell", "脚本", "pipefail", "循环", "trap"],
     seoTitle: "Bash Shell 脚本在线速查",
-    seoDescription: "搜索并复制常用 Bash 安全设置、参数处理、循环、trap 和条件语句。",
-    faq: [{ question: "会执行 Shell 命令吗？", answer: "不会。所有脚本片段都只在页面中显示，复制前应先检查。" }],
+    seoDescription:
+      "搜索并复制常用 Bash 安全设置、参数处理、循环、trap 和条件语句。",
+    faq: [
+      {
+        question: "会执行 Shell 命令吗？",
+        answer: "不会。所有脚本片段都只在页面中显示，复制前应先检查。",
+      },
+    ],
   },
   "sql-cheatsheet": {
     name: "SQL 语句速查",
@@ -766,26 +988,46 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
     description: "查找查询、连接、聚合、写入、事务、CTE 和执行计划示例。",
     keywords: ["sql", "select", "join", "group by", "事务", "cte", "explain"],
     seoTitle: "常用 SQL 语句在线速查",
-    seoDescription: "搜索并复制常用 SQL 查询、连接、聚合、写入、事务和 CTE 示例。",
-    faq: [{ question: "SQL 会连接数据库执行吗？", answer: "不会。页面只提供数据库无关的参考语句。" }],
+    seoDescription:
+      "搜索并复制常用 SQL 查询、连接、聚合、写入、事务和 CTE 示例。",
+    faq: [
+      {
+        question: "SQL 会连接数据库执行吗？",
+        answer: "不会。页面只提供数据库无关的参考语句。",
+      },
+    ],
   },
   "javascript-cheatsheet": {
     name: "JavaScript 语法速查",
     shortName: "JavaScript 速查",
-    description: "查找对象、数组、异步、集合、模块和 JSON 的现代 JavaScript 写法。",
+    description:
+      "查找对象、数组、异步、集合、模块和 JSON 的现代 JavaScript 写法。",
     keywords: ["javascript", "js", "异步", "数组", "对象", "模块"],
     seoTitle: "现代 JavaScript 语法在线速查",
-    seoDescription: "搜索并复制现代 JavaScript 解构、数组、异步、集合、模块和 JSON 示例。",
-    faq: [{ question: "代码会在页面中运行吗？", answer: "不会。代码片段只用于参考和复制。" }],
+    seoDescription:
+      "搜索并复制现代 JavaScript 解构、数组、异步、集合、模块和 JSON 示例。",
+    faq: [
+      {
+        question: "代码会在页面中运行吗？",
+        answer: "不会。代码片段只用于参考和复制。",
+      },
+    ],
   },
   "python-cheatsheet": {
     name: "Python 语法速查",
     shortName: "Python 速查",
-    description: "查找虚拟环境、依赖、推导式、迭代、文件、JSON 和异常处理示例。",
+    description:
+      "查找虚拟环境、依赖、推导式、迭代、文件、JSON 和异常处理示例。",
     keywords: ["python", "venv", "pip", "推导式", "pathlib", "json"],
     seoTitle: "Python 常用语法在线速查",
-    seoDescription: "搜索并复制 Python 虚拟环境、推导式、迭代、文件、JSON 和异常示例。",
-    faq: [{ question: "会执行 Python 代码吗？", answer: "不会。页面只显示可搜索和复制的代码参考。" }],
+    seoDescription:
+      "搜索并复制 Python 虚拟环境、推导式、迭代、文件、JSON 和异常示例。",
+    faq: [
+      {
+        question: "会执行 Python 代码吗？",
+        answer: "不会。页面只显示可搜索和复制的代码参考。",
+      },
+    ],
   },
   "http-status-code-cheatsheet": {
     name: "HTTP 状态码速查",
@@ -793,16 +1035,30 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
     description: "快速查看常用成功、重定向、客户端错误和服务器错误状态码。",
     keywords: ["http", "状态码", "200", "404", "429", "500", "响应"],
     seoTitle: "常用 HTTP 状态码在线速查",
-    seoDescription: "快速搜索并复制常用 HTTP 2xx、3xx、4xx 和 5xx 状态码及语义。",
-    faq: [{ question: "与完整状态码查询有什么区别？", answer: "此页面提供高频状态码速查；完整查询页包含更广的标准状态码集合。" }],
+    seoDescription:
+      "快速搜索并复制常用 HTTP 2xx、3xx、4xx 和 5xx 状态码及语义。",
+    faq: [
+      {
+        question: "与完整状态码查询有什么区别？",
+        answer:
+          "此页面提供高频状态码速查；完整查询页包含更广的标准状态码集合。",
+      },
+    ],
   },
   "css-cheatsheet": {
     name: "CSS 样式速查",
     shortName: "CSS 速查",
-    description: "查找尺寸、Flexbox、Grid、响应式字号、变量、媒体查询和溢出片段。",
+    description:
+      "查找尺寸、Flexbox、Grid、响应式字号、变量、媒体查询和溢出片段。",
     keywords: ["css", "flexbox", "grid", "clamp", "媒体查询", "布局"],
     seoTitle: "常用 CSS 布局与样式在线速查",
-    seoDescription: "搜索并复制常用 CSS 尺寸、Flexbox、Grid、clamp、媒体查询和溢出片段。",
-    faq: [{ question: "片段会修改当前页面吗？", answer: "不会。所有 CSS 都只作为文本显示和复制。" }],
+    seoDescription:
+      "搜索并复制常用 CSS 尺寸、Flexbox、Grid、clamp、媒体查询和溢出片段。",
+    faq: [
+      {
+        question: "片段会修改当前页面吗？",
+        answer: "不会。所有 CSS 都只作为文本显示和复制。",
+      },
+    ],
   },
 };

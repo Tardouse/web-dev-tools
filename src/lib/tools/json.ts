@@ -1,5 +1,9 @@
 import { TOOL_LIMITS, assertInputLimit } from "@/lib/config";
 
+export type JsonPrimitive = string | number | boolean | null;
+export type JsonValue =
+  JsonPrimitive | JsonValue[] | { [key: string]: JsonValue };
+
 function assertJsonDepth(value: unknown): void {
   const stack: Array<{ value: unknown; depth: number }> = [{ value, depth: 1 }];
   while (stack.length > 0) {
@@ -18,11 +22,11 @@ function assertJsonDepth(value: unknown): void {
   }
 }
 
-export function parseJson(input: string): unknown {
+export function parseJson(input: string): JsonValue {
   assertInputLimit(input, TOOL_LIMITS.json);
   if (!input.trim()) throw new Error("Enter JSON to continue.");
   try {
-    const value: unknown = JSON.parse(input);
+    const value = JSON.parse(input) as JsonValue;
     assertJsonDepth(value);
     return value;
   } catch (error) {

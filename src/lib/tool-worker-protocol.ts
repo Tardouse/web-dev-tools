@@ -6,12 +6,17 @@ import type { DiffLine } from "@/lib/tools/diff";
 import type { LocalFileEntry } from "@/lib/tools/archive";
 import type { FileHashAlgorithm } from "@/lib/tools/file";
 import type { GenerateSshKeyOptions, GeneratedSshKey } from "@/lib/tools/ssh";
+import type { JsonTreeResult } from "@/lib/tools/json-conversion";
 import type { ToolLimitErrorCode } from "@/lib/tool-limits";
 
 export type ToolWorkerRequest =
   | { operation: "json-format"; input: string; indent: number }
   | { operation: "json-minify"; input: string }
   | { operation: "json-validate"; input: string }
+  | { operation: "json-to-yaml"; input: string }
+  | { operation: "json-to-xml"; input: string }
+  | { operation: "json-to-csv"; input: string }
+  | { operation: "json-tree"; input: string }
   | { operation: "base64-encode"; input: string }
   | { operation: "base64-decode"; input: string }
   | { operation: "url-encode"; input: string }
@@ -81,7 +86,8 @@ export type ToolWorkerResult =
   | NumberBaseWorkerResult
   | LocalFileEntry[]
   | Uint8Array
-  | GeneratedSshKey;
+  | GeneratedSshKey
+  | JsonTreeResult;
 
 export interface ToolWorkerEnvelope {
   request: ToolWorkerRequest;

@@ -6,7 +6,7 @@
 
 ### 当前交付概览
 
-- 第一版建议工具：20 / 20 已完成，仓库实际注册 56 个独立工具
+- 第一版建议工具：20 / 20 已完成，仓库实际注册 60 个独立工具
 - P0 必须项：19 / 19 已完成
 - P1 第一阶段项：11 / 11 已完成
 - P2 用户增长项：11 / 11 已完成
@@ -19,6 +19,7 @@
 - Sprint 11：随机字符串、密码、用户名、Lorem Ipsum、Fake JSON、Mock CSV、数字、日期与颜色生成器已完成，包含 Web Crypto、安全字符集、集中限制和长输出滚动，并通过桌面/移动端 E2E
 - Sprint 12：Vim、Regex、Bash、SQL、JavaScript、Python、HTTP 状态码与 CSS 速查已完成，包含 94 条双语可搜索参考内容，并通过桌面/移动端 E2E
 - Sprint 13：统一最大执行时间、最大输出和最大并发限制已完成，支持后台逐工具配置、旧数据库迁移、可终止 Web Worker、请求取消与双语错误，并通过桌面/移动端 E2E
+- Sprint 14：JSON 转 YAML / XML / CSV 与 JSON Tree Viewer 已完成，包含类型保真转换、CSV 公式注入防护、可复制 JSONPath、分批渲染和可终止 Web Worker，并通过桌面/移动端 E2E
 - 用户与后台：已完成 Email 注册验证、登录与密码恢复、用户/管理员认证隔离、收藏与最近使用、运营 Dashboard 和用户管理
 - 工程化：已具备单元、集成和 E2E 测试、GitHub Actions CI 及生产部署配置；实际域名、HTTPS 证书和 CD 尚未落地
 
@@ -230,10 +231,10 @@ AI Agent
 - [x] JSON 格式化
 - [x] JSON 压缩
 - [x] JSON 校验
-- [ ] JSON 转 YAML
-- [ ] JSON 转 XML
-- [ ] JSON 转 CSV
-- [ ] JSON Tree Viewer
+- [x] JSON 转 YAML
+- [x] JSON 转 XML
+- [x] JSON 转 CSV
+- [x] JSON Tree Viewer
 
 限制：
 
@@ -1614,6 +1615,13 @@ Code Review
 - [x] 后台逐工具配置、SQLite 持久化与旧数据库迁移
 - [x] 高耗时本地计算使用可终止 Web Worker，请求任务支持 AbortSignal
 - [x] 双语限制错误、单元/集成测试与桌面/移动端 E2E
+
+## Sprint 14
+
+- [x] JSON 转 YAML / XML / CSV
+- [x] JSON Tree Viewer、类型与结构统计、JSONPath 复制
+- [x] 类型保真 XML、CSV 联合表头与公式注入防护
+- [x] Web Worker 转换、超大子节点分批渲染与桌面/移动端 E2E
 
 ---
 

@@ -15,6 +15,18 @@ const toolComponents: Record<string, ComponentType<ToolComponentProps>> = {
   "json-minifier": dynamic(() =>
     import("./json-tools").then((module) => module.JsonMinifierTool),
   ),
+  "json-to-yaml": dynamic(() =>
+    import("./json-data-tools").then((module) => module.JsonToYamlTool),
+  ),
+  "json-to-xml": dynamic(() =>
+    import("./json-data-tools").then((module) => module.JsonToXmlTool),
+  ),
+  "json-to-csv": dynamic(() =>
+    import("./json-data-tools").then((module) => module.JsonToCsvTool),
+  ),
+  "json-tree-viewer": dynamic(() =>
+    import("./json-data-tools").then((module) => module.JsonTreeViewerTool),
+  ),
   base64: dynamic(() =>
     import("./encoding-tools").then((module) => module.Base64Tool),
   ),

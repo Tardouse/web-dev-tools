@@ -61,6 +61,10 @@ export function localizeToolError(message: string, messages: Messages): string {
       (m) => interpolate(messages.errors.jsonDepth, { depth: m[1] }),
     ],
     [
+      /^JSON contains characters that XML 1\.0 cannot represent\.$/,
+      () => messages.errors.xmlCharacters,
+    ],
+    [
       /^The input is not a valid base-(\d+) integer\.$/,
       (m) => interpolate(messages.errors.invalidBase, { base: m[1] }),
     ],

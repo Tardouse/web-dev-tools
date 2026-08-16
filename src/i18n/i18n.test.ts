@@ -65,5 +65,11 @@ describe("localization", () => {
         messages,
       ),
     ).toBe("最多只能同时执行 2 个工具操作。");
+    expect(
+      localizeToolError(
+        "JSON contains characters that XML 1.0 cannot represent.",
+        messages,
+      ),
+    ).toBe("JSON 包含 XML 1.0 无法表示的字符。");
   });
 });

@@ -310,6 +310,7 @@ export const zh: Messages = {
     enterJson: "请输入 JSON 后继续。",
     invalidJson: "JSON 无效：{detail}",
     jsonDepth: "JSON 嵌套超过最大深度 {depth}。",
+    xmlCharacters: "JSON 包含 XML 1.0 无法表示的字符。",
     validJson: "JSON 有效\n根节点类型：{type}",
     validBase64: "请输入有效的 Base64 字符串。",
     invalidUtf8: "此 Base64 内容不是有效的 UTF-8 文本。",

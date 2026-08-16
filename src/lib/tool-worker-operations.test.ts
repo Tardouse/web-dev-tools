@@ -32,6 +32,30 @@ describe("tool worker operations", () => {
       }),
     ).resolves.toContain("Root type: array");
     await expect(
+      executeToolWorkerRequest({
+        operation: "json-to-yaml",
+        input: '{"ready":true}',
+      }),
+    ).resolves.toContain("ready: true");
+    await expect(
+      executeToolWorkerRequest({
+        operation: "json-to-xml",
+        input: '{"ready":true}',
+      }),
+    ).resolves.toContain('<property name="ready" type="boolean">true');
+    await expect(
+      executeToolWorkerRequest({
+        operation: "json-to-csv",
+        input: '[{"name":"Ada"}]',
+      }),
+    ).resolves.toBe("name\nAda");
+    await expect(
+      executeToolWorkerRequest({
+        operation: "json-tree",
+        input: '{"items":[1,2]}',
+      }),
+    ).resolves.toMatchObject({ stats: { nodes: 4, maxDepth: 2 } });
+    await expect(
       executeToolWorkerRequest({ operation: "base64-encode", input: "世界" }),
     ).resolves.toBe("5LiW55WM");
     await expect(

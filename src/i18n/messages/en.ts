@@ -317,6 +317,7 @@ export const en = {
     enterJson: "Enter JSON to continue.",
     invalidJson: "Invalid JSON: {detail}",
     jsonDepth: "JSON nesting exceeds the maximum depth of {depth}.",
+    xmlCharacters: "JSON contains characters that XML 1.0 cannot represent.",
     validJson: "Valid JSON\nRoot type: {type}",
     validBase64: "Enter a valid Base64 string.",
     invalidUtf8: "This Base64 value does not contain valid UTF-8 text.",
