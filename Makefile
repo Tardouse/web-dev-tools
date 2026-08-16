@@ -19,7 +19,7 @@ deploy:
 	./scripts/deploy.sh
 
 deploy-native:
-	./scripts/install.sh
+	./scripts/install-native.sh
 
 stop:
 	./scripts/stop.sh

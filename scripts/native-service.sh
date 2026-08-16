@@ -102,7 +102,7 @@ start_service() {
     printf 'DevToolbox is already running (PID %s).\n' "$pid"
     return 0
   fi
-  [ -L "$CURRENT_LINK" ] || die "No native release is installed. Run scripts/install.sh first."
+  [ -L "$CURRENT_LINK" ] || die "No native release is installed. Run scripts/install-native.sh first."
   RELEASE_DIR=$(readlink "$CURRENT_LINK")
   [ -f "$RELEASE_DIR/server.js" ] || die "Native release is incomplete: $RELEASE_DIR"
   [ -f "$RELEASE_DIR/native-env-loader.cjs" ] || die "Native environment loader is missing: $RELEASE_DIR"

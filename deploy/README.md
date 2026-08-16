@@ -5,7 +5,7 @@
 Requirements: Node.js 22+, npm, and either `curl` or `wget`.
 
 ```bash
-./scripts/install.sh
+./scripts/install-native.sh
 ```
 
 The installer performs an in-place production deployment without root access:
@@ -35,7 +35,7 @@ PORT=8886
 BIND_HOST="127.0.0.1"
 ```
 
-`NEXT_PUBLIC_SITE_URL` is embedded during `next build`, so rerun the installer after changing it. Use an absolute `DATABASE_PATH`; the installer rejects relative database paths so data cannot accidentally move between release directories. This path does not call Docker or Docker Compose at any point.
+`NEXT_PUBLIC_SITE_URL` is embedded during `next build`, so rerun the installer after changing it. Use an absolute `DATABASE_PATH`; the installer rejects relative database paths so data cannot accidentally move between release directories. This path does not call Docker or Docker Compose at any point. `scripts/install.sh` remains a short alias for the same native installer.
 
 Production registration, verification, and password recovery require a working
 SMTP configuration. `SMTP_USER` and `SMTP_PASSWORD` are optional only when the
@@ -57,8 +57,8 @@ The built-in process manager survives terminal disconnects but does not install 
 To customize paths or the initial port on first installation:
 
 ```bash
-NATIVE_PORT=9000 DATA_DIR=/srv/devtoolbox/data ./scripts/install.sh
-ENV_FILE=/etc/devtoolbox.env NATIVE_DIR=/opt/devtoolbox-runtime ./scripts/install.sh
+NATIVE_PORT=9000 DATA_DIR=/srv/devtoolbox/data ./scripts/install-native.sh
+ENV_FILE=/etc/devtoolbox.env NATIVE_DIR=/opt/devtoolbox-runtime ./scripts/install-native.sh
 ```
 
 ## Docker installation
@@ -79,7 +79,7 @@ Both the native server and Compose service bind to `127.0.0.1` by default so the
 2. Replace `tools.example.com` and ensure DNS resolves to the host.
 3. Obtain a certificate, for example with `sudo certbot --nginx -d tools.example.com`.
 4. Validate and reload: `sudo nginx -t && sudo systemctl reload nginx`.
-5. Set `NEXT_PUBLIC_SITE_URL=https://tools.example.com` in `.env.native` and rerun `./scripts/install.sh`, or set it in `.env` and rerun `./scripts/deploy.sh` for Docker. This ensures canonical metadata is built correctly.
+5. Set `NEXT_PUBLIC_SITE_URL=https://tools.example.com` in `.env.native` and rerun `./scripts/install-native.sh`, or set it in `.env` and rerun `./scripts/deploy.sh` for Docker. This ensures canonical metadata is built correctly.
 
 ## Docker operations
 
