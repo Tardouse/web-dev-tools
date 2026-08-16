@@ -6,7 +6,7 @@
 
 ### 当前交付概览
 
-- 第一版建议工具：20 / 20 已完成，仓库实际注册 60 个独立工具
+- 第一版建议工具：20 / 20 已完成，仓库实际注册 68 个独立工具
 - P0 必须项：19 / 19 已完成
 - P1 第一阶段项：11 / 11 已完成
 - P2 用户增长项：11 / 11 已完成
@@ -20,6 +20,7 @@
 - Sprint 12：Vim、Regex、Bash、SQL、JavaScript、Python、HTTP 状态码与 CSS 速查已完成，包含 94 条双语可搜索参考内容，并通过桌面/移动端 E2E
 - Sprint 13：统一最大执行时间、最大输出和最大并发限制已完成，支持后台逐工具配置、旧数据库迁移、可终止 Web Worker、请求取消与双语错误，并通过桌面/移动端 E2E
 - Sprint 14：JSON 转 YAML / XML / CSV 与 JSON Tree Viewer 已完成，包含类型保真转换、CSV 公式注入防护、可复制 JSONPath、分批渲染和可终止 Web Worker，并通过桌面/移动端 E2E
+- Sprint 15：文件/图片 Base64、自动编码方向、URL / Query String、Unicode、ASCII 与 UTF-8 工具已完成，包含文件往返、重复参数保真、代理项校验、完整字符表和分批渲染，并通过桌面/移动端 E2E
 - 用户与后台：已完成 Email 注册验证、登录与密码恢复、用户/管理员认证隔离、收藏与最近使用、运营 Dashboard 和用户管理
 - 工程化：已具备单元、集成和 E2E 测试、GitHub Actions CI 及生产部署配置；实际域名、HTTPS 证书和 CD 尚未落地
 
@@ -252,9 +253,9 @@ AI Agent
 - [x] Base64 编码
 - [x] Base64 解码
 - [x] 文本 Base64
-- [ ] 文件 Base64
-- [ ] 图片 Base64
-- [ ] 自动识别编码
+- [x] 文件 Base64
+- [x] 图片 Base64
+- [x] 自动识别编码
 
 限制：
 
@@ -266,17 +267,17 @@ AI Agent
 
 - [x] URL Encode
 - [x] URL Decode
-- [ ] URL Parser
-- [ ] Query String Parser
-- [ ] Query String Generator
+- [x] URL Parser
+- [x] Query String Parser
+- [x] Query String Generator
 
 ## Unicode
 
-- [ ] Unicode 编码
-- [ ] Unicode 解码
-- [ ] ASCII 转换
-- [ ] ASCII 字符查看
-- [ ] UTF-8 编码查看
+- [x] Unicode 编码
+- [x] Unicode 解码
+- [x] ASCII 转换
+- [x] ASCII 字符查看
+- [x] UTF-8 编码查看
 
 ---
 
@@ -1622,6 +1623,13 @@ Code Review
 - [x] JSON Tree Viewer、类型与结构统计、JSONPath 复制
 - [x] 类型保真 XML、CSV 联合表头与公式注入防护
 - [x] Web Worker 转换、超大子节点分批渲染与桌面/移动端 E2E
+
+## Sprint 15
+
+- [x] 文本 Base64 自动方向识别、文件 Base64 双向转换与图片 Base64 往返
+- [x] URL Parser、Query String Parser 与可编辑 Query String Generator
+- [x] Unicode 编解码、ASCII 转换与完整 128 项字符表
+- [x] UTF-8 码点/字节查看、可终止 Worker、受限渲染与桌面/移动端 E2E
 
 ---
 

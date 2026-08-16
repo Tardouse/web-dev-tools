@@ -177,6 +177,28 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
       },
     ],
   },
+  "file-base64": {
+    name: "文件 Base64 转换",
+    shortName: "文件 Base64",
+    description:
+      "将本地文件编码为原始 Base64 或 Data URL，也可将 Base64 解码为可下载文件。",
+    keywords: ["base64", "文件", "data url", "二进制", "编码", "解码"],
+    seoTitle: "文件转 Base64 在线工具 — 文件编码与解码",
+    seoDescription:
+      "在浏览器本地将文件转为 Base64，或解码 Base64 Data URL，支持 MIME 识别、文件下载和严格大小限制。",
+    faq: [
+      {
+        question: "选择的文件会被上传吗？",
+        answer:
+          "不会。浏览器只在本地读取文件，并由受时间限制的 Web Worker 完成 Base64 转换。",
+      },
+      {
+        question: "原始 Base64 和 Data URL 有什么区别？",
+        answer:
+          "Data URL 包含 MIME 类型和 Base64 标记，原始 Base64 只包含编码后的字节。",
+      },
+    ],
+  },
   "url-encoder": {
     name: "URL 编码",
     shortName: "URL 编码",
@@ -204,6 +226,153 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
         question: "加号会被转换为空格吗？",
         answer:
           "会，与常见的 application/x-www-form-urlencoded 查询值保持一致。",
+      },
+    ],
+  },
+  "url-parser": {
+    name: "URL 解析器",
+    shortName: "URL 解析",
+    description:
+      "将完整 URL 拆分为协议、凭据、主机、端口、路径、查询参数和片段。",
+    keywords: ["url", "解析", "主机", "路径", "查询参数", "片段", "端口"],
+    seoTitle: "URL 在线解析器 — 查看 URL 各组成部分",
+    seoDescription:
+      "在本地解析完整 URL，查看规范化协议、主机、路径片段、重复查询参数和片段。",
+    faq: [
+      {
+        question: "重复查询参数会保留吗？",
+        answer: "会。名称相同的重复参数会在 JSON 结果中以数组形式显示。",
+      },
+      {
+        question: "解析器会发起网络请求吗？",
+        answer: "不会。工具只使用浏览器的 URL 解析能力，不会连接输入的主机。",
+      },
+    ],
+  },
+  "query-string-parser": {
+    name: "Query String 解析器",
+    shortName: "查询参数解析",
+    description:
+      "将查询字符串或完整 URL 解析为已解码 JSON，并保留重复键和空值。",
+    keywords: ["query string", "查询参数", "解析", "url 参数", "解码"],
+    seoTitle: "Query String 在线解析 — URL 参数转 JSON",
+    seoDescription:
+      "在本地将 URL 查询参数解析为易读 JSON，支持重复键、加号空格和空值。",
+    faq: [
+      {
+        question: "可以粘贴完整 URL 吗？",
+        answer: "可以。解析器既接受完整 URL，也接受开头可带问号的查询字符串。",
+      },
+      {
+        question: "名称相同的多个参数如何处理？",
+        answer: "第一个值保持字符串形式，出现重复值时会按原始顺序组合为数组。",
+      },
+    ],
+  },
+  "query-string-generator": {
+    name: "Query String 生成器",
+    shortName: "查询参数生成",
+    description: "通过有序键值行生成编码后的查询字符串，并支持重复参数名。",
+    keywords: ["query string", "查询参数", "生成", "编码", "url 参数"],
+    seoTitle: "Query String 在线生成器 — 构建 URL 查询参数",
+    seoDescription:
+      "通过可编辑键值行生成符合规范的 URL 查询字符串，支持重复键和可选开头问号。",
+    faq: [
+      {
+        question: "同一个参数名可以出现多次吗？",
+        answer: "可以。每一行都会按顺序追加，适用于数组式和重复查询参数。",
+      },
+      {
+        question: "空格会如何编码？",
+        answer:
+          "生成器遵循 URLSearchParams 规则，在表单式查询字符串中将空格编码为加号。",
+      },
+    ],
+  },
+  "unicode-converter": {
+    name: "Unicode 转义转换器",
+    shortName: "Unicode 转换",
+    description:
+      "将文本编码为 Unicode 转义序列，或解码固定长度和码点转义写法。",
+    keywords: ["unicode", "转义", "码点", "编码", "解码", "emoji"],
+    seoTitle: "Unicode 在线编码与解码 — 转换转义序列",
+    seoDescription:
+      "在本地转换文本和 Unicode 转义序列，支持非 BMP 码点、Emoji 和代理项校验。",
+    faq: [
+      {
+        question: "Emoji 如何编码？",
+        answer:
+          "BMP 以外的字符使用如 \\u{1F680} 的码点写法，也可以解码标准代理项对输入。",
+      },
+      {
+        question: "无效代理项会被接受吗？",
+        answer:
+          "不会。孤立代理代码单元和超过 U+10FFFF 的数值都会返回明确错误。",
+      },
+    ],
+  },
+  "ascii-converter": {
+    name: "ASCII 转换器",
+    shortName: "ASCII 转换",
+    description:
+      "将 ASCII 文本转换为十进制、十六进制或二进制代码，也可解码混合代码写法。",
+    keywords: ["ascii", "十进制", "十六进制", "二进制", "字符编码", "转换"],
+    seoTitle: "ASCII 在线转换 — 文本、十进制、十六进制与二进制",
+    seoDescription:
+      "在本地将 ASCII 文本与字符代码在文本、十进制、十六进制和二进制之间转换。",
+    faq: [
+      {
+        question: "可以解码哪些代码格式？",
+        answer:
+          "可输入普通十进制、0x 开头的十六进制或 0b 开头的二进制值，并用空格或逗号分隔。",
+      },
+      {
+        question: "为什么不接受大于 127 的值？",
+        answer:
+          "本页专门处理原始 7 位 ASCII 标准，其他字符请使用 Unicode 工具。",
+      },
+    ],
+  },
+  "ascii-table": {
+    name: "ASCII 字符表",
+    shortName: "ASCII 表",
+    description:
+      "搜索全部 128 个 ASCII 控制字符和可打印字符，查看十进制、十六进制和二进制代码。",
+    keywords: ["ascii", "字符表", "字符", "控制码", "十六进制", "二进制"],
+    seoTitle: "ASCII 在线字符表 — 字符编码参考",
+    seoDescription:
+      "搜索完整 7 位 ASCII 表，查看控制字符名称、可打印字符及十进制、十六进制和二进制值。",
+    faq: [
+      {
+        question: "字符表包含控制字符吗？",
+        answer: "包含。0 至 31 和 127 均显示标准缩写和名称。",
+      },
+      {
+        question: "可以只筛选可打印字符吗？",
+        answer:
+          "可以。使用分段筛选，或按字符、名称、十进制、十六进制和二进制代码搜索。",
+      },
+    ],
+  },
+  "utf8-inspector": {
+    name: "UTF-8 编码查看器",
+    shortName: "UTF-8 查看",
+    description:
+      "查看文本的 Unicode 码点、UTF-8 字节、字节数和 UTF-16 代码单元。",
+    keywords: ["utf-8", "unicode", "字节", "十六进制", "码点", "编码"],
+    seoTitle: "UTF-8 在线编码查看 — 字节与 Unicode 码点",
+    seoDescription:
+      "在本地查看文本的 UTF-8 字节、逐字符十六进制、Unicode 码点和字节统计。",
+    faq: [
+      {
+        question: "为什么一个字符可能占多个字节？",
+        answer:
+          "ASCII 码点使用一个 UTF-8 字节，其他 Unicode 码点会使用两到四个字节。",
+      },
+      {
+        question: "大段文本会导致表格卡顿吗？",
+        answer:
+          "分析在可终止 Worker 中进行，页面最多列出 1,000 个码点，同时保留完整输入的统计总数。",
       },
     ],
   },

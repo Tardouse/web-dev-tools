@@ -7,6 +7,11 @@ import type { LocalFileEntry } from "@/lib/tools/archive";
 import type { FileHashAlgorithm } from "@/lib/tools/file";
 import type { GenerateSshKeyOptions, GeneratedSshKey } from "@/lib/tools/ssh";
 import type { JsonTreeResult } from "@/lib/tools/json-conversion";
+import type {
+  AsciiCodeBase,
+  DecodedBase64File,
+  Utf8Inspection,
+} from "@/lib/tools/encoding-data";
 import type { ToolLimitErrorCode } from "@/lib/tool-limits";
 
 export type ToolWorkerRequest =
@@ -19,8 +24,23 @@ export type ToolWorkerRequest =
   | { operation: "json-tree"; input: string }
   | { operation: "base64-encode"; input: string }
   | { operation: "base64-decode"; input: string }
+  | { operation: "base64-auto"; input: string }
+  | {
+      operation: "file-base64-encode";
+      data: Uint8Array;
+      mimeType: string;
+      dataUrl: boolean;
+    }
+  | { operation: "file-base64-decode"; input: string }
   | { operation: "url-encode"; input: string }
   | { operation: "url-decode"; input: string }
+  | { operation: "url-parse"; input: string }
+  | { operation: "query-parse"; input: string }
+  | { operation: "unicode-encode"; input: string }
+  | { operation: "unicode-decode"; input: string }
+  | { operation: "ascii-encode"; input: string; base: AsciiCodeBase }
+  | { operation: "ascii-decode"; input: string }
+  | { operation: "utf8-inspect"; input: string }
   | { operation: "hash"; input: string; algorithm: HashAlgorithm }
   | { operation: "case-convert"; input: string; mode: CaseMode }
   | { operation: "text-count"; input: string }
@@ -87,7 +107,9 @@ export type ToolWorkerResult =
   | LocalFileEntry[]
   | Uint8Array
   | GeneratedSshKey
-  | JsonTreeResult;
+  | JsonTreeResult
+  | DecodedBase64File
+  | Utf8Inspection;
 
 export interface ToolWorkerEnvelope {
   request: ToolWorkerRequest;

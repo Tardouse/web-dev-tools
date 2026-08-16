@@ -1,3 +1,6 @@
+const FILE_INPUT_LIMIT = 10 * 1024 * 1024;
+const BASE64_FILE_TEXT_LIMIT = Math.ceil((FILE_INPUT_LIMIT * 4) / 3) + 1024;
+
 export const SITE_CONFIG = {
   name: "DevToolbox",
   shortName: "DT",
@@ -12,7 +15,7 @@ export const TOOL_LIMITS = {
   json: 5 * 1024 * 1024,
   regex: 500 * 1024,
   diff: 2 * 1024 * 1024,
-  file: 10 * 1024 * 1024,
+  file: FILE_INPUT_LIMIT,
   image: 20 * 1024 * 1024,
   archive: 50 * 1024 * 1024,
   maxExtractedSize: 100 * 1024 * 1024,
@@ -22,6 +25,7 @@ export const TOOL_LIMITS = {
   maxFileProcessTime: 10_000,
   maxExecutionTime: 10_000,
   maxOutput: 10 * 1024 * 1024,
+  maxBase64Output: BASE64_FILE_TEXT_LIMIT,
   maxConcurrentExecutions: 2,
   maxJsonDepth: 100,
   maxRegexLength: 1_000,

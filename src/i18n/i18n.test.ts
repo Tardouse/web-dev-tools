@@ -71,5 +71,11 @@ describe("localization", () => {
         messages,
       ),
     ).toBe("JSON 包含 XML 1.0 无法表示的字符。");
+    expect(
+      localizeToolError(
+        "Unicode input contains an unpaired surrogate.",
+        messages,
+      ),
+    ).toBe("Unicode 输入包含孤立代理项。");
   });
 });

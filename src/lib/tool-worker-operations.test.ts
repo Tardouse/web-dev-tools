@@ -125,6 +125,64 @@ describe("tool worker operations", () => {
     ).resolves.toContain("SELECT");
   });
 
+  it("runs extended encoding and URL operations inside the worker boundary", async () => {
+    await expect(
+      executeToolWorkerRequest({ operation: "base64-auto", input: "SGVsbG8=" }),
+    ).resolves.toBe("Hello");
+    const fileBase64 = await executeToolWorkerRequest({
+      operation: "file-base64-encode",
+      data: encode("worker file"),
+      mimeType: "text/plain",
+      dataUrl: true,
+    });
+    expect(fileBase64).toBe("data:text/plain;base64,d29ya2VyIGZpbGU=");
+    const decodedFile = (await executeToolWorkerRequest({
+      operation: "file-base64-decode",
+      input: fileBase64 as string,
+    })) as { data: Uint8Array; mimeType: string; source: string };
+    expect(decodedFile).toMatchObject({
+      mimeType: "text/plain",
+      source: "data-url",
+    });
+    expect(Array.from(decodedFile.data)).toEqual(
+      Array.from(encode("worker file")),
+    );
+    await expect(
+      executeToolWorkerRequest({
+        operation: "url-parse",
+        input: "https://example.com/a?q=one&q=two",
+      }),
+    ).resolves.toContain('"q": [');
+    await expect(
+      executeToolWorkerRequest({
+        operation: "query-parse",
+        input: "?q=dev+tools",
+      }),
+    ).resolves.toContain('"q": "dev tools"');
+    await expect(
+      executeToolWorkerRequest({ operation: "unicode-encode", input: "世🚀" }),
+    ).resolves.toBe("\\u4E16\\u{1F680}");
+    await expect(
+      executeToolWorkerRequest({
+        operation: "unicode-decode",
+        input: "\\u4E16\\u{1F680}",
+      }),
+    ).resolves.toBe("世🚀");
+    await expect(
+      executeToolWorkerRequest({
+        operation: "ascii-encode",
+        input: "AZ",
+        base: "hex",
+      }),
+    ).resolves.toBe("0x41 0x5A");
+    await expect(
+      executeToolWorkerRequest({ operation: "ascii-decode", input: "65 90" }),
+    ).resolves.toBe("AZ");
+    await expect(
+      executeToolWorkerRequest({ operation: "utf8-inspect", input: "A世" }),
+    ).resolves.toMatchObject({ bytes: 4, codePoints: 2, multibyte: 1 });
+  });
+
   it("computes regex, diff, and arbitrary-base results", async () => {
     const regex = await executeToolWorkerRequest({
       operation: "regex-test",

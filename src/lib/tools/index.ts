@@ -1,6 +1,7 @@
 export * from "./json";
 export * from "./json-conversion";
 export * from "./encoding";
+export * from "./encoding-data";
 export * from "./text";
 export * from "./number-color";
 export * from "./security";

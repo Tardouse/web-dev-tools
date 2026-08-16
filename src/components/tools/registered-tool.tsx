@@ -30,11 +30,37 @@ const toolComponents: Record<string, ComponentType<ToolComponentProps>> = {
   base64: dynamic(() =>
     import("./encoding-tools").then((module) => module.Base64Tool),
   ),
+  "file-base64": dynamic(() =>
+    import("./encoding-data-tools").then((module) => module.FileBase64Tool),
+  ),
   "url-encoder": dynamic(() =>
     import("./encoding-tools").then((module) => module.UrlEncoderTool),
   ),
   "url-decoder": dynamic(() =>
     import("./encoding-tools").then((module) => module.UrlDecoderTool),
+  ),
+  "url-parser": dynamic(() =>
+    import("./encoding-tools").then((module) => module.UrlParserTool),
+  ),
+  "query-string-parser": dynamic(() =>
+    import("./encoding-tools").then((module) => module.QueryStringParserTool),
+  ),
+  "query-string-generator": dynamic(() =>
+    import("./encoding-data-tools").then(
+      (module) => module.QueryStringGeneratorTool,
+    ),
+  ),
+  "unicode-converter": dynamic(() =>
+    import("./encoding-tools").then((module) => module.UnicodeConverterTool),
+  ),
+  "ascii-converter": dynamic(() =>
+    import("./encoding-tools").then((module) => module.AsciiConverterTool),
+  ),
+  "ascii-table": dynamic(() =>
+    import("./encoding-data-tools").then((module) => module.AsciiTableTool),
+  ),
+  "utf8-inspector": dynamic(() =>
+    import("./encoding-data-tools").then((module) => module.Utf8InspectorTool),
   ),
   "timestamp-converter": dynamic(() =>
     import("./timestamp-tool").then((module) => module.TimestampTool),

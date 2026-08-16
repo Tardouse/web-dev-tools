@@ -30,6 +30,18 @@ import {
   jsonToXml,
   jsonToYaml,
 } from "@/lib/tools/json-conversion";
+import {
+  decodeAscii,
+  decodeFileBase64,
+  decodeUnicodeEscapes,
+  encodeAscii,
+  encodeFileBase64,
+  encodeUnicodeEscapes,
+  inspectUtf8,
+  parseQueryString,
+  parseUrl,
+  transformBase64,
+} from "@/lib/tools/encoding-data";
 import { convertBase } from "@/lib/tools/number-color";
 import { hashText, testRegex } from "@/lib/tools/security";
 import { hashFileBytes } from "@/lib/tools/file";
@@ -64,10 +76,30 @@ export async function executeToolWorkerRequest(
       return encodeBase64(request.input);
     case "base64-decode":
       return decodeBase64(request.input);
+    case "base64-auto":
+      return transformBase64(request.input, "auto");
+    case "file-base64-encode":
+      return encodeFileBase64(request.data, request.mimeType, request.dataUrl);
+    case "file-base64-decode":
+      return decodeFileBase64(request.input);
     case "url-encode":
       return encodeUrl(request.input);
     case "url-decode":
       return decodeUrl(request.input);
+    case "url-parse":
+      return parseUrl(request.input);
+    case "query-parse":
+      return parseQueryString(request.input);
+    case "unicode-encode":
+      return encodeUnicodeEscapes(request.input);
+    case "unicode-decode":
+      return decodeUnicodeEscapes(request.input);
+    case "ascii-encode":
+      return encodeAscii(request.input, request.base);
+    case "ascii-decode":
+      return decodeAscii(request.input);
+    case "utf8-inspect":
+      return inspectUtf8(request.input);
     case "hash":
       return hashText(request.input, request.algorithm);
     case "case-convert":

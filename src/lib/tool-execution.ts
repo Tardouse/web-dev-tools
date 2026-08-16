@@ -136,6 +136,8 @@ export function workerInputPayload(request: ToolWorkerRequest): unknown {
     case "archive-gzip":
     case "file-hash":
       return request.data;
+    case "file-base64-encode":
+      return request.data;
     case "archive-create-zip":
       return request.files.map(({ name, data }) => ({ name, data }));
     case "ssh-key":

@@ -65,6 +65,16 @@ describe("unified tool execution limits", () => {
         }),
       ),
     ).toBe(7);
+    expect(
+      outputByteLength(
+        workerInputPayload({
+          operation: "file-base64-encode",
+          data: new Uint8Array(9),
+          mimeType: "application/octet-stream",
+          dataUrl: true,
+        }),
+      ),
+    ).toBe(9);
   });
 
   it("caps concurrent operations with one shared slot", async () => {

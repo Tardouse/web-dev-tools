@@ -306,6 +306,38 @@ export const tools: ToolDefinition[] = [
   },
   {
     ...shared,
+    id: "file-base64",
+    slug: "file-base64",
+    name: "File Base64 Converter",
+    shortName: "File Base64",
+    category: "encoding",
+    icon: "FileDigit",
+    sortOrder: 41,
+    description:
+      "Encode local files as raw Base64 or data URLs, and decode Base64 back into downloadable files.",
+    keywords: ["base64", "file", "data url", "binary", "encode", "decode"],
+    aliases: ["file to base64", "base64 to file"],
+    maxInputSize: TOOL_LIMITS.maxBase64Output,
+    maxOutputSize: TOOL_LIMITS.maxBase64Output,
+    seoTitle: "File to Base64 Converter Online — Encode or Decode Files",
+    seoDescription:
+      "Convert files to Base64 and decode Base64 data URLs locally with MIME detection, downloads, and strict file limits.",
+    related: ["base64", "image-workbench", "file-inspector"],
+    faq: [
+      {
+        question: "Is the selected file uploaded?",
+        answer:
+          "No. The browser reads the file locally and a time-limited Web Worker performs the Base64 conversion.",
+      },
+      {
+        question: "What is the difference between raw Base64 and a data URL?",
+        answer:
+          "A data URL includes the MIME type and Base64 marker, while raw Base64 contains only the encoded bytes.",
+      },
+    ],
+  },
+  {
+    ...shared,
     id: "url-encoder",
     slug: "url-encoder",
     name: "URL Encoder",
@@ -352,6 +384,242 @@ export const tools: ToolDefinition[] = [
         question: "Are plus signs treated as spaces?",
         answer:
           "Yes, matching common application/x-www-form-urlencoded query values.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "url-parser",
+    slug: "url-parser",
+    name: "URL Parser",
+    shortName: "URL Parser",
+    category: "encoding",
+    icon: "ScanText",
+    sortOrder: 61,
+    description:
+      "Break an absolute URL into protocol, credentials, host, port, path, query values, and fragment.",
+    keywords: ["url", "parse", "host", "path", "query", "fragment", "port"],
+    aliases: ["url analyzer", "uri parser"],
+    maxInputSize: TOOL_LIMITS.text,
+    seoTitle: "URL Parser Online — Inspect URL Components",
+    seoDescription:
+      "Parse absolute URLs locally and inspect normalized protocol, host, path segments, repeated query values, and fragments.",
+    related: ["url-encoder", "url-decoder", "network-calculator"],
+    faq: [
+      {
+        question: "Are duplicate query parameters preserved?",
+        answer:
+          "Yes. Repeated parameter names are represented as arrays in the parsed JSON output.",
+      },
+      {
+        question: "Does the parser make a network request?",
+        answer:
+          "No. It uses the browser URL parser locally and never connects to the entered host.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "query-string-parser",
+    slug: "query-string-parser",
+    name: "Query String Parser",
+    shortName: "Query Parser",
+    category: "encoding",
+    icon: "ListFilter",
+    sortOrder: 62,
+    description:
+      "Parse a query string or complete URL into decoded JSON while preserving repeated keys and empty values.",
+    keywords: [
+      "query string",
+      "url params",
+      "parse",
+      "search params",
+      "decode",
+    ],
+    aliases: ["query parameter parser", "url params parser"],
+    maxInputSize: TOOL_LIMITS.text,
+    seoTitle: "Query String Parser Online — URL Parameters to JSON",
+    seoDescription:
+      "Parse URL query parameters into readable JSON locally, including repeated keys, plus spaces, and blank values.",
+    related: ["query-string-generator", "url-parser", "url-decoder"],
+    faq: [
+      {
+        question: "Can I paste a complete URL?",
+        answer:
+          "Yes. The parser accepts either an absolute URL or a query string beginning with an optional question mark.",
+      },
+      {
+        question: "How are repeated parameter names handled?",
+        answer:
+          "The first value remains a string and repeated values are returned together as an ordered array.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "query-string-generator",
+    slug: "query-string-generator",
+    name: "Query String Generator",
+    shortName: "Query Generator",
+    category: "encoding",
+    icon: "ListPlus",
+    sortOrder: 63,
+    description:
+      "Build an encoded query string from ordered key/value rows with duplicate-key support.",
+    keywords: [
+      "query string",
+      "url params",
+      "generate",
+      "encode",
+      "search params",
+    ],
+    aliases: ["query parameter builder", "url params generator"],
+    maxInputSize: TOOL_LIMITS.text,
+    seoTitle: "Query String Generator Online — Build URL Parameters",
+    seoDescription:
+      "Generate standards-based URL query strings from editable key/value rows, including repeated keys and optional leading question marks.",
+    related: ["query-string-parser", "url-encoder", "api-request-builder"],
+    faq: [
+      {
+        question: "Can the same key appear more than once?",
+        answer:
+          "Yes. Each row is appended in order, which supports array-style and repeated query parameters.",
+      },
+      {
+        question: "How are spaces encoded?",
+        answer:
+          "The generator follows URLSearchParams rules and encodes spaces as plus signs in form-style query strings.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "unicode-converter",
+    slug: "unicode-converter",
+    name: "Unicode Escape Converter",
+    shortName: "Unicode Converter",
+    category: "encoding",
+    icon: "Languages",
+    sortOrder: 64,
+    description:
+      "Encode text as Unicode escape sequences or decode fixed and code-point escape notation.",
+    keywords: ["unicode", "escape", "code point", "encode", "decode", "emoji"],
+    aliases: ["unicode encoder", "unicode decoder"],
+    maxInputSize: TOOL_LIMITS.text,
+    seoTitle: "Unicode Encoder & Decoder Online — Convert Escape Sequences",
+    seoDescription:
+      "Convert text and Unicode escape sequences locally with support for non-BMP code points, emoji, and surrogate validation.",
+    related: ["utf8-inspector", "ascii-converter", "base64"],
+    faq: [
+      {
+        question: "How are emoji encoded?",
+        answer:
+          "Characters above the BMP use code-point notation such as \\u{1F680}; standard surrogate-pair input can also be decoded.",
+      },
+      {
+        question: "Are invalid surrogate values accepted?",
+        answer:
+          "No. Lone surrogate code units and values above U+10FFFF are rejected with a clear error.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "ascii-converter",
+    slug: "ascii-converter",
+    name: "ASCII Converter",
+    shortName: "ASCII Converter",
+    category: "encoding",
+    icon: "Binary",
+    sortOrder: 65,
+    description:
+      "Convert ASCII text to decimal, hexadecimal, or binary codes and decode mixed code notation.",
+    keywords: [
+      "ascii",
+      "decimal",
+      "hex",
+      "binary",
+      "character code",
+      "convert",
+    ],
+    aliases: ["text to ascii", "ascii to text"],
+    maxInputSize: TOOL_LIMITS.text,
+    seoTitle: "ASCII Converter Online — Text, Decimal, Hex & Binary",
+    seoDescription:
+      "Convert ASCII text and character codes locally between text, decimal, hexadecimal, and binary notation.",
+    related: ["ascii-table", "unicode-converter", "number-base-converter"],
+    faq: [
+      {
+        question: "Which code formats can be decoded?",
+        answer:
+          "Use plain decimal values, 0x-prefixed hexadecimal values, or 0b-prefixed binary values, separated by spaces or commas.",
+      },
+      {
+        question: "Why are values above 127 rejected?",
+        answer:
+          "This page targets the original 7-bit ASCII standard; use the Unicode tools for other characters.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "ascii-table",
+    slug: "ascii-table",
+    name: "ASCII Character Table",
+    shortName: "ASCII Table",
+    category: "encoding",
+    icon: "Table2",
+    sortOrder: 66,
+    description:
+      "Search all 128 ASCII control and printable characters with decimal, hex, and binary codes.",
+    keywords: ["ascii", "table", "character", "control code", "hex", "binary"],
+    aliases: ["ascii chart", "ascii reference"],
+    maxInputSize: TOOL_LIMITS.text,
+    seoTitle: "ASCII Table Online — Character Code Reference",
+    seoDescription:
+      "Search the complete 7-bit ASCII table with control names, printable characters, decimal, hexadecimal, and binary values.",
+    related: ["ascii-converter", "utf8-inspector", "http-status-reference"],
+    faq: [
+      {
+        question: "Does the table include control characters?",
+        answer:
+          "Yes. Values 0 through 31 and 127 include their standard abbreviations and names.",
+      },
+      {
+        question: "Can I filter printable characters only?",
+        answer:
+          "Yes. Use the segmented filter or search by character, name, decimal, hex, or binary code.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "utf8-inspector",
+    slug: "utf8-inspector",
+    name: "UTF-8 Encoding Inspector",
+    shortName: "UTF-8 Inspector",
+    category: "encoding",
+    icon: "TextSearch",
+    sortOrder: 67,
+    description:
+      "Inspect Unicode code points, UTF-8 bytes, byte counts, and UTF-16 code units for text.",
+    keywords: ["utf-8", "unicode", "bytes", "hex", "code point", "encoding"],
+    aliases: ["utf8 viewer", "utf-8 byte viewer"],
+    maxInputSize: TOOL_LIMITS.text,
+    seoTitle: "UTF-8 Encoding Inspector Online — View Bytes & Code Points",
+    seoDescription:
+      "Inspect text as UTF-8 bytes locally with per-character hex, Unicode code points, byte totals, and bounded rendering.",
+    related: ["unicode-converter", "ascii-table", "file-inspector"],
+    faq: [
+      {
+        question: "Why can one character use multiple bytes?",
+        answer:
+          "ASCII code points use one UTF-8 byte, while other Unicode code points use two to four bytes.",
+      },
+      {
+        question: "Can large text freeze the table?",
+        answer:
+          "Analysis runs in a terminable Worker and the page lists at most 1,000 code points while retaining totals for the complete input.",
       },
     ],
   },

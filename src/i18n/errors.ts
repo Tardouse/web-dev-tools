@@ -6,8 +6,22 @@ export function localizeToolError(message: string, messages: Messages): string {
     "Enter a valid Base64 string.": messages.errors.validBase64,
     "This Base64 value does not contain valid UTF-8 text.":
       messages.errors.invalidUtf8,
+    "Enter Base64 data to continue.": messages.errors.enterBase64Data,
+    "The data URL must contain Base64 data.": messages.errors.dataUrlBase64,
+    "Enter valid Base64 file data.": messages.errors.validFileBase64,
     "The value contains an invalid percent-encoded sequence.":
       messages.errors.invalidPercent,
+    "Enter a query string to continue.": messages.errors.enterQuery,
+    "Enter a valid URL or query string.": messages.errors.validUrlOrQuery,
+    "Enter valid Unicode escape sequences.": messages.errors.unicodeEscapes,
+    "Unicode input contains an unpaired surrogate.":
+      messages.errors.unicodeSurrogate,
+    "ASCII only supports code points from 0 to 127.":
+      messages.errors.asciiRange,
+    "Enter ASCII codes as decimal, 0x hex, or 0b binary values.":
+      messages.errors.asciiCodes,
+    "Query strings are limited to 100 parameter rows.":
+      messages.errors.queryRows,
     "A JWT must contain three dot-separated parts.": messages.errors.jwtParts,
     "JWT header or payload is not valid Base64URL JSON.":
       messages.errors.jwtInvalid,
