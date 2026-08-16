@@ -6,7 +6,7 @@
 
 ### 当前交付概览
 
-- 第一版建议工具：20 / 20 已完成，仓库实际注册 39 个独立工具
+- 第一版建议工具：20 / 20 已完成，仓库实际注册 48 个独立工具
 - P0 必须项：19 / 19 已完成
 - P1 第一阶段项：11 / 11 已完成
 - P2 用户增长项：11 / 11 已完成
@@ -16,6 +16,7 @@
 - Sprint 8：SEO、Sitemap、搜索、相关推荐、FAQ、Analytics 与按需加载已完成，并通过聚合 E2E 验收
 - Sprint 9：SQL、Web 代码处理、Git、网络分析、浏览器 API 请求与 Linux/Git/Docker/Nginx 速查已完成，并通过桌面/移动端 E2E
 - Sprint 10：HTTP Header/Auth 生成与浏览器 Webhook 测试已完成，包含 Payload 格式化、统一超时/响应限制和 Header 注入防护，并通过桌面/移动端 E2E
+- Sprint 11：随机字符串、密码、用户名、Lorem Ipsum、Fake JSON、Mock CSV、数字、日期与颜色生成器已完成，包含 Web Crypto、安全字符集、集中限制和长输出滚动，并通过桌面/移动端 E2E
 - 用户与后台：已完成 Email 注册验证、登录与密码恢复、用户/管理员认证隔离、收藏与最近使用、运营 Dashboard 和用户管理
 - 工程化：已具备单元、集成和 E2E 测试、GitHub Actions CI 及生产部署配置；实际域名、HTTPS 证书和 CD 尚未落地
 
@@ -438,7 +439,7 @@ Body
 - [ ] CMYK 转换
 - [x] 颜色选择器
 - [x] 颜色预览
-- [ ] 随机颜色
+- [x] 随机颜色
 - [ ] 调色板生成
 - [ ] 对比色
 - [ ] 互补色
@@ -755,15 +756,15 @@ Webhook / HTTP 请求功能必须严格控制服务器端网络访问能力，�
 这类工具实现简单，但使用频率很高。
 
 - [x] UUID Generator
-- [ ] Random String Generator
-- [ ] Password Generator
-- [ ] Username Generator
-- [ ] Lorem Ipsum Generator
-- [ ] Fake JSON Generator
-- [ ] Mock Data Generator
-- [ ] Random Number Generator
-- [ ] Random Date Generator
-- [ ] Random Color Generator
+- [x] Random String Generator
+- [x] Password Generator
+- [x] Username Generator
+- [x] Lorem Ipsum Generator
+- [x] Fake JSON Generator
+- [x] Mock Data Generator
+- [x] Random Number Generator
+- [x] Random Date Generator
+- [x] Random Color Generator
 
 ---
 
@@ -1589,6 +1590,14 @@ Code Review
 - [x] Webhook Payload Formatter
 - [x] 浏览器直连、超时与响应大小限制
 - [x] Header 注入防护
+
+## Sprint 11
+
+- [x] Random String / Password / Username Generator
+- [x] Lorem Ipsum / Fake JSON / Mock CSV Generator
+- [x] Random Number / Date / Color Generator
+- [x] Web Crypto、安全字符集与集中数量限制
+- [x] 长输出内部滚动与桌面/移动端 E2E
 
 ---
 

@@ -115,6 +115,51 @@ const toolComponents: Record<string, ComponentType<ToolComponentProps>> = {
   "webhook-tester": dynamic(() =>
     import("./webhook-tool").then((module) => module.WebhookTesterTool),
   ),
+  "random-string-generator": dynamic(() =>
+    import("./random-generator-tool").then(
+      (module) => module.RandomGeneratorTool,
+    ),
+  ),
+  "password-generator": dynamic(() =>
+    import("./random-generator-tool").then(
+      (module) => module.RandomGeneratorTool,
+    ),
+  ),
+  "username-generator": dynamic(() =>
+    import("./random-generator-tool").then(
+      (module) => module.RandomGeneratorTool,
+    ),
+  ),
+  "lorem-ipsum-generator": dynamic(() =>
+    import("./random-generator-tool").then(
+      (module) => module.RandomGeneratorTool,
+    ),
+  ),
+  "fake-json-generator": dynamic(() =>
+    import("./random-generator-tool").then(
+      (module) => module.RandomGeneratorTool,
+    ),
+  ),
+  "mock-data-generator": dynamic(() =>
+    import("./random-generator-tool").then(
+      (module) => module.RandomGeneratorTool,
+    ),
+  ),
+  "random-number-generator": dynamic(() =>
+    import("./random-generator-tool").then(
+      (module) => module.RandomGeneratorTool,
+    ),
+  ),
+  "random-date-generator": dynamic(() =>
+    import("./random-generator-tool").then(
+      (module) => module.RandomGeneratorTool,
+    ),
+  ),
+  "random-color-generator": dynamic(() =>
+    import("./random-generator-tool").then(
+      (module) => module.RandomGeneratorTool,
+    ),
+  ),
   "linux-cheatsheet": dynamic(() =>
     import("./cheatsheet-tool").then(
       (module) => module.DeveloperCheatsheetTool,
@@ -156,6 +201,7 @@ export function RegisteredTool({
     );
   return (
     <ToolComponent
+      key={definition.slug}
       definition={definition}
       locale={locale}
       messages={messages}

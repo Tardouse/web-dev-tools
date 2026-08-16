@@ -562,6 +562,141 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
       { question: "有哪些限制？", answer: "Payload 使用后台配置的工具上限，请求 10 秒后超时，响应正文最大为 1 MB。" },
     ],
   },
+  "random-string-generator": {
+    name: "随机字符串生成器",
+    shortName: "随机字符串",
+    description: "使用 Web Crypto 按指定长度和字符集生成安全随机字符串。",
+    keywords: ["随机字符串", "token", "字符集", "安全", "web crypto"],
+    seoTitle: "安全随机字符串在线生成器",
+    seoDescription:
+      "在浏览器本地使用 Web Crypto 生成随机字符串，可配置长度、字符集和易混淆字符过滤。",
+    faq: [
+      {
+        question: "使用什么随机源？",
+        answer: "工具使用 Web Crypto，而不是 Math.random()。",
+      },
+    ],
+  },
+  "password-generator": {
+    name: "安全密码生成器",
+    shortName: "密码生成器",
+    description: "按字符类型生成强密码，并显示估算熵值。",
+    keywords: ["密码", "安全", "熵", "随机", "web crypto"],
+    seoTitle: "带熵估算的安全密码在线生成器",
+    seoDescription:
+      "使用 Web Crypto 在本地生成强密码，可配置字符类型并查看估算熵值。",
+    faq: [
+      {
+        question: "生成的密码会上传吗？",
+        answer: "不会。密码只在浏览器本地生成，不会上传或保存。",
+      },
+    ],
+  },
+  "username-generator": {
+    name: "用户名生成器",
+    shortName: "用户名生成",
+    description: "组合形容词与名词，批量生成可读用户名并控制分隔符和数字后缀。",
+    keywords: ["用户名", "昵称", "handle", "随机名称"],
+    seoTitle: "随机用户名在线生成器",
+    seoDescription:
+      "在浏览器本地生成可读的随机用户名，可选择分隔符和数字后缀。",
+    faq: [
+      {
+        question: "用户名一定全局唯一吗？",
+        answer: "不会。工具只保证当前生成批次内不重复。",
+      },
+    ],
+  },
+  "lorem-ipsum-generator": {
+    name: "Lorem Ipsum 生成器",
+    shortName: "Lorem Ipsum",
+    description: "按单词、句子或段落生成有界长度的占位文本。",
+    keywords: ["lorem ipsum", "占位文本", "假文", "段落"],
+    seoTitle: "Lorem Ipsum 占位文本在线生成",
+    seoDescription: "即时生成指定数量的 Lorem Ipsum 单词、句子或段落。",
+    faq: [
+      {
+        question: "一次最多生成多少？",
+        answer: "单次最多 1,000 个单词、100 个句子或 20 个段落。",
+      },
+    ],
+  },
+  "fake-json-generator": {
+    name: "Fake JSON 数据生成器",
+    shortName: "Fake JSON",
+    description: "生成包含 ID、邮箱、角色、日期、状态和分数的合成 JSON 记录。",
+    keywords: ["fake json", "样例数据", "fixture", "mock json", "记录"],
+    seoTitle: "Fake JSON 测试数据在线生成器",
+    seoDescription:
+      "在浏览器本地生成用于原型、测试和 Fixture 的合成 JSON 记录。",
+    faq: [
+      {
+        question: "数据对应真实用户吗？",
+        answer: "不会。所有记录都是在本地随机生成的合成数据。",
+      },
+    ],
+  },
+  "mock-data-generator": {
+    name: "Mock CSV 数据生成器",
+    shortName: "Mock 数据",
+    description: "生成用于本地测试、Fixture 和表格的合成 CSV 用户记录。",
+    keywords: ["mock data", "csv", "fixture", "样例记录", "测试数据"],
+    seoTitle: "Mock CSV 测试数据在线生成器",
+    seoDescription:
+      "在浏览器本地创建包含 ID、邮箱、角色、国家和状态的合成 CSV 数据。",
+    faq: [
+      {
+        question: "单次最多生成多少行？",
+        answer: "每批最多 100 行，以保持浏览器响应流畅。",
+      },
+    ],
+  },
+  "random-number-generator": {
+    name: "随机数生成器",
+    shortName: "随机数",
+    description: "按范围生成整数或小数，并控制数量、精度和是否去重。",
+    keywords: ["随机数", "整数", "小数", "范围", "不重复"],
+    seoTitle: "可设置范围与精度的随机数在线生成器",
+    seoDescription:
+      "在本地生成指定范围的整数或小数，可配置数量、精度和唯一性。",
+    faq: [
+      {
+        question: "可以避免重复吗？",
+        answer: "可以，但所选范围和精度必须能容纳请求的唯一数量。",
+      },
+    ],
+  },
+  "random-date-generator": {
+    name: "随机日期生成器",
+    shortName: "随机日期",
+    description:
+      "在指定范围内生成排序后的随机日期，并输出 ISO、日期或 Unix 格式。",
+    keywords: ["随机日期", "日期范围", "iso 8601", "unix 时间戳"],
+    seoTitle: "ISO 与 Unix 随机日期在线生成器",
+    seoDescription:
+      "在指定日期范围内生成随机值，并导出 ISO 8601、YYYY-MM-DD 或 Unix 格式。",
+    faq: [
+      {
+        question: "支持哪些日期格式？",
+        answer: "支持 ISO 8601、YYYY-MM-DD 和 Unix 秒。",
+      },
+    ],
+  },
+  "random-color-generator": {
+    name: "随机颜色生成器",
+    shortName: "随机颜色",
+    description: "生成可检查的颜色色块，并复制 HEX、RGB 或 HSL CSS 值。",
+    keywords: ["随机颜色", "hex", "rgb", "hsl", "css", "色块"],
+    seoTitle: "随机 HEX、RGB 与 HSL 颜色在线生成器",
+    seoDescription:
+      "在浏览器本地生成随机色块，并复制有效的 HEX、RGB 或 HSL CSS 值。",
+    faq: [
+      {
+        question: "颜色可以直接作为 CSS 使用吗？",
+        answer: "可以。切换 HEX、RGB 或 HSL 后即可复制对应值。",
+      },
+    ],
+  },
   "linux-cheatsheet": {
     name: "Linux 命令速查",
     shortName: "Linux 命令",

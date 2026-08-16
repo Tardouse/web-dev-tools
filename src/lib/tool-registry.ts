@@ -969,6 +969,250 @@ export const tools: ToolDefinition[] = [
       { question: "What limits apply?", answer: "Payloads use the configured tool limit, requests time out after 10 seconds, and response bodies are limited to 1 MB." },
     ],
   },
+  ...(
+    [
+      {
+        slug: "random-string-generator",
+        name: "Random String Generator",
+        shortName: "Random String",
+        category: "crypto",
+        icon: "Dices",
+        sortOrder: 400,
+        featured: false,
+        description:
+          "Generate cryptographically random strings from configurable character sets and lengths.",
+        keywords: [
+          "random string",
+          "token",
+          "characters",
+          "secure",
+          "web crypto",
+        ],
+        seoTitle: "Secure Random String Generator Online",
+        seoDescription:
+          "Generate random strings locally with Web Crypto, custom length, character sets, and ambiguous-character filtering.",
+        related: ["password-generator", "uuid-generator", "hash-generator"],
+        faq: {
+          question: "What randomness source is used?",
+          answer: "The generator uses Web Crypto rather than Math.random().",
+        },
+      },
+      {
+        slug: "password-generator",
+        name: "Secure Password Generator",
+        shortName: "Password Generator",
+        category: "crypto",
+        icon: "KeyRound",
+        sortOrder: 410,
+        featured: true,
+        description:
+          "Create strong local passwords with required character classes and an entropy estimate.",
+        keywords: ["password", "secure", "entropy", "random", "web crypto"],
+        seoTitle: "Secure Password Generator with Entropy Estimate",
+        seoDescription:
+          "Generate strong passwords locally with Web Crypto, configurable character classes, and estimated entropy.",
+        related: [
+          "random-string-generator",
+          "uuid-generator",
+          "hash-generator",
+        ],
+        faq: {
+          question: "Are generated passwords transmitted?",
+          answer:
+            "No. Passwords are generated locally and are never uploaded or stored.",
+        },
+      },
+      {
+        slug: "username-generator",
+        name: "Username Generator",
+        shortName: "Username Generator",
+        category: "text",
+        icon: "UserRoundPlus",
+        sortOrder: 420,
+        featured: false,
+        description:
+          "Generate unique adjective-and-noun usernames with separator and numeric suffix controls.",
+        keywords: ["username", "handle", "nickname", "random name"],
+        seoTitle: "Random Username Generator Online",
+        seoDescription:
+          "Create readable random usernames locally with separators and optional numeric suffixes.",
+        related: [
+          "random-string-generator",
+          "mock-data-generator",
+          "case-converter",
+        ],
+        faq: {
+          question: "Are usernames guaranteed to be globally unique?",
+          answer: "No. Results are unique within the generated batch only.",
+        },
+      },
+      {
+        slug: "lorem-ipsum-generator",
+        name: "Lorem Ipsum Generator",
+        shortName: "Lorem Ipsum",
+        category: "text",
+        icon: "Pilcrow",
+        sortOrder: 430,
+        featured: false,
+        description:
+          "Generate placeholder words, sentences, or paragraphs with bounded output sizes.",
+        keywords: ["lorem ipsum", "placeholder", "dummy text", "paragraphs"],
+        seoTitle: "Lorem Ipsum Text Generator Online",
+        seoDescription:
+          "Generate placeholder words, sentences, and paragraphs instantly in your browser.",
+        related: ["text-counter", "case-converter", "random-string-generator"],
+        faq: {
+          question: "How much text can be generated?",
+          answer:
+            "A single run is capped at 1,000 words, 100 sentences, or 20 paragraphs.",
+        },
+      },
+      {
+        slug: "fake-json-generator",
+        name: "Fake JSON Generator",
+        shortName: "Fake JSON",
+        category: "json-data",
+        icon: "FileJson",
+        sortOrder: 440,
+        featured: true,
+        description:
+          "Generate bounded JSON user records with IDs, emails, roles, dates, flags, and scores.",
+        keywords: [
+          "fake json",
+          "sample data",
+          "fixture",
+          "mock json",
+          "records",
+        ],
+        seoTitle: "Fake JSON Data Generator Online",
+        seoDescription:
+          "Generate realistic sample JSON records locally for prototypes, tests, and fixtures.",
+        related: ["mock-data-generator", "json-formatter", "json-validator"],
+        faq: {
+          question: "Does the data represent real people?",
+          answer: "No. Every record is synthetic and generated locally.",
+        },
+      },
+      {
+        slug: "mock-data-generator",
+        name: "Mock CSV Data Generator",
+        shortName: "Mock Data",
+        category: "json-data",
+        icon: "TableProperties",
+        sortOrder: 450,
+        featured: false,
+        description:
+          "Generate synthetic profile records as CSV for local tests, fixtures, and spreadsheets.",
+        keywords: [
+          "mock data",
+          "csv",
+          "fixture",
+          "sample records",
+          "test data",
+        ],
+        seoTitle: "Mock CSV Data Generator Online",
+        seoDescription:
+          "Create synthetic CSV profile data locally with IDs, emails, roles, countries, and flags.",
+        related: ["fake-json-generator", "json-formatter", "text-diff"],
+        faq: {
+          question: "How many rows can one run create?",
+          answer:
+            "Each batch is limited to 100 rows to keep browser output responsive.",
+        },
+      },
+      {
+        slug: "random-number-generator",
+        name: "Random Number Generator",
+        shortName: "Random Numbers",
+        category: "time-number",
+        icon: "Sigma",
+        sortOrder: 460,
+        featured: false,
+        description:
+          "Generate bounded whole or decimal numbers with precision and uniqueness controls.",
+        keywords: ["random number", "integer", "decimal", "range", "unique"],
+        seoTitle: "Random Number Generator with Range & Precision",
+        seoDescription:
+          "Generate random whole or decimal numbers locally with range, count, precision, and uniqueness controls.",
+        related: [
+          "number-base-converter",
+          "random-date-generator",
+          "random-string-generator",
+        ],
+        faq: {
+          question: "Can duplicate numbers be prevented?",
+          answer:
+            "Yes. Enable unique output when the selected range and precision can satisfy the requested count.",
+        },
+      },
+      {
+        slug: "random-date-generator",
+        name: "Random Date Generator",
+        shortName: "Random Dates",
+        category: "time-number",
+        icon: "CalendarDays",
+        sortOrder: 470,
+        featured: false,
+        description:
+          "Generate sorted random dates inside a selected range as ISO, calendar, or Unix values.",
+        keywords: ["random date", "date range", "iso 8601", "unix timestamp"],
+        seoTitle: "Random Date Generator for ISO & Unix Values",
+        seoDescription:
+          "Generate random dates within a chosen range and export ISO 8601, YYYY-MM-DD, or Unix values.",
+        related: [
+          "timestamp-converter",
+          "random-number-generator",
+          "cron-generator",
+        ],
+        faq: {
+          question: "Which date formats are supported?",
+          answer: "Output can use ISO 8601, YYYY-MM-DD, or Unix seconds.",
+        },
+      },
+      {
+        slug: "random-color-generator",
+        name: "Random Color Generator",
+        shortName: "Random Colors",
+        category: "web",
+        icon: "Palette",
+        sortOrder: 480,
+        featured: false,
+        description:
+          "Generate inspectable color swatches and copy HEX, RGB, or HSL CSS values.",
+        keywords: ["random color", "hex", "rgb", "hsl", "css", "swatch"],
+        seoTitle: "Random HEX, RGB & HSL Color Generator",
+        seoDescription:
+          "Generate random color swatches locally and copy valid HEX, RGB, or HSL CSS values.",
+        related: [
+          "color-converter",
+          "css-formatter",
+          "random-number-generator",
+        ],
+        faq: {
+          question: "Can colors be copied as CSS?",
+          answer:
+            "Yes. Switch between HEX, RGB, and HSL, then copy any generated value.",
+        },
+      },
+    ] as const
+  ).map((tool) => ({
+    ...shared,
+    id: tool.slug,
+    slug: tool.slug,
+    name: tool.name,
+    shortName: tool.shortName,
+    category: tool.category,
+    icon: tool.icon,
+    featured: tool.featured,
+    sortOrder: tool.sortOrder,
+    description: tool.description,
+    keywords: [...tool.keywords],
+    maxInputSize: TOOL_LIMITS.text,
+    seoTitle: tool.seoTitle,
+    seoDescription: tool.seoDescription,
+    related: [...tool.related],
+    faq: [tool.faq],
+  })),
   ...([
     ["linux-cheatsheet", "Linux Command Cheatsheet", "Linux Commands", "Terminal", 340, ["linux", "shell", "commands", "systemd", "files", "network"]],
     ["git-cheatsheet", "Git Command Cheatsheet", "Git Cheatsheet", "GitCommitHorizontal", 350, ["git", "commands", "branch", "diff", "reflog", "remote"]],

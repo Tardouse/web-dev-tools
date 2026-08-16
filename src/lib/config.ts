@@ -23,6 +23,13 @@ export const TOOL_LIMITS = {
   maxOutput: 10 * 1024 * 1024,
   maxJsonDepth: 100,
   maxRegexLength: 1_000,
+  maxRandomBatchSize: 100,
+  maxRandomStringLength: 4_096,
+  maxPasswordLength: 256,
+  maxLoremWords: 1_000,
+  maxLoremSentences: 100,
+  maxLoremParagraphs: 20,
+  maxRandomDecimalPlaces: 10,
 } as const;
 
 export function byteLength(value: string): number {
