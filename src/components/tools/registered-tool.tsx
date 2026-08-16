@@ -180,6 +180,46 @@ const toolComponents: Record<string, ComponentType<ToolComponentProps>> = {
       (module) => module.DeveloperCheatsheetTool,
     ),
   ),
+  "vim-cheatsheet": dynamic(() =>
+    import("./cheatsheet-tool").then(
+      (module) => module.DeveloperCheatsheetTool,
+    ),
+  ),
+  "regex-cheatsheet": dynamic(() =>
+    import("./cheatsheet-tool").then(
+      (module) => module.DeveloperCheatsheetTool,
+    ),
+  ),
+  "bash-cheatsheet": dynamic(() =>
+    import("./cheatsheet-tool").then(
+      (module) => module.DeveloperCheatsheetTool,
+    ),
+  ),
+  "sql-cheatsheet": dynamic(() =>
+    import("./cheatsheet-tool").then(
+      (module) => module.DeveloperCheatsheetTool,
+    ),
+  ),
+  "javascript-cheatsheet": dynamic(() =>
+    import("./cheatsheet-tool").then(
+      (module) => module.DeveloperCheatsheetTool,
+    ),
+  ),
+  "python-cheatsheet": dynamic(() =>
+    import("./cheatsheet-tool").then(
+      (module) => module.DeveloperCheatsheetTool,
+    ),
+  ),
+  "http-status-code-cheatsheet": dynamic(() =>
+    import("./cheatsheet-tool").then(
+      (module) => module.DeveloperCheatsheetTool,
+    ),
+  ),
+  "css-cheatsheet": dynamic(() =>
+    import("./cheatsheet-tool").then(
+      (module) => module.DeveloperCheatsheetTool,
+    ),
+  ),
 };
 export function RegisteredTool({
   definition,

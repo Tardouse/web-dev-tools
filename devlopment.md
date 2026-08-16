@@ -6,7 +6,7 @@
 
 ### 当前交付概览
 
-- 第一版建议工具：20 / 20 已完成，仓库实际注册 48 个独立工具
+- 第一版建议工具：20 / 20 已完成，仓库实际注册 56 个独立工具
 - P0 必须项：19 / 19 已完成
 - P1 第一阶段项：11 / 11 已完成
 - P2 用户增长项：11 / 11 已完成
@@ -17,6 +17,7 @@
 - Sprint 9：SQL、Web 代码处理、Git、网络分析、浏览器 API 请求与 Linux/Git/Docker/Nginx 速查已完成，并通过桌面/移动端 E2E
 - Sprint 10：HTTP Header/Auth 生成与浏览器 Webhook 测试已完成，包含 Payload 格式化、统一超时/响应限制和 Header 注入防护，并通过桌面/移动端 E2E
 - Sprint 11：随机字符串、密码、用户名、Lorem Ipsum、Fake JSON、Mock CSV、数字、日期与颜色生成器已完成，包含 Web Crypto、安全字符集、集中限制和长输出滚动，并通过桌面/移动端 E2E
+- Sprint 12：Vim、Regex、Bash、SQL、JavaScript、Python、HTTP 状态码与 CSS 速查已完成，包含 94 条双语可搜索参考内容，并通过桌面/移动端 E2E
 - 用户与后台：已完成 Email 注册验证、登录与密码恢复、用户/管理员认证隔离、收藏与最近使用、运营 Dashboard 和用户管理
 - 工程化：已具备单元、集成和 E2E 测试、GitHub Actions CI 及生产部署配置；实际域名、HTTPS 证书和 CD 尚未落地
 
@@ -776,14 +777,14 @@ Webhook / HTTP 请求功能必须严格控制服务器端网络访问能力，�
 - [x] Git Cheatsheet
 - [x] Docker Cheatsheet
 - [x] Nginx Cheatsheet
-- [ ] Vim Cheatsheet
-- [ ] Regex Cheatsheet
-- [ ] Bash Cheatsheet
-- [ ] SQL Cheatsheet
-- [ ] JavaScript Cheatsheet
-- [ ] Python Cheatsheet
-- [ ] HTTP Status Code Cheatsheet
-- [ ] CSS Cheatsheet
+- [x] Vim Cheatsheet
+- [x] Regex Cheatsheet
+- [x] Bash Cheatsheet
+- [x] SQL Cheatsheet
+- [x] JavaScript Cheatsheet
+- [x] Python Cheatsheet
+- [x] HTTP Status Code Cheatsheet
+- [x] CSS Cheatsheet
 
 这个模块对于 SEO 和长期流量非常有价值。
 
@@ -1598,6 +1599,13 @@ Code Review
 - [x] Random Number / Date / Color Generator
 - [x] Web Crypto、安全字符集与集中数量限制
 - [x] 长输出内部滚动与桌面/移动端 E2E
+
+## Sprint 12
+
+- [x] Vim / Regex / Bash / SQL Cheatsheet
+- [x] JavaScript / Python / HTTP Status Code / CSS Cheatsheet
+- [x] 双语条目搜索、复制、空状态与独立 SEO 页面
+- [x] 长代码安全换行与桌面/移动端 E2E
 
 ---
 

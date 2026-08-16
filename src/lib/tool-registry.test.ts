@@ -3,7 +3,7 @@ import { categories, getTool, searchTools, tools } from "./tool-registry";
 
 describe("tool registry", () => {
   it("registers a complete extensible first release", () => {
-    expect(tools.length).toBeGreaterThanOrEqual(20);
+    expect(tools).toHaveLength(56);
     expect(new Set(tools.map((tool) => tool.slug)).size).toBe(tools.length);
     expect(
       tools.every(

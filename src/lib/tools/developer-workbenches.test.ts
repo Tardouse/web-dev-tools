@@ -6,7 +6,7 @@ import {
   formatWebCode,
   minifyWebCode,
 } from "./code-workbench";
-import { searchCheatsheet } from "./cheatsheets";
+import { cheatsheets, searchCheatsheet } from "./cheatsheets";
 import {
   analyzeNetworkValue,
   generateApiSnippet,
@@ -30,9 +30,9 @@ describe("web and SQL workbenches", () => {
     await expect(
       minifyWebCode("const answer = 40 + 2;", "javascript"),
     ).resolves.toBe("const answer=42;");
-    await expect(
-      minifyWebCode(".app { color: red; }", "css"),
-    ).resolves.toBe(".app{color:red}");
+    await expect(minifyWebCode(".app { color: red; }", "css")).resolves.toBe(
+      ".app{color:red}",
+    );
     await expect(
       minifyWebCode("<main>  <!-- note --> <h1>Hello</h1> </main>", "html"),
     ).resolves.toBe("<main> <h1>Hello</h1> </main>");
@@ -120,7 +120,11 @@ describe("Git and network workbenches", () => {
     });
     expect(
       analyzeNetworkValue("https://example.com:8443/api?q=tools#result"),
-    ).toMatchObject({ hostname: "example.com", port: "8443", pathname: "/api" });
+    ).toMatchObject({
+      hostname: "example.com",
+      port: "8443",
+      pathname: "/api",
+    });
   });
 });
 
@@ -138,14 +142,31 @@ describe("API builder and command references", () => {
     expect(generateApiSnippet(input, "curl")).toContain(
       "-H 'X-Request-ID: sprint-9'",
     );
-    expect(generateApiSnippet(input, "fetch")).toContain('"body": "{\\"name\\":\\"demo\\"}"');
+    expect(generateApiSnippet(input, "fetch")).toContain(
+      '"body": "{\\"name\\":\\"demo\\"}"',
+    );
     const axios = generateApiSnippet(input, "axios");
     expect(axios).toContain('"data": "{\\"name\\":\\"demo\\"}"');
     expect(axios).not.toContain('"body"');
-    expect(() => parseHeaderLines("broken header")).toThrow("Invalid header line");
+    expect(() => parseHeaderLines("broken header")).toThrow(
+      "Invalid header line",
+    );
   });
 
   it("searches localized cheatsheet content", () => {
+    expect(Object.keys(cheatsheets)).toHaveLength(12);
+    expect(
+      Object.values(cheatsheets).reduce(
+        (total, entries) => total + entries.length,
+        0,
+      ),
+    ).toBe(94);
+    for (const entries of Object.values(cheatsheets)) {
+      expect(entries.length).toBeGreaterThanOrEqual(6);
+      expect(new Set(entries.map((entry) => entry.command)).size).toBe(
+        entries.length,
+      );
+    }
     expect(searchCheatsheet("linux", "systemd")[0]?.command).toContain(
       "journalctl",
     );
@@ -155,6 +176,28 @@ describe("API builder and command references", () => {
     );
     expect(searchCheatsheet("nginx", "转发")[0]?.command).toContain(
       "proxy_pass",
+    );
+    expect(searchCheatsheet("vim", "逐项确认")[0]?.command).toContain(":%s/");
+    expect(searchCheatsheet("regex", "单词边界")[0]?.command).toBe(
+      "\\bword\\b",
+    );
+    expect(searchCheatsheet("bash", "pipefail")[0]?.command).toBe(
+      "set -euo pipefail",
+    );
+    expect(searchCheatsheet("sql", "执行计划")[0]?.command).toContain(
+      "EXPLAIN",
+    );
+    expect(searchCheatsheet("javascript", "异步")[0]?.command).toContain(
+      "Promise.all",
+    );
+    expect(searchCheatsheet("python", "虚拟环境")[0]?.command).toContain(
+      "venv",
+    );
+    expect(searchCheatsheet("http-status-code", "速率限制")[0]?.command).toBe(
+      "429 Too Many Requests",
+    );
+    expect(searchCheatsheet("css", "响应式网格")[0]?.command).toContain(
+      "auto-fit",
     );
   });
 });

@@ -1411,11 +1411,11 @@
 .cheatsheet-row code {
   min-width: 0;
   padding: 9px 10px;
-  overflow-x: auto;
+  overflow-wrap: anywhere;
   border-radius: 6px;
   background: var(--surface-muted);
   font-size: 0.78rem;
-  white-space: nowrap;
+  white-space: pre-wrap;
 }
 .api-request-line {
   display: grid;
