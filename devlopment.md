@@ -24,7 +24,7 @@
 - Sprint 16：Bit/Byte 与 SI/IEC 数据大小换算、英文字符统计、行清理/排序/反转/行号、文本去重/合并/拆分和首字母大写已完成，包含统一 Worker 限制、主题水合修复及桌面/移动端 E2E
 - Sprint 17：Regex 捕获组/替换/模板/语法解释与 PCRE 说明、JSON Diff 和忽略大小写已完成，包含集中匹配限制、双语错误、规范化 JSON 对比及桌面/移动端 E2E
 - Sprint 18：cURL 完整请求解析与多语言代码生成已完成，覆盖请求头、查询参数、Cookie、Basic/Bearer 认证、四种 Body 模式和 10 个输出目标，并通过可终止 Worker、双语错误及桌面/移动端 E2E 验收
-- Sprint 19（进行中）：颜色工具已接入 HSL / HSV / CMYK 转换、对比度、互补色、调色板和 CSS 变量生成；双语元数据、E2E 验收和发布质量门禁待完成
+- Sprint 19：颜色工具已完成 HSL / HSV / CMYK 转换、对比度、互补色、调色板和 CSS 变量生成，并通过双语错误、Worker、桌面/移动端 E2E 与全量质量门禁
 - 用户与后台：已完成 Email 注册验证、登录与密码恢复、用户/管理员认证隔离、收藏与最近使用、运营 Dashboard 和用户管理
 - 工程化：已具备单元、集成和 E2E 测试、GitHub Actions CI、Docker Compose 部署及免 Docker 的 Node.js 原生安装；实际域名、HTTPS 证书和 CD 尚未落地
 
@@ -1657,14 +1657,21 @@ Code Review
 - [x] 注入防护、集中条目限制、可终止 Worker 与双语错误
 - [x] 单元、Worker、桌面/移动端、深色模式与全量回归测试
 
-## Sprint 19（进行中）
+## Sprint 19
 
 - [x] HSL → RGB、HSV 与 CMYK 颜色转换
 - [x] 颜色对比度、互补色和 10 级调色板生成
 - [x] CSS custom properties 输出、随机颜色与取色器输入
 - [x] 颜色分析接入可终止共享 Worker，并完成纯函数/Worker 测试
-- [ ] 双语错误消息、工具元数据与桌面/移动端 E2E 验收
-- [ ] 全量质量门禁、发布提交与阶段标签
+- [x] 双语错误消息、工具元数据与桌面/移动端 E2E 验收
+- [x] 全量质量门禁、发布提交与阶段标签
+
+## Sprint 20（进行中）
+
+- [ ] WiFi、Email 与 vCard 内容模板生成二维码
+- [ ] SVG 二维码导出
+- [ ] 二维码扫描与解析，并设置文件大小限制
+- [ ] 双语错误、元数据、单元/Worker/E2E 与移动端验收
 
 ---
 
