@@ -26,7 +26,11 @@ export function FavoritesPage({
     };
     sync();
     window.addEventListener("devtoolbox:storage", sync);
-    return () => window.removeEventListener("devtoolbox:storage", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("devtoolbox:storage", sync);
+      window.removeEventListener("storage", sync);
+    };
   }, []);
   const resolve = (slugs: string[]) =>
     slugs

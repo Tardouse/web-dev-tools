@@ -172,8 +172,15 @@ test("Unicode 与 ASCII 工具覆盖转义、代码转换和字符表", async ({
 test("UTF-8 查看器在 Worker 中统计码点并限制明细渲染", async ({ page }) => {
   await installWorkerProbe(page);
   await openTool(page, "utf8-inspector");
-  await page.getByLabel("UTF-8 文本输入").fill("A世🚀");
-  await expect(page.getByText("8", { exact: true }).first()).toBeVisible();
+  const utf8Input = page.getByLabel("UTF-8 文本输入");
+  await utf8Input.fill("A世🚀");
+  await expect(utf8Input).toHaveValue("A世🚀");
+  await expect(
+    page
+      .locator(".utf8-metrics .metric")
+      .filter({ hasText: "UTF-8 字节" })
+      .locator(".metric-value"),
+  ).toHaveText("8");
   await expect(page.getByText("U+4E16", { exact: true })).toBeVisible();
   await expect(page.getByText("E4 B8 96", { exact: true })).toBeVisible();
   await expect(page.getByText("U+1F680", { exact: true })).toBeVisible();

@@ -343,6 +343,31 @@ function createCss(
   return lines.join("\n");
 }
 
+export function extractColorInput(input: string): string {
+  assertInputLimit(input, TOOL_LIMITS.file);
+  const value = input.trim();
+  if (!value) return value;
+  try {
+    const parsed: unknown = JSON.parse(value);
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      "hex" in parsed &&
+      typeof parsed.hex === "string"
+    ) {
+      return parsed.hex.trim();
+    }
+  } catch {
+    // Plain text and CSS imports are handled below.
+  }
+  const cssVariable = value.match(/--color-primary\s*:\s*([^;\n]+)/i);
+  if (cssVariable?.[1]) return cssVariable[1].trim();
+  const colorToken = value.match(
+    /#(?:[\da-f]{3}|[\da-f]{6})\b|(?:rgb|hsl|hsv|cmyk)\s*\([^)]*\)/i,
+  );
+  return colorToken?.[0] ?? value;
+}
+
 export function parseColor(input: string): ColorValue {
   assertInputLimit(input, TOOL_LIMITS.text);
   const value = input.trim();

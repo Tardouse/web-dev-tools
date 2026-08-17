@@ -80,9 +80,16 @@ test("颜色工具生成调色板和 CSS 变量", async ({ page }) => {
   await expect(cssOutput).toContainText("--color-primary: #2563EB;");
   await expect(cssOutput).toContainText("--color-primary-complement:");
   const cssActions = page.locator(".color-css-view .button");
-  await expect(cssActions).toHaveCount(2);
-  await expect(cssActions.filter({ hasText: "复制" })).toBeVisible();
-  await expect(cssActions.filter({ hasText: "下载" })).toBeVisible();
+  await expect(cssActions).toHaveCount(3);
+  await expect(
+    page.getByRole("button", { name: "复制", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "下载", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "下载 JSON", exact: true }),
+  ).toBeVisible();
 });
 
 test("颜色工具支持随机颜色并本地化非法输入", async ({ page }) => {

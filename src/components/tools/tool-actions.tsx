@@ -95,11 +95,13 @@ export function DownloadButton({
   filename,
   messages,
   type,
+  label,
 }: {
   value: string;
   filename: string;
   messages: Messages;
   type?: string;
+  label?: string;
 }) {
   const { toast } = useToast();
   return (
@@ -111,7 +113,7 @@ export function DownloadButton({
       icon={Download}
       disabled={!value}
     >
-      {messages.common.download}
+      {label ?? messages.common.download}
     </ActionButton>
   );
 }

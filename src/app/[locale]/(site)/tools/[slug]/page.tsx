@@ -7,6 +7,7 @@ import { ToolIcon } from "@/components/icon";
 import { ToolPageClient } from "@/components/tool-page-client";
 import { RegisteredTool } from "@/components/tools/registered-tool";
 import { FavoriteToolButton } from "@/components/favorite-tool-button";
+import { ShareToolButton } from "@/components/share-tool-button";
 import { formatBytes, SITE_CONFIG } from "@/lib/config";
 import { tools } from "@/lib/tool-registry";
 import { getCurrentUser } from "@/server/auth/session";
@@ -168,18 +169,25 @@ export default async function ToolPage({
             </span>
           </div>
         </div>
-        <FavoriteToolButton
-          slug={tool.slug}
-          name={tool.name}
-          messages={messages}
-        />
+        <div className="tool-page-actions">
+          <ShareToolButton name={tool.name} messages={messages} />
+          <FavoriteToolButton
+            slug={tool.slug}
+            name={tool.name}
+            messages={messages}
+          />
+        </div>
       </header>
       <div className="tool-layout">
         <div className="tool-main">
           {tool.freeToUse === false ? (
             <div className="empty-state card paid-tool-state">
               <LockKeyhole size={30} />
-              <h3>{locale === "zh" ? "此工具需要付费权限" : "Paid access required"}</h3>
+              <h3>
+                {locale === "zh"
+                  ? "此工具需要付费权限"
+                  : "Paid access required"}
+              </h3>
               <p>
                 {locale === "zh"
                   ? "当前版本尚未开放订阅购买，请联系网站管理员获取访问方式。"

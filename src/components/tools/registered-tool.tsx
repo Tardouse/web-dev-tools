@@ -1,9 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { ComponentType } from "react";
+import { Suspense, type ComponentType } from "react";
 import type { Locale, Messages } from "@/i18n";
 import type { ToolComponentProps, ToolDefinition } from "@/lib/types";
+import { ToolErrorBoundary, ToolLoadingState } from "./tool-state";
 
 const toolComponents: Record<string, ComponentType<ToolComponentProps>> = {
   "json-formatter": dynamic(() =>
@@ -303,11 +304,18 @@ export function RegisteredTool({
       </div>
     );
   return (
-    <ToolComponent
-      key={definition.slug}
-      definition={definition}
-      locale={locale}
-      messages={messages}
-    />
+    <Suspense
+      key={`${definition.slug}:${locale}`}
+      fallback={<ToolLoadingState messages={messages} />}
+    >
+      <ToolErrorBoundary key={definition.slug} messages={messages}>
+        <ToolComponent
+          key={definition.slug}
+          definition={definition}
+          locale={locale}
+          messages={messages}
+        />
+      </ToolErrorBoundary>
+    </Suspense>
   );
 }

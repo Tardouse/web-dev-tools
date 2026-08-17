@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { convertBase, parseColor } from "./number-color";
+import { convertBase, extractColorInput, parseColor } from "./number-color";
 
 describe("number and color tools", () => {
   it("converts arbitrary precision integers", () => {
@@ -40,6 +40,13 @@ describe("number and color tools", () => {
     expect(new Set(value.palette.map((entry) => entry.hex)).size).toBe(10);
     expect(value.css).toContain("--color-primary-contrast: #FFFFFF;");
     expect(value.css).toContain("--color-primary-complement: #EBAC24;");
+  });
+  it("extracts colors from JSON, CSS, and plain text imports", () => {
+    expect(extractColorInput('{"hex":"#12abef"}')).toBe("#12abef");
+    expect(
+      extractColorInput(":root { --color-primary: hsl(20, 80%, 50%); }"),
+    ).toBe("hsl(20, 80%, 50%)");
+    expect(extractColorInput("primary color: #abc")).toBe("#abc");
   });
   it("handles black and rejects invalid hue, percentages, and oversized input", () => {
     expect(parseColor("#000")).toMatchObject({
