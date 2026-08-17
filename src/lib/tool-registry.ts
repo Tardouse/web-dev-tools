@@ -1154,17 +1154,44 @@ export const tools: ToolDefinition[] = [
     featured: true,
     sortOrder: 160,
     description:
-      "Create downloadable PNG QR codes with size and correction controls.",
-    keywords: ["qr", "qrcode", "barcode", "url", "png"],
+      "Generate text, URL, WiFi, email, and vCard QR codes with PNG and SVG export, or decode a QR image locally.",
+    keywords: [
+      "qr",
+      "qrcode",
+      "barcode",
+      "url",
+      "wifi",
+      "email",
+      "vcard",
+      "png",
+      "svg",
+      "scanner",
+      "decode",
+    ],
     maxInputSize: TOOL_LIMITS.text,
-    seoTitle: "QR Code Generator Online — Download PNG",
+    seoTitle: "QR Code Generator Online — WiFi, Email, vCard, PNG & SVG",
     seoDescription:
-      "Create customizable QR codes locally and download high-resolution PNG images.",
+      "Generate text, URL, WiFi, email, and vCard QR codes locally, download PNG or SVG, and scan QR images without uploading data.",
     related: ["url-encoder", "color-converter", "base64"],
     faq: [
       {
         question: "Is QR content sent anywhere?",
         answer: "No. The QR image is rendered in your browser.",
+      },
+      {
+        question: "Which QR templates are supported?",
+        answer:
+          "Use plain text or URL content, or generate standard WiFi, email, and vCard payloads.",
+      },
+      {
+        question: "Can I export an SVG QR code?",
+        answer:
+          "Yes. The generator downloads both PNG and scalable SVG files locally.",
+      },
+      {
+        question: "Can the tool scan an existing QR image?",
+        answer:
+          "Yes. Choose an image and decoding runs locally in your browser with a file-size limit.",
       },
     ],
   },

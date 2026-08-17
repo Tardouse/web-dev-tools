@@ -721,14 +721,42 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
   "qr-code-generator": {
     name: "二维码生成器",
     shortName: "二维码",
-    description: "生成可下载的 PNG 二维码，并设置尺寸和纠错等级。",
-    keywords: ["二维码", "qr", "qrcode", "url", "png", "生成"],
-    seoTitle: "二维码在线生成 — 下载 PNG",
-    seoDescription: "在本地生成可自定义的二维码，并下载高清 PNG 图片。",
+    description:
+      "生成文本、URL、WiFi、Email 和 vCard 二维码，支持 PNG、SVG 导出及本地图片解析。",
+    keywords: [
+      "二维码",
+      "qr",
+      "qrcode",
+      "url",
+      "wifi",
+      "email",
+      "vcard",
+      "png",
+      "svg",
+      "扫描",
+      "解析",
+      "生成",
+    ],
+    seoTitle: "二维码在线生成 — WiFi、Email、vCard、PNG 与 SVG",
+    seoDescription:
+      "在浏览器本地生成文本、URL、WiFi、Email 和 vCard 二维码，下载 PNG 或 SVG，并解析二维码图片。",
     faq: [
       {
         question: "二维码内容会被上传吗？",
         answer: "不会。二维码图像完全在浏览器中生成。",
+      },
+      {
+        question: "支持哪些二维码模板？",
+        answer: "支持普通文本或 URL，以及标准 WiFi、Email 和 vCard 内容。",
+      },
+      {
+        question: "可以导出 SVG 二维码吗？",
+        answer: "可以。工具支持下载 PNG 和可缩放的 SVG 文件。",
+      },
+      {
+        question: "可以解析已有的二维码图片吗？",
+        answer:
+          "可以。选择图片后，二维码会在浏览器本地解析，并受文件大小限制保护。",
       },
     ],
   },

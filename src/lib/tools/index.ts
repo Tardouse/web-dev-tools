@@ -5,6 +5,7 @@ export * from "./encoding-data";
 export * from "./text";
 export * from "./text-processing";
 export * from "./number-color";
+export * from "./qr";
 export * from "./security";
 export * from "./curl";
 export * from "./time";

@@ -30,6 +30,7 @@ export function localizeToolError(message: string, messages: Messages): string {
     "Enter a valid HEX, RGB, HSL, HSV, or CMYK color value.":
       messages.errors.invalidColor,
     "Invalid color input.": messages.errors.invalidColor,
+    "No QR code was found in this image.": messages.errors.qrScanNoCode,
     "Color hues must be between 0 and 360 degrees.":
       messages.errors.colorHueRange,
     "Color percentages must be between 0% and 100%.":
