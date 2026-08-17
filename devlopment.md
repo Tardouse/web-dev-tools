@@ -23,6 +23,7 @@
 - Sprint 15：文件/图片 Base64、自动编码方向、URL / Query String、Unicode、ASCII 与 UTF-8 工具已完成，包含文件往返、重复参数保真、代理项校验、完整字符表和分批渲染，并通过桌面/移动端 E2E
 - Sprint 16：Bit/Byte 与 SI/IEC 数据大小换算、英文字符统计、行清理/排序/反转/行号、文本去重/合并/拆分和首字母大写已完成，包含统一 Worker 限制、主题水合修复及桌面/移动端 E2E
 - Sprint 17：Regex 捕获组/替换/模板/语法解释与 PCRE 说明、JSON Diff 和忽略大小写已完成，包含集中匹配限制、双语错误、规范化 JSON 对比及桌面/移动端 E2E
+- Sprint 18：cURL 完整请求解析与多语言代码生成已完成，覆盖请求头、查询参数、Cookie、Basic/Bearer 认证、四种 Body 模式和 10 个输出目标，并通过可终止 Worker、双语错误及桌面/移动端 E2E 验收
 - 用户与后台：已完成 Email 注册验证、登录与密码恢复、用户/管理员认证隔离、收藏与最近使用、运营 Dashboard 和用户管理
 - 工程化：已具备单元、集成和 E2E 测试、GitHub Actions CI 及生产部署配置；实际域名、HTTPS 证书和 CD 尚未落地
 
@@ -398,40 +399,38 @@ curl -X POST https://example.com/api \
 
 自动解析：
 
-```text
-Method
-URL
-Headers
-Query
-Cookies
-Body
-```
+- [x] Method
+- [x] URL
+- [x] Headers
+- [x] Query
+- [x] Cookies
+- [x] Basic / Bearer Auth
+- [x] None / Raw / URL-encoded / Multipart Body
 
 ## Curl Generator
 
 提供表单：
 
-```text
-Method
-URL
-Headers
-Query Parameters
-Cookies
-Body
-```
+- [x] Method
+- [x] URL
+- [x] Headers
+- [x] Query Parameters
+- [x] Cookies
+- [x] Basic / Bearer Auth
+- [x] None / Raw / URL-encoded / Multipart Body
 
 生成：
 
 - [x] curl
 - [x] JavaScript fetch
-- [ ] Axios
-- [ ] Python requests
-- [ ] Python httpx
-- [ ] Go HTTP
-- [ ] PHP cURL
-- [ ] Java
-- [ ] C#
-- [ ] JavaScript XMLHttpRequest
+- [x] Axios
+- [x] Python requests
+- [x] Python httpx
+- [x] Go HTTP
+- [x] PHP cURL
+- [x] Java HttpClient
+- [x] C# HttpClient
+- [x] JavaScript XMLHttpRequest
 
 ---
 
@@ -1640,6 +1639,21 @@ Code Review
 - [x] 删除空行/重复行、行排序/反转与添加/删除行号
 - [x] 按行/单词/字符去重、双文本合并与多分隔方式拆分
 - [x] 可终止 Worker、双语错误、主题水合修复与桌面/移动端 E2E
+
+## Sprint 17
+
+- [x] Regex 捕获组、替换测试、常用模板与语法解释
+- [x] JavaScript Flags 与 PCRE 差异说明
+- [x] JSON Diff、忽略大小写与差异下载
+- [x] 集中限制、可终止 Worker、双语错误与桌面/移动端 E2E
+
+## Sprint 18
+
+- [x] cURL Method、URL、Headers、Query、Cookies 与 Auth 完整解析
+- [x] None、Raw、URL-encoded 与 Multipart 请求体解析和编辑
+- [x] cURL、Fetch、Axios、Python、Go、PHP、Java、C# 与 XHR 代码生成
+- [x] 注入防护、集中条目限制、可终止 Worker 与双语错误
+- [x] 单元、Worker、桌面/移动端、深色模式与全量回归测试
 
 ---
 

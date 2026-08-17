@@ -46,6 +46,7 @@ import {
 import { convertBase } from "@/lib/tools/number-color";
 import { hashText, testRegex } from "@/lib/tools/security";
 import { hashFileBytes } from "@/lib/tools/file";
+import { generateRequestCode, parseCurl } from "@/lib/tools/curl";
 import { generateSshKey } from "@/lib/tools/ssh";
 import { convertCase, countText } from "@/lib/tools/text";
 import {
@@ -179,6 +180,10 @@ export async function executeToolWorkerRequest(
       };
       return result;
     }
+    case "curl-parse":
+      return parseCurl(request.input);
+    case "curl-generate":
+      return generateRequestCode(request.request, request.format);
     case "number-base":
       return {
         value: convertBase(request.input, request.from, request.to),

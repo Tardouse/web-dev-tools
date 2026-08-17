@@ -6,6 +6,7 @@ import type {
   NumberBaseWorkerResult,
 } from "./tool-worker-protocol";
 import type { LocalFileEntry } from "./tools/archive";
+import type { CurlRequest } from "./tools/curl";
 
 const encode = (value: string) => new TextEncoder().encode(value);
 const decode = (value: Uint8Array) => new TextDecoder().decode(value);
@@ -325,6 +326,31 @@ describe("tool worker operations", () => {
         { base: 16, value: "ff" },
       ],
     });
+  });
+
+  it("parses and generates cURL requests inside the worker boundary", async () => {
+    const parsed = (await executeToolWorkerRequest({
+      operation: "curl-parse",
+      input:
+        "curl 'https://example.com/items?tag=one' -H 'Authorization: Bearer token' -b 'session=abc' --json '{\"ok\":true}'",
+    })) as CurlRequest;
+
+    expect(parsed).toMatchObject({
+      method: "POST",
+      url: "https://example.com/items",
+      query: [{ name: "tag", value: "one" }],
+      cookies: [{ name: "session", value: "abc" }],
+      auth: { type: "bearer", token: "token" },
+      body: { type: "raw", text: '{"ok":true}' },
+    });
+
+    await expect(
+      executeToolWorkerRequest({
+        operation: "curl-generate",
+        request: parsed,
+        format: "python-httpx",
+      }),
+    ).resolves.toContain("httpx.request");
   });
 
   it("creates and extracts ZIP, TAR, and GZIP payloads", async () => {

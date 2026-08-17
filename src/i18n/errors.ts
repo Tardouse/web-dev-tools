@@ -36,6 +36,19 @@ export function localizeToolError(message: string, messages: Messages): string {
     "The cURL command contains an unclosed quote.": messages.errors.curlQuote,
     "The command must start with curl.": messages.errors.curlStart,
     "No request URL was found.": messages.errors.curlNoUrl,
+    "cURL headers must use the Name: Value format.":
+      messages.errors.curlHeaderFormat,
+    "cURL field values cannot contain line breaks.":
+      messages.errors.curlLineBreak,
+    "HTTP methods can only contain letters, numbers, and hyphens.":
+      messages.errors.curlMethod,
+    "Put URL query values in the Query Parameters section.":
+      messages.errors.curlQuerySection,
+    "cURL entry names are required.": messages.errors.curlEntryName,
+    "cURL header and cookie names may only contain valid HTTP token characters.":
+      messages.errors.curlTokenName,
+    "Basic Auth usernames cannot contain a colon.":
+      messages.errors.curlBasicUsername,
     "The request URL is invalid.": messages.errors.invalidUrl,
     "Enter a request URL.": messages.errors.enterUrl,
     "Enter a valid absolute URL.": messages.errors.absoluteUrl,
@@ -112,6 +125,14 @@ export function localizeToolError(message: string, messages: Messages): string {
     [
       /^Changed JSON is invalid: (.+)$/s,
       (m) => interpolate(messages.errors.changedJsonInvalid, { detail: m[1] }),
+    ],
+    [
+      /^The (.+) option requires a value\.$/,
+      (m) => interpolate(messages.errors.curlOptionValue, { option: m[1] }),
+    ],
+    [
+      /^cURL requests are limited to (\d+) entries per section\.$/,
+      (m) => interpolate(messages.errors.curlEntryLimit, { limit: m[1] }),
     ],
     [
       /^Invalid cron expression: (.+)$/s,

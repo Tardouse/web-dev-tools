@@ -1156,18 +1156,32 @@ export const tools: ToolDefinition[] = [
     icon: "TerminalSquare",
     sortOrder: 170,
     description:
-      "Inspect the method, URL, headers, and body in a common cURL command.",
-    keywords: ["curl", "parse", "http", "api", "request"],
+      "Parse cURL methods, URLs, headers, query parameters, cookies, authentication, and request bodies locally.",
+    keywords: [
+      "curl",
+      "parse",
+      "http",
+      "api",
+      "request",
+      "headers",
+      "cookies",
+      "multipart",
+    ],
     maxInputSize: TOOL_LIMITS.text,
     seoTitle: "cURL Parser Online — Inspect HTTP Requests",
     seoDescription:
-      "Parse common cURL commands locally into method, URL, headers, and body.",
+      "Parse cURL commands locally into method, URL, headers, query parameters, cookies, authentication, and body details.",
     related: ["curl-generator", "url-decoder", "json-formatter"],
     faq: [
       {
         question: "Does it execute the request?",
         answer:
           "No. It only parses the command locally and never sends a network request.",
+      },
+      {
+        question: "Which cURL request fields are recognized?",
+        answer:
+          "The parser recognizes common method, URL, header, query, cookie, Basic or Bearer authentication, raw data, URL-encoded data, and multipart form options.",
       },
     ],
   },
@@ -1181,18 +1195,38 @@ export const tools: ToolDefinition[] = [
     icon: "SquareCode",
     sortOrder: 180,
     description:
-      "Build cURL or JavaScript fetch code from a simple HTTP request form.",
-    keywords: ["curl", "generate", "fetch", "http", "api", "request"],
+      "Build requests with headers, query parameters, cookies, authentication, and four body modes for ten code targets.",
+    keywords: [
+      "curl",
+      "generate",
+      "fetch",
+      "axios",
+      "python",
+      "httpx",
+      "go",
+      "php",
+      "java",
+      "csharp",
+      "xhr",
+      "http",
+      "api",
+      "request",
+    ],
     maxInputSize: TOOL_LIMITS.text,
     seoTitle: "cURL Generator Online — Build HTTP Requests",
     seoDescription:
-      "Generate cURL and fetch request code without sending your API data anywhere.",
+      "Generate cURL, Fetch, Axios, Python, Go, PHP, Java, C#, and XMLHttpRequest code without sending API data anywhere.",
     related: ["curl-parser", "json-formatter", "url-encoder"],
     faq: [
       {
         question: "Are requests executed?",
         answer:
           "No. The tool only generates source code for you to review and run yourself.",
+      },
+      {
+        question: "Which code formats are available?",
+        answer:
+          "Generate cURL, JavaScript Fetch, Axios, Python requests, Python httpx, Go HTTP, PHP cURL, Java HttpClient, C# HttpClient, or XMLHttpRequest code.",
       },
     ],
   },

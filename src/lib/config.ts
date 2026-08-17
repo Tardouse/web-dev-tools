@@ -31,6 +31,7 @@ export const TOOL_LIMITS = {
   maxRegexLength: 1_000,
   maxRegexReplacementLength: 10_000,
   maxRegexMatches: 1_000,
+  maxCurlEntries: 100,
   maxRandomBatchSize: 100,
   maxRandomStringLength: 4_096,
   maxPasswordLength: 256,

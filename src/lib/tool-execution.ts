@@ -134,6 +134,8 @@ export function workerInputPayload(request: ToolWorkerRequest): unknown {
       return [request.before, request.after];
     case "text-merge":
       return [request.first, request.second];
+    case "curl-generate":
+      return request.request;
     case "archive-extract":
     case "archive-gzip":
     case "file-hash":

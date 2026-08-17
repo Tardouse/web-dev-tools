@@ -709,28 +709,66 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
   "curl-parser": {
     name: "cURL 解析器",
     shortName: "cURL 解析",
-    description: "解析常见 cURL 命令中的请求方法、URL、请求头和请求体。",
-    keywords: ["curl", "解析", "http", "api", "请求"],
+    description:
+      "在本地解析 cURL 的方法、URL、请求头、查询参数、Cookie、身份认证和请求体。",
+    keywords: [
+      "curl",
+      "解析",
+      "http",
+      "api",
+      "请求",
+      "请求头",
+      "cookie",
+      "multipart",
+    ],
     seoTitle: "cURL 在线解析 — 查看 HTTP 请求",
-    seoDescription: "在本地将常见 cURL 命令解析为方法、URL、请求头和请求体。",
+    seoDescription:
+      "在本地将 cURL 命令解析为方法、URL、请求头、查询参数、Cookie、身份认证和请求体详情。",
     faq: [
       {
         question: "工具会执行请求吗？",
         answer: "不会。工具只在本地解析命令，不会发送任何网络请求。",
+      },
+      {
+        question: "可以识别哪些 cURL 请求字段？",
+        answer:
+          "解析器支持常用的方法、URL、请求头、查询参数、Cookie、Basic 或 Bearer 认证、原始数据、URL 编码数据和 Multipart 表单选项。",
       },
     ],
   },
   "curl-generator": {
     name: "cURL 生成器",
     shortName: "cURL 生成",
-    description: "通过简单表单生成 cURL 或 JavaScript fetch 请求代码。",
-    keywords: ["curl", "生成", "fetch", "http", "api", "请求"],
+    description:
+      "使用请求头、查询参数、Cookie、身份认证和四种请求体模式生成十种目标代码。",
+    keywords: [
+      "curl",
+      "生成",
+      "fetch",
+      "axios",
+      "python",
+      "httpx",
+      "go",
+      "php",
+      "java",
+      "csharp",
+      "xhr",
+      "http",
+      "api",
+      "请求",
+    ],
     seoTitle: "cURL 在线生成 — 构建 HTTP 请求",
-    seoDescription: "在不发送 API 数据的情况下生成 cURL 和 fetch 请求代码。",
+    seoDescription:
+      "在不发送 API 数据的情况下生成 cURL、Fetch、Axios、Python、Go、PHP、Java、C# 和 XMLHttpRequest 代码。",
     faq: [
       {
         question: "会执行生成的请求吗？",
         answer: "不会。工具只生成源代码，您可以检查后自行运行。",
+      },
+      {
+        question: "支持生成哪些代码格式？",
+        answer:
+          "支持 cURL、JavaScript Fetch、Axios、Python requests、Python httpx、Go HTTP、PHP cURL、Java HttpClient、C# HttpClient 和 XMLHttpRequest。",
       },
     ],
   },

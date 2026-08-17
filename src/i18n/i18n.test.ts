@@ -104,5 +104,20 @@ describe("localization", () => {
         messages,
       ),
     ).toBe("修改后的 JSON 无效：Expected property name");
+    expect(
+      localizeToolError(
+        "cURL requests are limited to 100 entries per section.",
+        messages,
+      ),
+    ).toBe("cURL 每个配置分区最多允许 100 项。");
+    expect(
+      localizeToolError("The --header option requires a value.", messages),
+    ).toBe("选项 --header 必须提供一个值。");
+    expect(
+      localizeToolError(
+        "cURL field values cannot contain line breaks.",
+        messages,
+      ),
+    ).toBe("cURL 字段值不能包含换行符。");
   });
 });

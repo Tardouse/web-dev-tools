@@ -23,6 +23,7 @@ import type {
   Utf8Inspection,
 } from "@/lib/tools/encoding-data";
 import type { ToolLimitErrorCode } from "@/lib/tool-limits";
+import type { CurlOutputFormat, CurlRequest } from "@/lib/tools/curl";
 
 export type ToolWorkerRequest =
   | { operation: "json-format"; input: string; indent: number }
@@ -98,6 +99,12 @@ export type ToolWorkerRequest =
       ignoreWhitespace: boolean;
       ignoreCase?: boolean;
     }
+  | { operation: "curl-parse"; input: string }
+  | {
+      operation: "curl-generate";
+      request: CurlRequest;
+      format: CurlOutputFormat;
+    }
   | {
       operation: "number-base";
       input: string;
@@ -138,6 +145,7 @@ export type ToolWorkerResult =
   | DataSizeConversion
   | DecodedJwt
   | RegexResult
+  | CurlRequest
   | DiffWorkerResult
   | NumberBaseWorkerResult
   | LocalFileEntry[]

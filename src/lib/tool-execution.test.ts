@@ -86,6 +86,26 @@ describe("unified tool execution limits", () => {
         }),
       ),
     ).toBe(16);
+    expect(
+      workerInputPayload({
+        operation: "curl-generate",
+        format: "fetch",
+        request: {
+          method: "POST",
+          url: "https://example.com/items",
+          headers: [{ name: "Accept", value: "application/json" }],
+          query: [],
+          cookies: [],
+          auth: {
+            type: "none",
+            username: "",
+            password: "",
+            token: "",
+          },
+          body: { type: "raw", text: "payload", fields: [] },
+        },
+      }),
+    ).toMatchObject({ body: { text: "payload" } });
   });
 
   it("caps concurrent operations with one shared slot", async () => {
