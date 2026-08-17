@@ -2,7 +2,7 @@
 
 A fast, privacy-oriented developer toolbox for everyday formatting, encoding, conversion, testing, file, web, and reference tasks. DevToolbox is built with Next.js, React, and TypeScript and provides Simplified Chinese and English interfaces.
 
-[中文文档](docs/README.zh-CN.md) · [Development status and sprint record](devlopment.md) · [CI workflow](.github/workflows/ci.yml)
+[中文文档](docs/README.zh-CN.md) · [CI workflow](.github/workflows/ci.yml)
 
 > DevToolbox is an actively developed project. The current repository contains the implemented application and deployment paths, but a public domain, HTTPS certificate rollout, and continuous deployment have not yet been completed.
 
@@ -17,7 +17,7 @@ A fast, privacy-oriented developer toolbox for everyday formatting, encoding, co
 - Optional user accounts and a separately authorized administration console.
 - Docker Compose and native Node.js deployment paths.
 
-The registered-tool count and category model are maintained in [`src/lib/tool-registry.ts`](src/lib/tool-registry.ts) and covered by registry tests. The detailed Chinese sprint checklist is available in [`devlopment.md`](devlopment.md).
+The registered-tool count and category model are maintained in [`src/lib/tool-registry.ts`](src/lib/tool-registry.ts) and covered by registry tests.
 
 ## Why DevToolbox?
 
@@ -254,7 +254,7 @@ Registry metadata automatically feeds search, cards, category pages, static tool
 
 The next work includes performance budgets and bundle analysis, accessibility auditing, validation of native deployment documentation, upgrade/rollback/backup hardening, CI/CD, and public domain and HTTPS rollout. Pro, API, advertising, or commercial features are exploratory ideas rather than committed behavior.
 
-For the detailed dated checklist, see [`devlopment.md`](devlopment.md).
+For the current status, refer to the implementation, tests, and CI results in the repository.
 
 ## Contributing
 

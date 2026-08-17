@@ -23,6 +23,9 @@
 .env.*.local
 .env.docker-test
 
+# local development notes
+devlopment.md
+
 # misc
 .DS_Store
 *.pem

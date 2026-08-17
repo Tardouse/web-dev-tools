@@ -2,7 +2,7 @@
 
 一个面向日常开发、运维和学习场景的快速、注重隐私的开发者工具箱，覆盖格式化、编码、转换、测试、文件、Web 和参考资料等任务。DevToolbox 使用 Next.js、React 和 TypeScript 构建，提供简体中文和英文界面。
 
-[English README](../README.md) · [开发进度与 Sprint 记录](../devlopment.md) · [CI 工作流](../.github/workflows/ci.yml)
+[English README](../README.md) · [CI 工作流](../.github/workflows/ci.yml)
 
 > DevToolbox 仍在持续开发中。当前仓库包含已经实现的应用和部署路径，但实际公共域名、HTTPS 证书上线和持续部署（CD）尚未完成。
 
@@ -17,7 +17,7 @@
 - 提供可选的用户账户，以及独立授权的管理后台。
 - 支持 Docker Compose 和 Node.js 原生部署。
 
-注册工具数量和分类模型由 [`src/lib/tool-registry.ts`](../src/lib/tool-registry.ts) 维护，并由 registry 测试覆盖。完整的中文 Sprint 清单见 [`devlopment.md`](../devlopment.md)。
+注册工具数量和分类模型由 [`src/lib/tool-registry.ts`](../src/lib/tool-registry.ts) 维护，并由 registry 测试覆盖。
 
 ## 为什么选择 DevToolbox？
 
@@ -254,7 +254,7 @@ Registry 元数据会自动驱动搜索、卡片、分类页、静态工具路�
 
 下一阶段包括性能预算和 bundle 分析、可访问性审计、原生部署文档验证、升级/回滚/备份强化、CI/CD，以及公共域名和 HTTPS 上线。Pro、API、广告或商业功能目前只是探索性想法，并非已承诺的行为。
 
-详细的带日期清单见 [`devlopment.md`](../devlopment.md)。
+详细的功能状态以仓库中的实现、测试和 CI 结果为准。
 
 ## 贡献方式
 
