@@ -422,8 +422,18 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
   "text-counter": {
     name: "文本统计",
     shortName: "文本统计",
-    description: "统计字符、单词、行、字节、数字、空白和中文字符。",
-    keywords: ["文本", "字数", "字符", "单词", "字节", "行数", "统计"],
+    description: "统计字符、英文字符、中文字符、单词、行、字节、数字和空白。",
+    keywords: [
+      "文本",
+      "字数",
+      "字符",
+      "英文字符",
+      "中文字符",
+      "单词",
+      "字节",
+      "行数",
+      "统计",
+    ],
     seoTitle: "在线文本统计 — 字符、单词、行数与字节",
     seoDescription: "在浏览器中即时分析文本，提供支持 Unicode 的多项统计。",
     faq: [
@@ -438,9 +448,10 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
     name: "文本大小写转换",
     shortName: "大小写转换",
     description:
-      "将文本转换为 camelCase、PascalCase、snake_case、kebab-case 等格式。",
+      "将文本首字母大写，或转换为 camelCase、PascalCase、snake_case、kebab-case 等格式。",
     keywords: [
       "大小写",
+      "首字母大写",
       "驼峰",
       "camelcase",
       "pascal",
@@ -449,11 +460,122 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
       "命名",
     ],
     seoTitle: "文本大小写转换 — camelCase、snake_case 等",
-    seoDescription: "在十种常用命名规则之间转换标识符和文本。",
+    seoDescription: "将文本首字母大写，或在十一种常用命名规则之间转换。",
     faq: [
       {
         question: "支持哪些分隔符？",
         answer: "支持空格、连字符、下划线、点、正斜杠、反斜杠和驼峰边界。",
+      },
+    ],
+  },
+  "line-cleaner": {
+    name: "行清理",
+    shortName: "清理文本行",
+    description: "删除空行、重复行和行首尾空白，并可控制是否区分大小写。",
+    keywords: ["行", "空行", "重复行", "删除", "清理", "去空格"],
+    seoTitle: "在线删除空行与重复行",
+    seoDescription:
+      "在浏览器本地删除文本中的空行或重复行、去除首尾空格并选择是否区分大小写。",
+    faq: [
+      {
+        question: "重复行匹配可以忽略大小写吗？",
+        answer:
+          "可以。关闭区分大小写后，Alpha 和 alpha 会视为同一行，并保留首次出现的内容。",
+      },
+      {
+        question: "只包含空格的行算空行吗？",
+        answer: "算。删除空行时也会移除只包含空白字符的行。",
+      },
+    ],
+  },
+  "line-sorter": {
+    name: "行排序与反转",
+    shortName: "行排序",
+    description: "按字典序、自然顺序或长度排序文本行，也可反转现有行顺序。",
+    keywords: ["行排序", "自然排序", "反转行", "字典序", "文本排序"],
+    seoTitle: "在线文本行排序与反转",
+    seoDescription:
+      "在浏览器中按字典序、自然顺序或长度排列文本行，也可直接反转全部行。",
+    faq: [
+      {
+        question: "什么是自然排序？",
+        answer:
+          "自然排序会按数值比较行中的数字，因此 item2 会排在 item10 前面。",
+      },
+      {
+        question: "反转行会反转每行的字符吗？",
+        answer: "不会。它只反转整行的先后顺序，每一行的内容保持不变。",
+      },
+    ],
+  },
+  "line-numberer": {
+    name: "行号处理",
+    shortName: "添加/删除行号",
+    description: "为文本添加可配置行号，或删除常见的数字行号前缀。",
+    keywords: ["行号", "添加行号", "删除行号", "编号", "数字前缀"],
+    seoTitle: "在线添加或删除文本行号",
+    seoDescription:
+      "设置起始值、分隔符和补零格式添加行号，或在浏览器本地删除常见行号前缀。",
+    faq: [
+      {
+        question: "可以添加哪些行号格式？",
+        answer: "可选择点号、冒号或 Tab 分隔符，设置起始数字，并按需补零对齐。",
+      },
+      {
+        question: "可以删除哪些行号前缀？",
+        answer:
+          "可识别数字后接空白、点号、冒号、括号、方括号或连字符等常见前缀。",
+      },
+    ],
+  },
+  "text-deduplicator": {
+    name: "文本去重",
+    shortName: "文本去重",
+    description: "按行、单词或 Unicode 字符保留首次出现的唯一内容。",
+    keywords: ["文本去重", "唯一行", "唯一单词", "重复字符", "删除重复"],
+    seoTitle: "在线文本去重 — 行、单词与字符",
+    seoDescription:
+      "按行、单词或 Unicode 字符移除重复内容，保留首次出现的顺序并在本地处理。",
+    faq: [
+      {
+        question: "去重后会保留原顺序吗？",
+        answer:
+          "会。首次出现的内容会保留，后续重复项会被移除，结果不会重新排序。",
+      },
+    ],
+  },
+  "text-merger": {
+    name: "文本合并",
+    shortName: "合并文本",
+    description: "使用指定分隔符依次合并两段文本，或交错合并两侧文本行。",
+    keywords: ["文本合并", "拼接文本", "交错行", "连接字符串"],
+    seoTitle: "在线合并两段文本或交错文本行",
+    seoDescription:
+      "使用换行、空行、空格或自定义分隔符合并两段文本，也可在本地交错合并文本行。",
+    faq: [
+      {
+        question: "交错行如何工作？",
+        answer:
+          "结果会依次取文本 A 和文本 B 的一行，较长一侧剩余的行会继续追加到末尾。",
+      },
+    ],
+  },
+  "text-splitter": {
+    name: "文本拆分",
+    shortName: "拆分文本",
+    description: "按换行、空白、逗号或自定义字面分隔符拆分文本。",
+    keywords: ["文本拆分", "分隔符", "切分文本", "字符串拆分", "json 数组"],
+    seoTitle: "按分隔符在线拆分文本",
+    seoDescription:
+      "按换行、空白、逗号或自定义字面分隔符拆分文本，并在本地输出逐行结果或 JSON。",
+    faq: [
+      {
+        question: "自定义分隔符是正则表达式吗？",
+        answer: "不是。它按字面文本匹配，正则表达式标点没有特殊含义。",
+      },
+      {
+        question: "可以保留空项吗？",
+        answer: "可以。关闭忽略空项，并选择逐行输出或 JSON 数组格式。",
       },
     ],
   },
@@ -502,6 +624,26 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
         question: "支持大整数吗？",
         answer:
           "支持。转换使用 JavaScript BigInt，不会出现普通浮点数精度损失。",
+      },
+    ],
+  },
+  "data-size-converter": {
+    name: "数据大小转换",
+    shortName: "Bit/Byte 转换",
+    description: "并排换算 bit、Byte、十进制 KB/MB/GB 与二进制 KiB/MiB/GiB。",
+    keywords: ["bit", "byte", "位", "字节", "kb", "mb", "gb", "文件大小"],
+    seoTitle: "Bit、Byte、KB、MB 与 GB 在线转换",
+    seoDescription:
+      "在十进制 SI 和二进制 IEC 数据大小单位之间换算，明确区分 1000 与 1024 进制。",
+    faq: [
+      {
+        question: "MB 和 MiB 有什么区别？",
+        answer:
+          "按照 SI 标准，1 MB 等于 1,000,000 Byte；按照 IEC 二进制标准，1 MiB 等于 1,048,576 Byte。",
+      },
+      {
+        question: "一个 Byte 有多少 bit？",
+        answer: "一个 Byte 固定包含 8 bit。",
       },
     ],
   },

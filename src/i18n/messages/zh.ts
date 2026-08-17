@@ -284,6 +284,7 @@ export const zh: Messages = {
     bytes: "字节数",
     noSpaces: "不含空白",
     chinese: "中文字符",
+    english: "英文字符",
     numbers: "数字",
     whitespace: "空白字符",
   },
@@ -344,5 +345,10 @@ export const zh: Messages = {
     cronRequired: "请输入 Cron 表达式。",
     cronNoRuns: "此表达式没有即将执行的时间。",
     cronInvalid: "Cron 表达式无效：{detail}",
+    dataSizeInvalid: "请输入非负且有限的数据大小。",
+    dataSizeLarge: "数据大小过大，无法进行换算。",
+    lineNumberStart: "起始行号必须是非负整数。",
+    lineNumberRange: "行号范围过大。",
+    delimiterRequired: "请先输入自定义分隔符再拆分文本。",
   },
 };

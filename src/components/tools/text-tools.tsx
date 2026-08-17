@@ -19,6 +19,7 @@ const emptyMetrics: TextMetrics = {
   lines: 0,
   bytes: 0,
   chineseCharacters: 0,
+  englishCharacters: 0,
   numbers: 0,
   spaces: 0,
 };
@@ -56,6 +57,7 @@ export function TextCounterTool({
           [messages.metrics.bytes]: metrics.bytes,
           [messages.metrics.noSpaces]: metrics.charactersNoSpaces,
           [messages.metrics.chinese]: metrics.chineseCharacters,
+          [messages.metrics.english]: metrics.englishCharacters,
           [messages.metrics.numbers]: metrics.numbers,
           [messages.metrics.whitespace]: metrics.spaces,
         }).map(([label, value]) => (
@@ -84,10 +86,10 @@ export function TextCounterTool({
   );
 }
 
-const modes: Array<[CaseMode, string]> = [
+const baseModes: Array<[CaseMode, string]> = [
   ["upper", "UPPER"],
   ["lower", "lower"],
-  ["title", "Title"],
+  ["title", "Title Case"],
   ["camel", "camelCase"],
   ["pascal", "PascalCase"],
   ["snake", "snake_case"],
@@ -99,6 +101,7 @@ const modes: Array<[CaseMode, string]> = [
 export function CaseConverterTool({
   definition,
   messages,
+  locale,
 }: ToolComponentProps) {
   const [mode, setMode] = useState<CaseMode>("camel");
   const workerTask = useCallback(
@@ -118,8 +121,16 @@ export function CaseConverterTool({
           style={{ width: 135, height: 34 }}
           value={mode}
           onChange={(event) => setMode(event.target.value as CaseMode)}
+          aria-label={locale === "zh" ? "转换格式" : "Case format"}
         >
-          {modes.map(([value, label]) => (
+          {[
+            ...baseModes.slice(0, 2),
+            [
+              "capitalize" as const,
+              locale === "zh" ? "首字母大写" : "Capitalize",
+            ] as const,
+            ...baseModes.slice(2),
+          ].map(([value, label]) => (
             <option value={value} key={value}>
               {label}
             </option>

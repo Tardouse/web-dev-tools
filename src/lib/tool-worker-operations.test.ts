@@ -89,13 +89,95 @@ describe("tool worker operations", () => {
         operation: "text-count",
         input: "Hello 世界",
       }),
-    ).resolves.toMatchObject({ characters: 8, chineseCharacters: 2, words: 2 });
+    ).resolves.toMatchObject({
+      characters: 8,
+      chineseCharacters: 2,
+      englishCharacters: 5,
+      words: 2,
+    });
     await expect(
       executeToolWorkerRequest({
         operation: "jwt-decode",
         input: "eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjMifQ.signature",
       }),
     ).resolves.toMatchObject({ payload: { sub: "123" } });
+  });
+
+  it("runs data size and text processing operations inside the worker boundary", async () => {
+    await expect(
+      executeToolWorkerRequest({
+        operation: "data-size-convert",
+        input: "1",
+        unit: "GiB",
+      }),
+    ).resolves.toMatchObject({
+      bytes: 1_073_741_824,
+      values: { MiB: 1024, GB: 1.073741824 },
+    });
+    await expect(
+      executeToolWorkerRequest({
+        operation: "line-clean",
+        input: "Alpha\n\nalpha\nBeta",
+        options: {
+          removeBlank: true,
+          removeDuplicates: true,
+          trimLines: false,
+          caseSensitive: false,
+        },
+      }),
+    ).resolves.toBe("Alpha\nBeta");
+    await expect(
+      executeToolWorkerRequest({
+        operation: "line-sort",
+        input: "item10\nitem2",
+        options: {
+          mode: "natural",
+          descending: false,
+          caseSensitive: true,
+          locale: "en-US",
+        },
+      }),
+    ).resolves.toBe("item2\nitem10");
+    await expect(
+      executeToolWorkerRequest({
+        operation: "line-number",
+        input: "one\ntwo",
+        options: {
+          action: "add",
+          start: 1,
+          pad: false,
+          separator: "colon",
+        },
+      }),
+    ).resolves.toBe("1: one\n2: two");
+    await expect(
+      executeToolWorkerRequest({
+        operation: "text-deduplicate",
+        input: "one two one",
+        options: { mode: "words", caseSensitive: true },
+      }),
+    ).resolves.toBe("one two");
+    await expect(
+      executeToolWorkerRequest({
+        operation: "text-merge",
+        first: "A1\nA2",
+        second: "B1\nB2",
+        options: { mode: "interleave", separator: "\n" },
+      }),
+    ).resolves.toBe("A1\nB1\nA2\nB2");
+    await expect(
+      executeToolWorkerRequest({
+        operation: "text-split",
+        input: "one,two,,three",
+        options: {
+          mode: "comma",
+          delimiter: "",
+          trimParts: true,
+          removeEmpty: true,
+          output: "json",
+        },
+      }),
+    ).resolves.toBe('[\n  "one",\n  "two",\n  "three"\n]');
   });
 
   it("formats web code and SQL inside the worker boundary", async () => {

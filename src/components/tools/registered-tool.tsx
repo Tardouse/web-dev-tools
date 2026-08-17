@@ -77,6 +77,26 @@ const toolComponents: Record<string, ComponentType<ToolComponentProps>> = {
   "case-converter": dynamic(() =>
     import("./text-tools").then((module) => module.CaseConverterTool),
   ),
+  "line-cleaner": dynamic(() =>
+    import("./text-processing-tools").then((module) => module.LineCleanerTool),
+  ),
+  "line-sorter": dynamic(() =>
+    import("./text-processing-tools").then((module) => module.LineSorterTool),
+  ),
+  "line-numberer": dynamic(() =>
+    import("./text-processing-tools").then((module) => module.LineNumbererTool),
+  ),
+  "text-deduplicator": dynamic(() =>
+    import("./text-processing-tools").then(
+      (module) => module.TextDeduplicatorTool,
+    ),
+  ),
+  "text-merger": dynamic(() =>
+    import("./text-processing-tools").then((module) => module.TextMergerTool),
+  ),
+  "text-splitter": dynamic(() =>
+    import("./text-processing-tools").then((module) => module.TextSplitterTool),
+  ),
   "text-diff": dynamic(() =>
     import("./diff-tool").then((module) => module.DiffTool),
   ),
@@ -85,6 +105,11 @@ const toolComponents: Record<string, ComponentType<ToolComponentProps>> = {
   ),
   "number-base-converter": dynamic(() =>
     import("./number-tool").then((module) => module.NumberBaseTool),
+  ),
+  "data-size-converter": dynamic(() =>
+    import("./text-processing-tools").then(
+      (module) => module.DataSizeConverterTool,
+    ),
   ),
   "color-converter": dynamic(() =>
     import("./color-tool").then((module) => module.ColorTool),

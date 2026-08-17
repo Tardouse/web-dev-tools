@@ -20,6 +20,7 @@ import {
 } from "./tool-actions";
 
 interface TextWorkbenchProps {
+  className?: string;
   messages: Messages;
   title?: string;
   inputLabel?: string;
@@ -35,6 +36,7 @@ interface TextWorkbenchProps {
   options?: React.ReactNode;
 }
 export function TextWorkbench({
+  className = "",
   messages,
   title,
   inputLabel,
@@ -115,7 +117,10 @@ export function TextWorkbench({
     setError("");
   };
   return (
-    <section className="tool-workspace card" aria-label={resolvedTitle}>
+    <section
+      className={`tool-workspace card ${className}`.trim()}
+      aria-label={resolvedTitle}
+    >
       <div className="workspace-header">
         <h2>{resolvedTitle}</h2>
         <div className="workspace-actions">

@@ -77,5 +77,11 @@ describe("localization", () => {
         messages,
       ),
     ).toBe("Unicode 输入包含孤立代理项。");
+    expect(
+      localizeToolError(
+        "Enter a custom delimiter before splitting text.",
+        messages,
+      ),
+    ).toBe("请先输入自定义分隔符再拆分文本。");
   });
 });

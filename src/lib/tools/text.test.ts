@@ -7,6 +7,7 @@ describe("text tools", () => {
       words: 4,
       lines: 2,
       chineseCharacters: 2,
+      englishCharacters: 9,
       numbers: 3,
     });
   });
@@ -20,6 +21,11 @@ describe("text tools", () => {
   ] as const)("converts to %s", (mode, expected) =>
     expect(convertCase("hello Developer-tools", mode)).toBe(expected),
   );
+  it("capitalizes the first Unicode letter without changing the remainder", () => {
+    expect(convertCase("  hello WORLD", "capitalize")).toBe("  Hello WORLD");
+    expect(convertCase("123 élève", "capitalize")).toBe("123 Élève");
+    expect(convertCase("123 🚀", "capitalize")).toBe("123 🚀");
+  });
   it("formats simple HTML without executing it", () => {
     expect(formatHtmlFallback("<main><p>Hello</p></main>")).toContain("  <p>");
   });

@@ -1,6 +1,16 @@
 import type { HashAlgorithm, RegexResult } from "@/lib/tools/security";
 import type { DecodedJwt } from "@/lib/tools/encoding";
 import type { CaseMode, TextMetrics } from "@/lib/tools/text";
+import type {
+  CleanLinesOptions,
+  DataSizeConversion,
+  DataSizeUnit,
+  LineNumberOptions,
+  SortLinesOptions,
+  TextDeduplicationOptions,
+  TextMergeOptions,
+  TextSplitOptions,
+} from "@/lib/tools/text-processing";
 import type { SqlDialect, WebCodeLanguage } from "@/lib/tools/code-workbench";
 import type { DiffLine } from "@/lib/tools/diff";
 import type { LocalFileEntry } from "@/lib/tools/archive";
@@ -44,6 +54,22 @@ export type ToolWorkerRequest =
   | { operation: "hash"; input: string; algorithm: HashAlgorithm }
   | { operation: "case-convert"; input: string; mode: CaseMode }
   | { operation: "text-count"; input: string }
+  | { operation: "data-size-convert"; input: string; unit: DataSizeUnit }
+  | { operation: "line-clean"; input: string; options: CleanLinesOptions }
+  | { operation: "line-sort"; input: string; options: SortLinesOptions }
+  | { operation: "line-number"; input: string; options: LineNumberOptions }
+  | {
+      operation: "text-deduplicate";
+      input: string;
+      options: TextDeduplicationOptions;
+    }
+  | {
+      operation: "text-merge";
+      first: string;
+      second: string;
+      options: TextMergeOptions;
+    }
+  | { operation: "text-split"; input: string; options: TextSplitOptions }
   | { operation: "jwt-decode"; input: string }
   | {
       operation: "web-code";
@@ -100,6 +126,7 @@ export interface NumberBaseWorkerResult {
 export type ToolWorkerResult =
   | string
   | TextMetrics
+  | DataSizeConversion
   | DecodedJwt
   | RegexResult
   | DiffWorkerResult

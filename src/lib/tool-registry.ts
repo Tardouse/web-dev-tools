@@ -712,8 +712,15 @@ export const tools: ToolDefinition[] = [
     featured: true,
     sortOrder: 100,
     description:
-      "Count characters, words, lines, bytes, numbers, whitespace, and Han characters.",
-    keywords: ["text", "word count", "character count", "bytes", "lines"],
+      "Count characters, English letters, Han characters, words, lines, bytes, numbers, and whitespace.",
+    keywords: [
+      "text",
+      "word count",
+      "character count",
+      "english letters",
+      "bytes",
+      "lines",
+    ],
     maxInputSize: TOOL_LIMITS.text,
     seoTitle: "Text Counter Online — Words, Characters, Lines & Bytes",
     seoDescription:
@@ -737,18 +744,213 @@ export const tools: ToolDefinition[] = [
     icon: "CaseSensitive",
     sortOrder: 110,
     description:
-      "Convert text to camelCase, PascalCase, snake_case, kebab-case, and more.",
-    keywords: ["case", "camelcase", "pascal", "snake", "kebab", "constant"],
+      "Capitalize text or convert it to camelCase, PascalCase, snake_case, kebab-case, and more.",
+    keywords: [
+      "case",
+      "capitalize",
+      "camelcase",
+      "pascal",
+      "snake",
+      "kebab",
+      "constant",
+    ],
     maxInputSize: TOOL_LIMITS.text,
     seoTitle: "Text Case Converter — camelCase, snake_case & More",
     seoDescription:
-      "Convert identifiers and text between ten common naming conventions.",
+      "Capitalize text or convert identifiers between eleven common naming conventions.",
     related: ["text-counter", "regex-tester", "html-formatter"],
     faq: [
       {
         question: "Which separators are recognized?",
         answer:
           "Spaces, hyphens, underscores, dots, slashes, backslashes, and camel-case boundaries are recognized.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "line-cleaner",
+    slug: "line-cleaner",
+    name: "Line Cleaner",
+    shortName: "Clean Lines",
+    category: "text",
+    icon: "ListX",
+    sortOrder: 111,
+    description:
+      "Remove blank lines, duplicate lines, and surrounding whitespace with case controls.",
+    keywords: ["lines", "blank lines", "duplicate lines", "clean", "trim"],
+    aliases: ["remove empty lines", "unique lines"],
+    maxInputSize: TOOL_LIMITS.text,
+    seoTitle: "Remove Blank and Duplicate Lines Online",
+    seoDescription:
+      "Clean text locally by removing empty or duplicate lines, trimming whitespace, and choosing case sensitivity.",
+    related: ["line-sorter", "line-numberer", "text-deduplicator"],
+    faq: [
+      {
+        question: "Can duplicate matching ignore letter case?",
+        answer:
+          "Yes. Turn off case-sensitive matching to treat values such as Alpha and alpha as the same line while preserving the first occurrence.",
+      },
+      {
+        question: "Are whitespace-only lines considered blank?",
+        answer:
+          "Yes. Blank-line removal also removes lines containing only whitespace.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "line-sorter",
+    slug: "line-sorter",
+    name: "Line Sorter and Reverser",
+    shortName: "Sort Lines",
+    category: "text",
+    icon: "ArrowUpDown",
+    sortOrder: 112,
+    description:
+      "Sort lines alphabetically, naturally, or by length, or reverse their existing order.",
+    keywords: ["line sort", "natural sort", "reverse lines", "alphabetical"],
+    aliases: ["sort text lines", "reverse line order"],
+    maxInputSize: TOOL_LIMITS.text,
+    seoTitle: "Sort or Reverse Text Lines Online",
+    seoDescription:
+      "Sort text lines alphabetically, naturally, or by length, and reverse line order entirely in your browser.",
+    related: ["line-cleaner", "line-numberer", "text-deduplicator"],
+    faq: [
+      {
+        question: "What is natural sorting?",
+        answer:
+          "Natural sorting compares embedded numbers numerically, so item2 appears before item10.",
+      },
+      {
+        question: "Does reverse mode reverse characters?",
+        answer:
+          "No. It reverses the order of complete lines and preserves the content of each line.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "line-numberer",
+    slug: "line-numberer",
+    name: "Line Numberer",
+    shortName: "Line Numbers",
+    category: "text",
+    icon: "ListOrdered",
+    sortOrder: 113,
+    description:
+      "Add configurable line numbers or remove common numeric prefixes from text.",
+    keywords: ["line numbers", "number lines", "remove numbering", "prefix"],
+    aliases: ["add line numbers", "strip line numbers"],
+    maxInputSize: TOOL_LIMITS.text,
+    seoTitle: "Add or Remove Line Numbers Online",
+    seoDescription:
+      "Add line numbers with configurable starts, separators, and zero padding, or remove common line-number prefixes locally.",
+    related: ["line-cleaner", "line-sorter", "text-splitter"],
+    faq: [
+      {
+        question: "Which line-number formats can be added?",
+        answer:
+          "Use a period, colon, or tab separator, choose the starting number, and optionally zero-pad the sequence.",
+      },
+      {
+        question: "Which prefixes can be removed?",
+        answer:
+          "The remover recognizes numeric prefixes followed by whitespace or common punctuation such as periods, colons, parentheses, brackets, and hyphens.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "text-deduplicator",
+    slug: "text-deduplicator",
+    name: "Text Deduplicator",
+    shortName: "Deduplicate Text",
+    category: "text",
+    icon: "ListMinus",
+    sortOrder: 114,
+    description:
+      "Keep the first unique line, word, or Unicode character with optional case-insensitive matching.",
+    keywords: [
+      "deduplicate",
+      "unique text",
+      "unique words",
+      "unique characters",
+    ],
+    aliases: ["remove duplicate text", "text unique"],
+    maxInputSize: TOOL_LIMITS.text,
+    seoTitle: "Text Deduplicator — Unique Lines, Words or Characters",
+    seoDescription:
+      "Remove repeated lines, words, or Unicode characters while preserving first-seen order and processing text locally.",
+    related: ["line-cleaner", "text-counter", "text-splitter"],
+    faq: [
+      {
+        question: "Is the original order preserved?",
+        answer:
+          "Yes. The first occurrence is retained and later matching values are removed without sorting the result.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "text-merger",
+    slug: "text-merger",
+    name: "Text Merger",
+    shortName: "Merge Text",
+    category: "text",
+    icon: "Combine",
+    sortOrder: 115,
+    description:
+      "Combine two texts with a selected separator or interleave their lines.",
+    keywords: ["merge text", "combine text", "interleave lines", "concatenate"],
+    aliases: ["text joiner", "combine lines"],
+    maxInputSize: TOOL_LIMITS.text,
+    seoTitle: "Merge Two Texts or Interleave Lines Online",
+    seoDescription:
+      "Combine two text blocks with a line, blank line, space, or custom separator, or interleave their lines locally.",
+    related: ["text-splitter", "line-sorter", "text-deduplicator"],
+    faq: [
+      {
+        question: "How does line interleaving work?",
+        answer:
+          "The result alternates one line from Text A and one from Text B, then includes any remaining lines from the longer input.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "text-splitter",
+    slug: "text-splitter",
+    name: "Text Splitter",
+    shortName: "Split Text",
+    category: "text",
+    icon: "Split",
+    sortOrder: 116,
+    description:
+      "Split text by line breaks, whitespace, commas, or a literal custom delimiter.",
+    keywords: [
+      "split text",
+      "delimiter",
+      "separate text",
+      "tokenize",
+      "json array",
+    ],
+    aliases: ["text separator", "string split"],
+    maxInputSize: TOOL_LIMITS.text,
+    seoTitle: "Split Text by Delimiter Online",
+    seoDescription:
+      "Split text by line breaks, whitespace, commas, or a custom literal delimiter and export lines or JSON locally.",
+    related: ["text-merger", "line-numberer", "text-deduplicator"],
+    faq: [
+      {
+        question: "Is the custom delimiter a regular expression?",
+        answer:
+          "No. It is matched as literal text, so regex punctuation has no special behavior.",
+      },
+      {
+        question: "Can empty parts be retained?",
+        answer:
+          "Yes. Turn off the empty-part filter, and choose either one item per line or a JSON array for output.",
       },
     ],
   },
@@ -831,6 +1033,37 @@ export const tools: ToolDefinition[] = [
         question: "Are large integers supported?",
         answer:
           "Yes. Conversion uses JavaScript BigInt, avoiding normal floating-point precision loss.",
+      },
+    ],
+  },
+  {
+    ...shared,
+    id: "data-size-converter",
+    slug: "data-size-converter",
+    name: "Data Size Converter",
+    shortName: "Data Size",
+    category: "time-number",
+    icon: "Scaling",
+    sortOrder: 145,
+    featured: true,
+    description:
+      "Convert bits, bytes, decimal KB/MB/GB, and binary KiB/MiB/GiB units side by side.",
+    keywords: ["bit byte", "kb mb gb", "kib mib gib", "file size", "data unit"],
+    aliases: ["bit byte converter", "kb mb gb converter"],
+    maxInputSize: TOOL_LIMITS.text,
+    seoTitle: "Bit, Byte, KB, MB and GB Converter Online",
+    seoDescription:
+      "Convert bits and bytes across decimal SI and binary IEC data-size units with clear 1000 and 1024 conventions.",
+    related: ["number-base-converter", "file-inspector", "text-counter"],
+    faq: [
+      {
+        question: "What is the difference between MB and MiB?",
+        answer:
+          "One MB is 1,000,000 bytes under SI, while one MiB is 1,048,576 bytes under the IEC binary convention.",
+      },
+      {
+        question: "How many bits are in one byte?",
+        answer: "One byte contains exactly eight bits.",
       },
     ],
   },

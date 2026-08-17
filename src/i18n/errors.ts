@@ -42,6 +42,13 @@ export function localizeToolError(message: string, messages: Messages): string {
       messages.errors.timestampInvalid,
     "Enter a cron expression.": messages.errors.cronRequired,
     "This expression has no upcoming runs.": messages.errors.cronNoRuns,
+    "Enter a non-negative finite data size.": messages.errors.dataSizeInvalid,
+    "The data size is too large to convert.": messages.errors.dataSizeLarge,
+    "The first line number must be a non-negative integer.":
+      messages.errors.lineNumberStart,
+    "The line number range is too large.": messages.errors.lineNumberRange,
+    "Enter a custom delimiter before splitting text.":
+      messages.errors.delimiterRequired,
   };
   if (exact[message]) return exact[message];
   const patterns: Array<[RegExp, (match: RegExpMatchArray) => string]> = [

@@ -132,6 +132,8 @@ export function workerInputPayload(request: ToolWorkerRequest): unknown {
       return [request.pattern, request.input];
     case "diff":
       return [request.before, request.after];
+    case "text-merge":
+      return [request.first, request.second];
     case "archive-extract":
     case "archive-gzip":
     case "file-hash":

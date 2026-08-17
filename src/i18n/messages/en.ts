@@ -290,6 +290,7 @@ export const en = {
     bytes: "Bytes",
     noSpaces: "No spaces",
     chinese: "Chinese",
+    english: "English letters",
     numbers: "Numbers",
     whitespace: "Whitespace",
   },
@@ -353,6 +354,11 @@ export const en = {
     cronRequired: "Enter a cron expression.",
     cronNoRuns: "This expression has no upcoming runs.",
     cronInvalid: "Invalid cron expression: {detail}",
+    dataSizeInvalid: "Enter a non-negative finite data size.",
+    dataSizeLarge: "The data size is too large to convert.",
+    lineNumberStart: "The first line number must be a non-negative integer.",
+    lineNumberRange: "The line number range is too large.",
+    delimiterRequired: "Enter a custom delimiter before splitting text.",
   },
 } as const;
 

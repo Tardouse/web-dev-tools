@@ -47,6 +47,15 @@ import { hashText, testRegex } from "@/lib/tools/security";
 import { hashFileBytes } from "@/lib/tools/file";
 import { generateSshKey } from "@/lib/tools/ssh";
 import { convertCase, countText } from "@/lib/tools/text";
+import {
+  cleanLines,
+  convertDataSize,
+  deduplicateText,
+  mergeText,
+  sortLines,
+  splitText,
+  transformLineNumbers,
+} from "@/lib/tools/text-processing";
 import type {
   DiffWorkerResult,
   NumberBaseWorkerResult,
@@ -106,6 +115,20 @@ export async function executeToolWorkerRequest(
       return convertCase(request.input, request.mode);
     case "text-count":
       return countText(request.input);
+    case "data-size-convert":
+      return convertDataSize(request.input, request.unit);
+    case "line-clean":
+      return cleanLines(request.input, request.options);
+    case "line-sort":
+      return sortLines(request.input, request.options);
+    case "line-number":
+      return transformLineNumbers(request.input, request.options);
+    case "text-deduplicate":
+      return deduplicateText(request.input, request.options);
+    case "text-merge":
+      return mergeText(request.first, request.second, request.options);
+    case "text-split":
+      return splitText(request.input, request.options);
     case "jwt-decode":
       return decodeJwt(request.input);
     case "web-code":

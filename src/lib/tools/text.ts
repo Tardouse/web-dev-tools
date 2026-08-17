@@ -7,6 +7,7 @@ export interface TextMetrics {
   lines: number;
   bytes: number;
   chineseCharacters: number;
+  englishCharacters: number;
   numbers: number;
   spaces: number;
 }
@@ -20,6 +21,7 @@ export function countText(input: string): TextMetrics {
     lines: input ? input.split(/\r\n|\r|\n/).length : 0,
     bytes: byteLength(input),
     chineseCharacters: (input.match(/[\p{Script=Han}]/gu) ?? []).length,
+    englishCharacters: (input.match(/[A-Za-z]/g) ?? []).length,
     numbers: (input.match(/\p{N}/gu) ?? []).length,
     spaces: (input.match(/\s/gu) ?? []).length,
   };
@@ -38,6 +40,7 @@ function words(value: string): string[] {
 export type CaseMode =
   | "upper"
   | "lower"
+  | "capitalize"
   | "title"
   | "camel"
   | "pascal"
@@ -51,6 +54,12 @@ export function convertCase(input: string, mode: CaseMode): string {
   assertInputLimit(input, TOOL_LIMITS.text);
   if (mode === "upper") return input.toUpperCase();
   if (mode === "lower") return input.toLowerCase();
+  if (mode === "capitalize") {
+    const index = input.search(/\p{L}/u);
+    if (index < 0) return input;
+    const [letter] = Array.from(input.slice(index));
+    return `${input.slice(0, index)}${letter.toLocaleUpperCase()}${input.slice(index + letter.length)}`;
+  }
   const items = words(input);
   const capitalize = (word: string) =>
     word ? word[0].toUpperCase() + word.slice(1) : word;
