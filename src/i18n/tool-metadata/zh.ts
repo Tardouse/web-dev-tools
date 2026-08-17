@@ -681,14 +681,40 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
   "color-converter": {
     name: "颜色转换",
     shortName: "颜色转换",
-    description: "转换并预览 HEX、RGB 和 HSL 颜色，生成可用的 CSS 值。",
-    keywords: ["颜色", "hex", "rgb", "hsl", "css", "取色器", "转换"],
-    seoTitle: "在线颜色转换 — HEX、RGB 与 HSL",
-    seoDescription: "转换 HEX 和 RGB 颜色，查看 HSL、预览颜色并复制 CSS。",
+    description:
+      "转换并预览 HEX、RGB、HSL、HSV 和 CMYK 颜色，计算对比度、生成调色板并输出 CSS 变量。",
+    keywords: [
+      "颜色",
+      "hex",
+      "rgb",
+      "hsl",
+      "hsv",
+      "cmyk",
+      "调色板",
+      "对比度",
+      "互补色",
+      "css",
+      "取色器",
+      "转换",
+    ],
+    seoTitle: "在线颜色转换 — HEX、RGB、HSL、HSV 与 CMYK",
+    seoDescription:
+      "在浏览器本地转换 HEX、RGB、HSL、HSV 和 CMYK，计算 WCAG 对比度、生成调色板并复制 CSS 变量。",
     faq: [
       {
         question: "支持哪些输入？",
-        answer: "支持 3 位或 6 位 HEX、rgb(r,g,b) 以及以逗号分隔的 RGB 值。",
+        answer:
+          "支持 3 位或 6 位 HEX、RGB 值，以及 hsl()、hsv() 和 cmyk() 函数格式。",
+      },
+      {
+        question: "生成的结果可以直接用于 CSS 吗？",
+        answer:
+          "可以。CSS 标签页会生成主色、对比色、互补色和 10 级调色板的 custom properties。",
+      },
+      {
+        question: "对比度是如何计算的？",
+        answer:
+          "工具使用 WCAG 相对亮度公式，分别显示黑色和白色文字的对比度比例。",
       },
     ],
   },

@@ -1,92 +1,338 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CircleAlert } from "lucide-react";
-import { parseColor } from "@/lib/tools";
-import { CopyButton } from "./tool-actions";
-import type { ToolComponentProps } from "@/lib/types";
+import { CircleAlert, Shuffle } from "lucide-react";
 import { localizeToolError } from "@/i18n/errors";
+import type { ToolWorkerRequest } from "@/lib/tool-worker-protocol";
+import type { ColorPaletteEntry, ColorValue } from "@/lib/tools/number-color";
+import type { ToolComponentProps } from "@/lib/types";
+import { ActionButton, CopyButton, DownloadButton } from "./tool-actions";
+import { useLiveWorkerResult } from "./use-live-worker-result";
 
-export function ColorTool({ messages }: ToolComponentProps) {
-  const [input, setInput] = useState("#2563EB");
-  const parsed = useMemo(() => {
-    try {
-      return { value: parseColor(input), error: "" };
-    } catch (error) {
-      return {
-        value: null,
-        error: error instanceof Error ? error.message : "Invalid color.",
-      };
-    }
-  }, [input]);
+const COLOR_LABELS = {
+  en: {
+    source: "Source color",
+    conversion: "Conversions",
+    palette: "Palette",
+    css: "CSS generator",
+    rgb: "RGB",
+    hsl: "HSL",
+    hsv: "HSV",
+    cmyk: "CMYK",
+    complementary: "Complementary",
+    contrast: "Accessible contrast",
+    contrastHint: "WCAG relative contrast ratio",
+    black: "Black text",
+    white: "White text",
+    preferred: "Recommended",
+    random: "Random color",
+    copyHex: "Copy HEX",
+    copyPalette: "Copy palette value",
+    level: "Palette level",
+  },
+  zh: {
+    source: "源颜色",
+    conversion: "颜色转换",
+    palette: "调色板",
+    css: "CSS 生成器",
+    rgb: "RGB",
+    hsl: "HSL",
+    hsv: "HSV",
+    cmyk: "CMYK",
+    complementary: "互补色",
+    contrast: "可读性对比度",
+    contrastHint: "WCAG 相对对比度",
+    black: "黑色文字",
+    white: "白色文字",
+    preferred: "推荐",
+    random: "随机颜色",
+    copyHex: "复制 HEX",
+    copyPalette: "复制调色板颜色",
+    level: "调色板级别",
+  },
+} as const;
+
+type ColorLabels = (typeof COLOR_LABELS)["en"] | (typeof COLOR_LABELS)["zh"];
+type ColorView = "conversion" | "palette" | "css";
+
+function formatRgb(value: ColorValue["rgb"]): string {
+  return `rgb(${value.r}, ${value.g}, ${value.b})`;
+}
+
+function formatHsl(value: ColorValue["hsl"]): string {
+  return `hsl(${value.h}, ${value.s}%, ${value.l}%)`;
+}
+
+function formatHsv(value: ColorValue["hsv"]): string {
+  return `hsv(${value.h}, ${value.s}%, ${value.v}%)`;
+}
+
+function formatCmyk(value: ColorValue["cmyk"]): string {
+  return `cmyk(${value.c}%, ${value.m}%, ${value.y}%, ${value.k}%)`;
+}
+
+function ValueRow({
+  label,
+  value,
+  messages,
+}: {
+  label: string;
+  value: string;
+  messages: ToolComponentProps["messages"];
+}) {
   return (
-    <section className="tool-workspace card">
-      <div className="workspace-header">
-        <div className="field" style={{ flex: 1 }}>
-          <label htmlFor="color-input">{messages.tool.colorInput}</label>
+    <div className="color-value-row">
+      <span className="field-label">{label}</span>
+      <code>{value}</code>
+      <CopyButton messages={messages} value={value} />
+    </div>
+  );
+}
+
+function PaletteSwatch({
+  entry,
+  labels,
+  messages,
+}: {
+  entry: ColorPaletteEntry;
+  labels: ColorLabels;
+  messages: ToolComponentProps["messages"];
+}) {
+  return (
+    <div
+      className="color-palette-swatch"
+      style={{ background: entry.hex, color: entry.contrast }}
+      title={`${labels.level} ${entry.step}: ${entry.hex}`}
+    >
+      <span>{entry.step}</span>
+      <code>{entry.hex}</code>
+      <CopyButton
+        messages={messages}
+        value={entry.hex}
+        label={labels.copyPalette}
+      />
+    </div>
+  );
+}
+
+export function ColorTool({
+  definition,
+  locale,
+  messages,
+}: ToolComponentProps) {
+  const labels = COLOR_LABELS[locale];
+  const [input, setInput] = useState("#2563EB");
+  const [view, setView] = useState<ColorView>("conversion");
+  const workerRequest = useMemo<ToolWorkerRequest>(
+    () => ({ operation: "color-analyze", input }),
+    [input],
+  );
+  const result = useLiveWorkerResult<ColorValue>(workerRequest, definition);
+  const value = result.value;
+  const viewLabels: Record<ColorView, string> = {
+    conversion: labels.conversion,
+    palette: labels.palette,
+    css: labels.css,
+  };
+
+  const randomize = () => {
+    const bytes = new Uint8Array(3);
+    crypto.getRandomValues(bytes);
+    setInput(
+      `#${Array.from(bytes)
+        .map((channel) => channel.toString(16).padStart(2, "0"))
+        .join("")
+        .toUpperCase()}`,
+    );
+  };
+
+  return (
+    <section className="tool-workspace card color-converter-workspace">
+      <div className="workspace-header color-input-header">
+        <label className="field color-input-field" htmlFor="color-input">
+          <span>{messages.tool.colorInput}</span>
           <input
             id="color-input"
             className="input mono"
+            aria-label={messages.tool.colorInput}
             value={input}
             onChange={(event) => setInput(event.target.value)}
           />
+        </label>
+        <div className="color-input-actions">
+          {value && (
+            <input
+              type="color"
+              className="color-picker"
+              value={value.hex}
+              onChange={(event) => setInput(event.target.value)}
+              aria-label={messages.tool.pickColor}
+            />
+          )}
+          <ActionButton icon={Shuffle} onClick={randomize}>
+            {labels.random}
+          </ActionButton>
         </div>
-        {parsed.value && (
-          <input
-            type="color"
-            value={parsed.value.hex}
-            onChange={(event) => setInput(event.target.value)}
-            aria-label={messages.tool.pickColor}
-            style={{
-              width: 48,
-              height: 40,
-              padding: 2,
-              border: "1px solid var(--border)",
-              borderRadius: 8,
-              background: "var(--surface)",
-            }}
-          />
-        )}
       </div>
-      {parsed.error && (
-        <div className="error-banner">
+      {result.error && (
+        <div className="error-banner" role="alert">
           <CircleAlert size={17} />
-          {localizeToolError(parsed.error, messages)}
+          <span>{localizeToolError(result.error, messages)}</span>
         </div>
       )}
-      {parsed.value && (
-        <div style={{ padding: 18, display: "grid", gap: 18 }}>
+      {value && (
+        <>
           <div
-            className="color-preview"
-            style={{ background: parsed.value.hex }}
-          />
-          <div className="color-values">
-            {[
-              ["HEX", parsed.value.hex],
-              [
-                "RGB",
-                `rgb(${parsed.value.rgb.r}, ${parsed.value.rgb.g}, ${parsed.value.rgb.b})`,
-              ],
-              [
-                "HSL",
-                `hsl(${parsed.value.hsl.h}, ${parsed.value.hsl.s}%, ${parsed.value.hsl.l}%)`,
-              ],
-              [messages.tool.cssVariable, `--color: ${parsed.value.hex};`],
-            ].map(([label, value]) => (
-              <div className="card" style={{ padding: 13 }} key={label}>
-                <span className="field-label">{label}</span>
-                <div
-                  className="option-row"
-                  style={{ justifyContent: "space-between" }}
-                >
-                  <code className="mono">{value}</code>
-                  <CopyButton messages={messages} value={value} />
-                </div>
-              </div>
+            className="color-source-preview"
+            style={{ background: value.hex, color: value.contrast.preferred }}
+          >
+            <div>
+              <span className="field-label">{labels.source}</span>
+              <strong>{value.hex}</strong>
+            </div>
+            <CopyButton
+              messages={messages}
+              value={value.hex}
+              label={labels.copyHex}
+            />
+          </div>
+          <div
+            className="color-view-tabs"
+            role="tablist"
+            aria-label={labels.source}
+          >
+            {(Object.keys(viewLabels) as ColorView[]).map((item) => (
+              <button
+                type="button"
+                role="tab"
+                aria-selected={view === item}
+                aria-controls={`color-panel-${item}`}
+                id={`color-tab-${item}`}
+                onClick={() => setView(item)}
+                key={item}
+              >
+                {viewLabels[item]}
+              </button>
             ))}
           </div>
-        </div>
+          <div
+            className="color-view-panel"
+            role="tabpanel"
+            id={`color-panel-${view}`}
+            aria-labelledby={`color-tab-${view}`}
+          >
+            {view === "conversion" && (
+              <div className="color-conversion-view">
+                <div className="color-value-table">
+                  <ValueRow label="HEX" value={value.hex} messages={messages} />
+                  <ValueRow
+                    label={labels.rgb}
+                    value={formatRgb(value.rgb)}
+                    messages={messages}
+                  />
+                  <ValueRow
+                    label={labels.hsl}
+                    value={formatHsl(value.hsl)}
+                    messages={messages}
+                  />
+                  <ValueRow
+                    label={labels.hsv}
+                    value={formatHsv(value.hsv)}
+                    messages={messages}
+                  />
+                  <ValueRow
+                    label={labels.cmyk}
+                    value={formatCmyk(value.cmyk)}
+                    messages={messages}
+                  />
+                </div>
+                <div className="color-detail-section">
+                  <div className="color-detail-heading">
+                    <strong>{labels.contrast}</strong>
+                    <span className="muted">{labels.contrastHint}</span>
+                  </div>
+                  <div className="color-contrast-grid">
+                    <div
+                      className="color-contrast-sample"
+                      style={{ background: value.hex, color: "#000000" }}
+                    >
+                      <span>{labels.black}</span>
+                      <strong>{value.contrast.blackRatio}:1</strong>
+                      {value.contrast.preferred === "#000000" && (
+                        <span className="badge">{labels.preferred}</span>
+                      )}
+                    </div>
+                    <div
+                      className="color-contrast-sample"
+                      style={{ background: value.hex, color: "#FFFFFF" }}
+                    >
+                      <span>{labels.white}</span>
+                      <strong>{value.contrast.whiteRatio}:1</strong>
+                      {value.contrast.preferred === "#FFFFFF" && (
+                        <span className="badge">{labels.preferred}</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="color-detail-section color-complementary">
+                  <div className="color-detail-heading">
+                    <strong>{labels.complementary}</strong>
+                  </div>
+                  <div className="color-complementary-row">
+                    <span
+                      className="color-complementary-swatch"
+                      style={{ background: value.complementary.hex }}
+                    />
+                    <code>{value.complementary.hex}</code>
+                    <CopyButton
+                      messages={messages}
+                      value={value.complementary.hex}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+            {view === "palette" && (
+              <div className="color-palette-view">
+                <div className="color-palette-grid">
+                  {value.palette.map((entry) => (
+                    <PaletteSwatch
+                      entry={entry}
+                      labels={labels}
+                      messages={messages}
+                      key={entry.step}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+            {view === "css" && (
+              <div className="color-css-view">
+                <div className="workspace-actions">
+                  <CopyButton messages={messages} value={value.css} />
+                  <DownloadButton
+                    messages={messages}
+                    value={value.css}
+                    filename="color-variables.css"
+                    type="text/css"
+                  />
+                </div>
+                <pre
+                  className="editor editor-output color-css-output"
+                  aria-label={labels.css}
+                >
+                  {value.css}
+                </pre>
+              </div>
+            )}
+          </div>
+        </>
       )}
+      <div className="workspace-footer">
+        <span className="workspace-footer-meta">
+          {messages.common.localBrowser}
+        </span>
+      </div>
     </section>
   );
 }

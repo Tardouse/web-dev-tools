@@ -43,7 +43,7 @@ import {
   parseUrl,
   transformBase64,
 } from "@/lib/tools/encoding-data";
-import { convertBase } from "@/lib/tools/number-color";
+import { convertBase, parseColor } from "@/lib/tools/number-color";
 import { hashText, testRegex } from "@/lib/tools/security";
 import { hashFileBytes } from "@/lib/tools/file";
 import { generateRequestCode, parseCurl } from "@/lib/tools/curl";
@@ -184,6 +184,8 @@ export async function executeToolWorkerRequest(
       return parseCurl(request.input);
     case "curl-generate":
       return generateRequestCode(request.request, request.format);
+    case "color-analyze":
+      return parseColor(request.input);
     case "number-base":
       return {
         value: convertBase(request.input, request.from, request.to),

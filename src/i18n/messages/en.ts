@@ -205,7 +205,7 @@ export const en = {
     original: "Original",
     changed: "Changed",
     difference: "Difference",
-    colorInput: "HEX or RGB color",
+    colorInput: "Color value (HEX, RGB, HSL, HSV, or CMYK)",
     pickColor: "Pick a color",
     cssVariable: "CSS variable",
     jwtSafety:
@@ -337,9 +337,10 @@ export const en = {
     jwtInvalid: "JWT header or payload is not valid Base64URL JSON.",
     basesRange: "Bases must be whole numbers from 2 to 36.",
     invalidBase: "The input is not a valid base-{base} integer.",
-    invalidColor:
-      "Enter a HEX color such as #2563eb or an RGB value such as 37, 99, 235.",
+    invalidColor: "Enter a valid HEX, RGB, HSL, HSV, or CMYK color value.",
     rgbRange: "RGB channels must be between 0 and 255.",
+    colorHueRange: "Color hues must be between 0 and 360 degrees.",
+    colorPercentageRange: "Color percentages must be between 0% and 100%.",
     regexLength: "Regular expressions are limited to {limit} characters.",
     regexReplacementLength:
       "Regex replacement expressions are limited to {limit} characters.",

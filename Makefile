@@ -1,4 +1,4 @@
-.PHONY: dev test check build install deploy deploy-native stop stop-native logs logs-native status-native
+.PHONY: dev test check build install install-no-docker deploy deploy-native stop stop-native logs logs-native status-native
 
 dev:
 	npm run dev
@@ -13,13 +13,16 @@ build:
 	npm run build
 
 install:
-	./scripts/install.sh
+	./scripts/install-no-docker.sh
+
+install-no-docker:
+	./scripts/install-no-docker.sh
 
 deploy:
 	./scripts/deploy.sh
 
 deploy-native:
-	./scripts/install-native.sh
+	./scripts/install-no-docker.sh
 
 stop:
 	./scripts/stop.sh

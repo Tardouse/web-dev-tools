@@ -27,8 +27,13 @@ export function localizeToolError(message: string, messages: Messages): string {
       messages.errors.jwtInvalid,
     "Bases must be whole numbers from 2 to 36.": messages.errors.basesRange,
     "RGB channels must be between 0 and 255.": messages.errors.rgbRange,
-    "Enter a HEX color such as #2563eb or an RGB value such as 37, 99, 235.":
+    "Enter a valid HEX, RGB, HSL, HSV, or CMYK color value.":
       messages.errors.invalidColor,
+    "Invalid color input.": messages.errors.invalidColor,
+    "Color hues must be between 0 and 360 degrees.":
+      messages.errors.colorHueRange,
+    "Color percentages must be between 0% and 100%.":
+      messages.errors.colorPercentageRange,
     "This expression contains nested quantifiers that may cause excessive backtracking.":
       messages.errors.regexUnsafe,
     "Original JSON is required.": messages.errors.originalJsonRequired,

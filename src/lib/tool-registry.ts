@@ -1106,18 +1106,40 @@ export const tools: ToolDefinition[] = [
     featured: true,
     sortOrder: 150,
     description:
-      "Convert and preview HEX, RGB, and HSL colors with CSS-ready values.",
-    keywords: ["color", "hex", "rgb", "hsl", "css", "picker"],
+      "Convert and preview HEX, RGB, HSL, HSV, and CMYK colors with contrast, palettes, and CSS-ready variables.",
+    keywords: [
+      "color",
+      "hex",
+      "rgb",
+      "hsl",
+      "hsv",
+      "cmyk",
+      "palette",
+      "contrast",
+      "complementary",
+      "css",
+      "picker",
+    ],
     maxInputSize: TOOL_LIMITS.text,
-    seoTitle: "Color Converter Online — HEX, RGB & HSL",
+    seoTitle: "Color Converter Online — HEX, RGB, HSL, HSV & CMYK",
     seoDescription:
-      "Convert HEX and RGB colors, inspect HSL values, preview, and copy CSS locally.",
+      "Convert HEX, RGB, HSL, HSV, and CMYK colors locally, calculate WCAG contrast, generate palettes, and copy CSS variables.",
     related: ["qr-code-generator", "html-formatter", "number-base-converter"],
     faq: [
       {
         question: "Which inputs are accepted?",
         answer:
-          "Use 3- or 6-digit HEX, rgb(r,g,b), or a comma-separated RGB triplet.",
+          "Use 3- or 6-digit HEX, RGB triplets, or hsl(), hsv(), and cmyk() functional values.",
+      },
+      {
+        question: "Can I use the generated values in CSS?",
+        answer:
+          "Yes. The CSS tab provides custom properties for the source color, contrast, complementary color, and ten palette steps.",
+      },
+      {
+        question: "How is accessible contrast calculated?",
+        answer:
+          "The tool uses the WCAG relative luminance formula and reports contrast ratios for black and white text.",
       },
     ],
   },

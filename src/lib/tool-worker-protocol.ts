@@ -24,6 +24,7 @@ import type {
 } from "@/lib/tools/encoding-data";
 import type { ToolLimitErrorCode } from "@/lib/tool-limits";
 import type { CurlOutputFormat, CurlRequest } from "@/lib/tools/curl";
+import type { ColorValue } from "@/lib/tools/number-color";
 
 export type ToolWorkerRequest =
   | { operation: "json-format"; input: string; indent: number }
@@ -105,6 +106,7 @@ export type ToolWorkerRequest =
       request: CurlRequest;
       format: CurlOutputFormat;
     }
+  | { operation: "color-analyze"; input: string }
   | {
       operation: "number-base";
       input: string;
@@ -146,6 +148,7 @@ export type ToolWorkerResult =
   | DecodedJwt
   | RegexResult
   | CurlRequest
+  | ColorValue
   | DiffWorkerResult
   | NumberBaseWorkerResult
   | LocalFileEntry[]

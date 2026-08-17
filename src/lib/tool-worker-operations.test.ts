@@ -353,6 +353,21 @@ describe("tool worker operations", () => {
     ).resolves.toContain("httpx.request");
   });
 
+  it("analyzes all color models inside the worker boundary", async () => {
+    await expect(
+      executeToolWorkerRequest({
+        operation: "color-analyze",
+        input: "hsl(0, 100%, 50%)",
+      }),
+    ).resolves.toMatchObject({
+      hex: "#FF0000",
+      hsv: { h: 0, s: 100, v: 100 },
+      complementary: { hex: "#00FFFF" },
+      palette: expect.any(Array),
+      css: expect.stringContaining("--color-primary"),
+    });
+  });
+
   it("creates and extracts ZIP, TAR, and GZIP payloads", async () => {
     const files: LocalFileEntry[] = [
       { name: "docs/readme.txt", data: encode("worker zip") },

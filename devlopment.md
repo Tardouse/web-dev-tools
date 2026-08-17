@@ -24,8 +24,9 @@
 - Sprint 16：Bit/Byte 与 SI/IEC 数据大小换算、英文字符统计、行清理/排序/反转/行号、文本去重/合并/拆分和首字母大写已完成，包含统一 Worker 限制、主题水合修复及桌面/移动端 E2E
 - Sprint 17：Regex 捕获组/替换/模板/语法解释与 PCRE 说明、JSON Diff 和忽略大小写已完成，包含集中匹配限制、双语错误、规范化 JSON 对比及桌面/移动端 E2E
 - Sprint 18：cURL 完整请求解析与多语言代码生成已完成，覆盖请求头、查询参数、Cookie、Basic/Bearer 认证、四种 Body 模式和 10 个输出目标，并通过可终止 Worker、双语错误及桌面/移动端 E2E 验收
+- Sprint 19（进行中）：颜色工具已接入 HSL / HSV / CMYK 转换、对比度、互补色、调色板和 CSS 变量生成；双语元数据、E2E 验收和发布质量门禁待完成
 - 用户与后台：已完成 Email 注册验证、登录与密码恢复、用户/管理员认证隔离、收藏与最近使用、运营 Dashboard 和用户管理
-- 工程化：已具备单元、集成和 E2E 测试、GitHub Actions CI 及生产部署配置；实际域名、HTTPS 证书和 CD 尚未落地
+- 工程化：已具备单元、集成和 E2E 测试、GitHub Actions CI、Docker Compose 部署及免 Docker 的 Node.js 原生安装；实际域名、HTTPS 证书和 CD 尚未落地
 
 ### 1. 项目定位
 
@@ -193,6 +194,7 @@ AI Agent
 - [x] 配置错误处理
 - [x] 配置环境变量
 - [x] 配置 Docker
+- [x] 配置免 Docker 的 Node.js 原生安装脚本
 - [x] 建立 Git 仓库
 - [ ] 建立 CI/CD
 - [x] 建立基础组件库
@@ -439,16 +441,16 @@ curl -X POST https://example.com/api \
 - [x] HEX → RGB
 - [x] RGB → HEX
 - [x] RGB → HSL
-- [ ] HSL → RGB
-- [ ] HSV 转换
-- [ ] CMYK 转换
+- [x] HSL → RGB
+- [x] HSV 转换
+- [x] CMYK 转换
 - [x] 颜色选择器
 - [x] 颜色预览
 - [x] 随机颜色
-- [ ] 调色板生成
-- [ ] 对比色
-- [ ] 互补色
-- [ ] CSS Color Generator
+- [x] 调色板生成
+- [x] 对比色
+- [x] 互补色
+- [x] CSS Color Generator
 
 例如：
 
@@ -1654,6 +1656,15 @@ Code Review
 - [x] cURL、Fetch、Axios、Python、Go、PHP、Java、C# 与 XHR 代码生成
 - [x] 注入防护、集中条目限制、可终止 Worker 与双语错误
 - [x] 单元、Worker、桌面/移动端、深色模式与全量回归测试
+
+## Sprint 19（进行中）
+
+- [x] HSL → RGB、HSV 与 CMYK 颜色转换
+- [x] 颜色对比度、互补色和 10 级调色板生成
+- [x] CSS custom properties 输出、随机颜色与取色器输入
+- [x] 颜色分析接入可终止共享 Worker，并完成纯函数/Worker 测试
+- [ ] 双语错误消息、工具元数据与桌面/移动端 E2E 验收
+- [ ] 全量质量门禁、发布提交与阶段标签
 
 ---
 
