@@ -115,6 +115,10 @@ export const en = {
   },
   toolPage: {
     howTo: "How to use {name}",
+    share: "Share {name}",
+    shared: "Link copied",
+    shareSuccess: "Tool link copied",
+    shareError: "Could not share this tool link",
     step1: "Enter or paste your data into the workspace above.",
     step2:
       "Choose any available options, then run the tool or review the live result.",

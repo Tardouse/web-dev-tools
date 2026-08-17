@@ -1,10 +1,16 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CircleAlert, Shuffle } from "lucide-react";
+import { CircleAlert, Shuffle, Upload } from "lucide-react";
+import type { ChangeEvent } from "react";
+import { formatBytes, TOOL_LIMITS } from "@/lib/config";
 import { localizeToolError } from "@/i18n/errors";
 import type { ToolWorkerRequest } from "@/lib/tool-worker-protocol";
-import type { ColorPaletteEntry, ColorValue } from "@/lib/tools/number-color";
+import {
+  extractColorInput,
+  type ColorPaletteEntry,
+  type ColorValue,
+} from "@/lib/tools/number-color";
 import type { ToolComponentProps } from "@/lib/types";
 import { ActionButton, CopyButton, DownloadButton } from "./tool-actions";
 import { useLiveWorkerResult } from "./use-live-worker-result";
@@ -29,6 +35,9 @@ const COLOR_LABELS = {
     copyHex: "Copy HEX",
     copyPalette: "Copy palette value",
     level: "Palette level",
+    importColor: "Import color file",
+    exportJson: "Download JSON",
+    importError: "Could not import a color from this file.",
   },
   zh: {
     source: "源颜色",
@@ -49,6 +58,9 @@ const COLOR_LABELS = {
     copyHex: "复制 HEX",
     copyPalette: "复制调色板颜色",
     level: "调色板级别",
+    importColor: "导入颜色文件",
+    exportJson: "下载 JSON",
+    importError: "无法从此文件导入颜色。",
   },
 } as const;
 
@@ -123,6 +135,7 @@ export function ColorTool({
   const labels = COLOR_LABELS[locale];
   const [input, setInput] = useState("#2563EB");
   const [view, setView] = useState<ColorView>("conversion");
+  const [importError, setImportError] = useState("");
   const workerRequest = useMemo<ToolWorkerRequest>(
     () => ({ operation: "color-analyze", input }),
     [input],
@@ -144,6 +157,33 @@ export function ColorTool({
         .join("")
         .toUpperCase()}`,
     );
+  };
+
+  const importColor = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    setImportError("");
+    if (file.size > TOOL_LIMITS.file) {
+      setImportError(
+        localizeToolError(
+          `Input is ${formatBytes(file.size)}. The limit for this tool is ${formatBytes(TOOL_LIMITS.file)}.`,
+          messages,
+        ),
+      );
+      return;
+    }
+    try {
+      const imported = extractColorInput(await file.text());
+      if (!imported.trim()) throw new Error(labels.importError);
+      setInput(imported);
+    } catch (caught) {
+      setImportError(
+        caught instanceof Error
+          ? localizeToolError(caught.message, messages)
+          : labels.importError,
+      );
+    }
   };
 
   return (
@@ -174,14 +214,29 @@ export function ColorTool({
           </ActionButton>
         </div>
       </div>
-      {result.error && (
+      <div className="color-input-actions">
+        <label className="button button-sm" htmlFor="color-import-file">
+          <Upload size={15} />
+          {labels.importColor}
+        </label>
+        <input
+          id="color-import-file"
+          className="sr-only"
+          type="file"
+          accept=".css,.json,.txt,text/css,application/json,text/plain"
+          onChange={importColor}
+        />
+      </div>
+      {(result.error || importError) && (
         <div className="error-banner" role="alert">
           <CircleAlert size={17} />
-          <span>{localizeToolError(result.error, messages)}</span>
+          <span>
+            {localizeToolError(result.error || importError, messages)}
+          </span>
         </div>
       )}
       {value && (
-        <>
+        <div aria-live="polite">
           <div
             className="color-source-preview"
             style={{ background: value.hex, color: value.contrast.preferred }}
@@ -316,6 +371,13 @@ export function ColorTool({
                     filename="color-variables.css"
                     type="text/css"
                   />
+                  <DownloadButton
+                    messages={messages}
+                    value={JSON.stringify(value, null, 2)}
+                    filename="color-analysis.json"
+                    type="application/json"
+                    label={labels.exportJson}
+                  />
                 </div>
                 <pre
                   className="editor editor-output color-css-output"
@@ -326,7 +388,7 @@ export function ColorTool({
               </div>
             )}
           </div>
-        </>
+        </div>
       )}
       <div className="workspace-footer">
         <span className="workspace-footer-meta">

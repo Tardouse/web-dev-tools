@@ -22,7 +22,11 @@ export function ToolCard({
     const sync = () => setFavorite(getFavorites().includes(tool.slug));
     sync();
     window.addEventListener("devtoolbox:storage", sync);
-    return () => window.removeEventListener("devtoolbox:storage", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("devtoolbox:storage", sync);
+      window.removeEventListener("storage", sync);
+    };
   }, [tool.slug]);
   return (
     <article className="tool-card card">

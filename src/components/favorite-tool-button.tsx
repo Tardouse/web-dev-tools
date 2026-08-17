@@ -19,7 +19,11 @@ export function FavoriteToolButton({
     const sync = () => setFavorite(getFavorites().includes(slug));
     sync();
     window.addEventListener("devtoolbox:storage", sync);
-    return () => window.removeEventListener("devtoolbox:storage", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("devtoolbox:storage", sync);
+      window.removeEventListener("storage", sync);
+    };
   }, [slug]);
   return (
     <button

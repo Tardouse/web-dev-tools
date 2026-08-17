@@ -21,7 +21,11 @@ export function RecentTools({
     const sync = () => setSlugs(getRecentTools());
     sync();
     window.addEventListener("devtoolbox:storage", sync);
-    return () => window.removeEventListener("devtoolbox:storage", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("devtoolbox:storage", sync);
+      window.removeEventListener("storage", sync);
+    };
   }, []);
   const recent = slugs
     .map((slug) => tools.find((tool) => tool.slug === slug))

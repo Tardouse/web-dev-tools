@@ -13,7 +13,7 @@ import {
   type QrTemplateValues,
 } from "@/lib/tools/qr";
 import { isToolTaskCancellation, runToolTask } from "@/lib/tool-execution";
-import { ActionButton, CopyButton } from "./tool-actions";
+import { ActionButton, CopyButton, DownloadButton } from "./tool-actions";
 import type { ToolComponentProps } from "@/lib/types";
 
 const QR_MODES: QrMode[] = ["text", "wifi", "email", "vcard"];
@@ -173,6 +173,7 @@ export function QrCodeTool({ definition, messages }: ToolComponentProps) {
 
   const handleScan = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+    event.target.value = "";
     if (!file) return;
     setScanResult("");
     setScanError("");
@@ -206,7 +207,6 @@ export function QrCodeTool({ definition, messages }: ToolComponentProps) {
       );
     } finally {
       setScanning(false);
-      event.target.value = "";
     }
   };
 
@@ -432,7 +432,7 @@ export function QrCodeTool({ definition, messages }: ToolComponentProps) {
         <div className="qr-builder-fields">{renderTemplateFields()}</div>
         <div className="qr-preview-panel">
           <div className="panel-label">{messages.tool.preview}</div>
-          <div className="qr-output">
+          <div className="qr-output" aria-live="polite">
             {pngUrl ? (
               <Image
                 src={pngUrl}
@@ -463,12 +463,22 @@ export function QrCodeTool({ definition, messages }: ToolComponentProps) {
           </div>
           <details className="qr-payload-details">
             <summary>{messages.tool.qrPayload}</summary>
-            <pre className="qr-payload-output">{payloadState.payload}</pre>
-            <CopyButton messages={messages} value={payloadState.payload} />
+            <pre className="qr-payload-output" aria-live="polite">
+              {payloadState.payload}
+            </pre>
+            <div className="workspace-actions">
+              <CopyButton messages={messages} value={payloadState.payload} />
+              <DownloadButton
+                messages={messages}
+                value={payloadState.payload}
+                filename="qr-payload.txt"
+                label={messages.common.download}
+              />
+            </div>
           </details>
         </div>
       </div>
-      <div className="qr-scanner-panel">
+      <div className="qr-scanner-panel" aria-live="polite">
         <div className="qr-scanner-heading">
           <div>
             <h3>{messages.tool.qrScanner}</h3>

@@ -184,6 +184,13 @@
   align-items: flex-start;
   padding: 14px 0 26px;
 }
+.tool-page-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
 .tool-title-row {
   display: flex;
   align-items: center;
@@ -453,6 +460,39 @@
   background: var(--danger-soft);
   color: var(--danger);
   font-size: 0.84rem;
+}
+.tool-runtime-state {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  min-height: 150px;
+  padding: 28px;
+  color: var(--danger);
+}
+.tool-runtime-state > div {
+  min-width: 0;
+}
+.tool-runtime-state h3 {
+  margin: 0;
+  color: var(--text);
+}
+.tool-runtime-state p {
+  margin: 6px 0 14px;
+  color: var(--text-muted);
+}
+.tool-runtime-spinner {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  border: 2px solid var(--border-strong);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: tool-runtime-spin 0.8s linear infinite;
+}
+@keyframes tool-runtime-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 .success-banner {
   background: var(--success-soft);
@@ -1206,7 +1246,9 @@
   overflow-wrap: anywhere;
   background: var(--surface-muted);
   color: var(--text);
-  font: 0.75rem/1.5 var(--font-mono), monospace;
+  font:
+    0.75rem/1.5 var(--font-mono),
+    monospace;
 }
 .qr-scanner-panel {
   display: grid;
@@ -2374,8 +2416,11 @@
   .tool-page-header {
     grid-template-columns: 1fr;
   }
-  .tool-page-header > .button {
-    width: 100%;
+  .tool-page-actions {
+    justify-content: stretch;
+  }
+  .tool-page-actions > .button {
+    flex: 1;
   }
   .tool-title-row {
     align-items: flex-start;

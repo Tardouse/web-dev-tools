@@ -113,6 +113,10 @@ export const zh: Messages = {
   },
   toolPage: {
     howTo: "如何使用{name}",
+    share: "分享{name}",
+    shared: "链接已复制",
+    shareSuccess: "工具链接已复制",
+    shareError: "无法分享工具链接",
     step1: "在上方工作区输入或粘贴需要处理的数据。",
     step2: "选择所需选项，然后运行工具或查看实时结果。",
     step3: "处理完成后，可复制或下载输出结果。",
