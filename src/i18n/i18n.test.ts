@@ -83,5 +83,26 @@ describe("localization", () => {
         messages,
       ),
     ).toBe("请先输入自定义分隔符再拆分文本。");
+    expect(
+      localizeToolError(
+        "Regex replacements are limited to 10000 characters.",
+        messages,
+      ),
+    ).toBe("正则替换表达式最多允许 10000 个字符。");
+    expect(
+      localizeToolError(
+        "Regex replacements are limited to 1000 matches.",
+        messages,
+      ),
+    ).toBe("正则替换最多允许匹配 1000 次。");
+    expect(localizeToolError("Original JSON is required.", messages)).toBe(
+      "请输入原始 JSON 后继续。",
+    );
+    expect(
+      localizeToolError(
+        "Changed JSON is invalid: Expected property name",
+        messages,
+      ),
+    ).toBe("修改后的 JSON 无效：Expected property name");
   });
 });

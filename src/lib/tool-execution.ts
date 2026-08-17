@@ -129,7 +129,7 @@ function workerError(reply: Extract<ToolWorkerReply, { ok: false }>): Error {
 export function workerInputPayload(request: ToolWorkerRequest): unknown {
   switch (request.operation) {
     case "regex-test":
-      return [request.pattern, request.input];
+      return [request.pattern, request.input, request.replacement ?? ""];
     case "diff":
       return [request.before, request.after];
     case "text-merge":

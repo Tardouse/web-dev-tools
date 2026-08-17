@@ -271,12 +271,20 @@ describe("tool worker operations", () => {
       pattern: "item-(\\d+)",
       flags: "g",
       input: "item-7 item-9",
+      replacement: "product-$1",
     });
     expect(regex).toMatchObject({
       matches: [
-        { value: "item-7", groups: ["7"] },
-        { value: "item-9", groups: ["9"] },
+        {
+          value: "item-7",
+          groups: [{ number: 1, name: null, value: "7" }],
+        },
+        {
+          value: "item-9",
+          groups: [{ number: 1, name: null, value: "9" }],
+        },
       ],
+      replacementResult: "product-7 product-9",
     });
 
     const diff = (await executeToolWorkerRequest({
@@ -285,9 +293,23 @@ describe("tool worker operations", () => {
       after: "new\n",
       mode: "lines",
       ignoreWhitespace: false,
+      ignoreCase: false,
     })) as DiffWorkerResult;
     expect(diff.text).toContain("-old");
     expect(diff.model.left[0].tone).toBe("modified");
+    expect(diff.displayBefore).toBe("old\n");
+
+    const jsonDiff = (await executeToolWorkerRequest({
+      operation: "diff",
+      before: '{"a":1,"b":2}',
+      after: '{"b":2,"a":1}',
+      mode: "json",
+      ignoreWhitespace: false,
+      ignoreCase: false,
+    })) as DiffWorkerResult;
+    expect(jsonDiff.model.left.every((line) => line.tone === "unchanged")).toBe(
+      true,
+    );
 
     const number = (await executeToolWorkerRequest({
       operation: "number-base",

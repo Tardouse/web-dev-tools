@@ -616,6 +616,110 @@
   background: color-mix(in srgb, var(--warning) 28%, transparent);
   border-bottom: 2px solid var(--warning);
 }
+.regex-template-select {
+  width: 180px;
+  height: 34px;
+}
+.regex-controls {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) auto minmax(180px, 0.55fr);
+  gap: 12px;
+  align-items: end;
+  padding: 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-muted);
+}
+.regex-flags {
+  gap: 6px;
+}
+.regex-main-grid {
+  min-height: 360px;
+}
+.regex-main-grid .editor {
+  min-height: 330px;
+}
+.regex-details-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  border-top: 1px solid var(--border);
+}
+.regex-detail-panel {
+  min-width: 0;
+}
+.regex-detail-panel + .regex-detail-panel {
+  border-left: 1px solid var(--border);
+}
+.regex-table-wrap {
+  min-height: 250px;
+  max-height: 340px;
+  overflow: auto;
+}
+.regex-capture-table {
+  min-width: 430px;
+}
+.regex-empty {
+  margin: 0;
+  padding: 20px 14px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+.regex-replacement-output {
+  min-height: 250px;
+  max-height: 340px;
+}
+.regex-explanation-panel,
+.regex-flavor-panel {
+  border-top: 1px solid var(--border);
+}
+.regex-token-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-height: 330px;
+  overflow: auto;
+}
+.regex-token-row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(70px, 0.45fr) minmax(0, 1fr);
+  gap: 10px;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.regex-token-row:nth-child(odd) {
+  border-right: 1px solid var(--border);
+}
+.regex-token-row code {
+  overflow: hidden;
+  color: var(--accent);
+  font-family: var(--font-mono), monospace;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.regex-token-row span,
+.regex-flavor-grid span {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+.regex-flavor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.regex-flavor-grid > div {
+  display: grid;
+  gap: 3px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.regex-flavor-grid > div:nth-child(odd) {
+  border-right: 1px solid var(--border);
+}
+.regex-truncated {
+  padding: 9px 12px;
+  border-top: 1px solid var(--border);
+  background: var(--surface-muted);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
 .diff-workspace {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -729,6 +833,19 @@
 .diff-char-changed {
   background: color-mix(in srgb, var(--warning) 30%, transparent);
   border-radius: 2px;
+}
+.diff-json-input-grid {
+  min-height: 290px;
+}
+.diff-json-input-grid .editor {
+  min-height: 260px;
+}
+.diff-json-result {
+  min-height: 360px;
+  border-top: 1px solid var(--border);
+}
+.diff-json-result .diff-editor-shell {
+  height: 320px;
 }
 .cron-builder {
   display: grid;
@@ -2185,31 +2302,59 @@
   .data-size-results {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .regex-controls,
+  .regex-details-grid {
+    grid-template-columns: 1fr;
+  }
+  .regex-detail-panel + .regex-detail-panel {
+    border-top: 1px solid var(--border);
+    border-left: 0;
+  }
 }
 
 @media (max-width: 650px) {
   .data-size-workspace .workspace-header,
+  .diff-tool-workspace .workspace-header,
+  .regex-workspace .workspace-header,
   .text-processing-workspace .workspace-header,
   .text-merge-workspace .workspace-header {
     align-items: stretch;
     flex-direction: column;
   }
+  .diff-tool-workspace .workspace-actions,
   .text-processing-workspace .workspace-actions,
   .text-merge-workspace .workspace-actions {
     align-items: stretch;
     flex-direction: column;
   }
+  .diff-tool-workspace .workspace-actions > *,
   .text-processing-workspace .workspace-actions > *,
   .text-merge-workspace .workspace-actions > * {
     width: 100%;
     max-width: none;
   }
+  .diff-tool-workspace .segmented button,
   .text-processing-workspace .segmented button,
   .text-merge-workspace .segmented button {
     flex: 1;
   }
   .data-size-controls {
     grid-template-columns: 1fr;
+  }
+  .regex-token-list,
+  .regex-flavor-grid {
+    grid-template-columns: 1fr;
+  }
+  .regex-token-row:nth-child(odd),
+  .regex-flavor-grid > div:nth-child(odd) {
+    border-right: 0;
+  }
+  .regex-flags {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .regex-flag {
+    justify-content: space-between;
   }
   .text-merge-inputs,
   .text-merge-output .editor {

@@ -582,29 +582,60 @@ export const zhTools: Record<string, LocalizedToolMetadata> = {
   "text-diff": {
     name: "文本差异对比",
     shortName: "文本 Diff",
-    description: "按行或字符对比两段文本，并导出精简差异结果。",
-    keywords: ["diff", "差异", "对比", "文本", "变更", "比较"],
-    seoTitle: "在线文本 Diff — 按行或字符对比",
-    seoDescription: "在本地清晰对比文本新增和删除内容，并下载结果。",
+    description: "按行或字符对比文本及规范化 JSON，可忽略空白和大小写。",
+    keywords: [
+      "diff",
+      "差异",
+      "对比",
+      "文本",
+      "json diff",
+      "忽略大小写",
+      "变更",
+      "比较",
+    ],
+    seoTitle: "在线文本与 JSON Diff — 按行或字符对比",
+    seoDescription:
+      "在本地对比文本或规范化 JSON，可忽略空白和大小写并下载差异结果。",
     faq: [
       {
         question: "可以忽略空白差异吗？",
         answer: "可以，按行对比时可选择忽略空白变化。",
+      },
+      {
+        question: "JSON 键顺序会影响结果吗？",
+        answer: "不会。对比前会按键名规范化对象，同时保留数组原有顺序。",
       },
     ],
   },
   "regex-tester": {
     name: "正则表达式测试",
     shortName: "正则测试",
-    description: "测试 JavaScript 正则表达式，实时高亮匹配并统计数量。",
-    keywords: ["regex", "正则", "表达式", "javascript", "匹配", "测试"],
-    seoTitle: "正则表达式在线测试 — JavaScript Regex",
+    description:
+      "测试和替换 JavaScript 正则表达式，查看捕获组、常用模板与语法解释。",
+    keywords: [
+      "regex",
+      "正则",
+      "表达式",
+      "javascript",
+      "pcre",
+      "捕获组",
+      "替换",
+      "模板",
+      "匹配",
+      "测试",
+    ],
+    seoTitle: "正则表达式在线测试与替换 — JavaScript Regex 解释",
     seoDescription:
-      "在本地测试 JavaScript 正则表达式，实时查看匹配并提供安全限制。",
+      "在本地测试、解释和替换 JavaScript 正则表达式，支持捕获组与常用模板。",
     faq: [
       {
         question: "使用哪种正则语法？",
-        answer: "使用浏览器提供的 JavaScript RegExp 实现。",
+        answer:
+          "使用浏览器提供的 JavaScript RegExp 实现，工作区会列出与 PCRE 的重要差异。",
+      },
+      {
+        question: "替换时可以引用捕获组吗？",
+        answer: "可以。编号分组使用 $1，JavaScript 命名分组使用 $<name>。",
       },
       {
         question: "如何防止 ReDoS？",

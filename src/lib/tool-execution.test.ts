@@ -75,6 +75,17 @@ describe("unified tool execution limits", () => {
         }),
       ),
     ).toBe(9);
+    expect(
+      outputByteLength(
+        workerInputPayload({
+          operation: "regex-test",
+          pattern: "a",
+          flags: "g",
+          input: "body",
+          replacement: "replacement",
+        }),
+      ),
+    ).toBe(16);
   });
 
   it("caps concurrent operations with one shared slot", async () => {

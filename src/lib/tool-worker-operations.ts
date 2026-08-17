@@ -21,6 +21,7 @@ import {
 import {
   compareText,
   createSideBySideDiff,
+  prepareDiffInputs,
   toUnifiedLikeDiff,
 } from "@/lib/tools/diff";
 import { formatJson, minifyJson, validateJson } from "@/lib/tools/json";
@@ -146,21 +147,35 @@ export async function executeToolWorkerRequest(
         request.keywordCase,
       );
     case "regex-test":
-      return testRegex(request.pattern, request.flags, request.input);
+      return testRegex(
+        request.pattern,
+        request.flags,
+        request.input,
+        request.replacement,
+      );
     case "diff": {
-      const parts = compareText(
+      const prepared = prepareDiffInputs(
         request.before,
         request.after,
         request.mode,
+      );
+      const parts = compareText(
+        prepared.before,
+        prepared.after,
+        request.mode === "json" ? "lines" : request.mode,
         request.ignoreWhitespace,
+        request.ignoreCase ?? false,
       );
       const result: DiffWorkerResult = {
         model: createSideBySideDiff(
-          request.before,
-          request.after,
+          prepared.before,
+          prepared.after,
           request.ignoreWhitespace,
+          request.ignoreCase ?? false,
         ),
         text: toUnifiedLikeDiff(parts),
+        displayBefore: prepared.before,
+        displayAfter: prepared.after,
       };
       return result;
     }

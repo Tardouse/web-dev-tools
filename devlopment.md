@@ -22,6 +22,7 @@
 - Sprint 14：JSON 转 YAML / XML / CSV 与 JSON Tree Viewer 已完成，包含类型保真转换、CSV 公式注入防护、可复制 JSONPath、分批渲染和可终止 Web Worker，并通过桌面/移动端 E2E
 - Sprint 15：文件/图片 Base64、自动编码方向、URL / Query String、Unicode、ASCII 与 UTF-8 工具已完成，包含文件往返、重复参数保真、代理项校验、完整字符表和分批渲染，并通过桌面/移动端 E2E
 - Sprint 16：Bit/Byte 与 SI/IEC 数据大小换算、英文字符统计、行清理/排序/反转/行号、文本去重/合并/拆分和首字母大写已完成，包含统一 Worker 限制、主题水合修复及桌面/移动端 E2E
+- Sprint 17：Regex 捕获组/替换/模板/语法解释与 PCRE 说明、JSON Diff 和忽略大小写已完成，包含集中匹配限制、双语错误、规范化 JSON 对比及桌面/移动端 E2E
 - 用户与后台：已完成 Email 注册验证、登录与密码恢复、用户/管理员认证隔离、收藏与最近使用、运营 Dashboard 和用户管理
 - 工程化：已具备单元、集成和 E2E 测试、GitHub Actions CI 及生产部署配置；实际域名、HTTPS 证书和 CD 尚未落地
 
@@ -346,14 +347,14 @@ AI Agent
 - [x] 正则表达式测试
 - [x] 实时匹配
 - [x] 匹配结果高亮
-- [ ] 捕获组显示
-- [ ] 替换测试
+- [x] 捕获组显示
+- [x] 替换测试
 - [x] Match 数量统计
-- [ ] 常用正则模板
-- [ ] Regex 解释
+- [x] 常用正则模板
+- [x] Regex 解释
 - [x] Flags 设置
 - [x] JavaScript Regex
-- [ ] PCRE 说明
+- [x] PCRE 说明
 
 限制：
 
@@ -371,9 +372,9 @@ AI Agent
 - [x] 行级 Diff
 - [x] 字符级 Diff
 - [x] Unified Diff
-- [ ] JSON Diff
+- [x] JSON Diff
 - [x] 忽略空格
-- [ ] 忽略大小写
+- [x] 忽略大小写
 - [x] 显示新增
 - [x] 显示删除
 - [x] 显示修改

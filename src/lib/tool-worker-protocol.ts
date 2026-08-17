@@ -12,7 +12,7 @@ import type {
   TextSplitOptions,
 } from "@/lib/tools/text-processing";
 import type { SqlDialect, WebCodeLanguage } from "@/lib/tools/code-workbench";
-import type { DiffLine } from "@/lib/tools/diff";
+import type { DiffLine, DiffMode } from "@/lib/tools/diff";
 import type { LocalFileEntry } from "@/lib/tools/archive";
 import type { FileHashAlgorithm } from "@/lib/tools/file";
 import type { GenerateSshKeyOptions, GeneratedSshKey } from "@/lib/tools/ssh";
@@ -83,13 +83,20 @@ export type ToolWorkerRequest =
       dialect: SqlDialect;
       keywordCase: "upper" | "lower" | "preserve";
     }
-  | { operation: "regex-test"; pattern: string; flags: string; input: string }
+  | {
+      operation: "regex-test";
+      pattern: string;
+      flags: string;
+      input: string;
+      replacement?: string;
+    }
   | {
       operation: "diff";
       before: string;
       after: string;
-      mode: "lines" | "characters";
+      mode: DiffMode;
       ignoreWhitespace: boolean;
+      ignoreCase?: boolean;
     }
   | {
       operation: "number-base";
@@ -116,6 +123,8 @@ export type ToolWorkerRequest =
 export interface DiffWorkerResult {
   model: { left: DiffLine[]; right: DiffLine[] };
   text: string;
+  displayBefore: string;
+  displayAfter: string;
 }
 
 export interface NumberBaseWorkerResult {

@@ -29,6 +29,8 @@ export const TOOL_LIMITS = {
   maxConcurrentExecutions: 2,
   maxJsonDepth: 100,
   maxRegexLength: 1_000,
+  maxRegexReplacementLength: 10_000,
+  maxRegexMatches: 1_000,
   maxRandomBatchSize: 100,
   maxRandomStringLength: 4_096,
   maxPasswordLength: 256,

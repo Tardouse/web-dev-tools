@@ -965,18 +965,31 @@ export const tools: ToolDefinition[] = [
     featured: true,
     sortOrder: 120,
     description:
-      "Compare two texts by line or character and export a compact diff.",
-    keywords: ["diff", "compare", "text", "changes", "unified"],
+      "Compare text or normalized JSON by line or character, with whitespace and case controls.",
+    keywords: [
+      "diff",
+      "compare",
+      "text",
+      "json diff",
+      "ignore case",
+      "changes",
+      "unified",
+    ],
     maxInputSize: TOOL_LIMITS.diff,
-    seoTitle: "Text Diff Online — Compare Text by Line or Character",
+    seoTitle: "Text & JSON Diff Online — Compare Lines and Characters",
     seoDescription:
-      "Compare text locally with clear additions and removals and downloadable results.",
+      "Compare text or normalized JSON locally, ignore whitespace or case, and download the resulting diff.",
     related: ["json-formatter", "text-counter", "regex-tester"],
     faq: [
       {
         question: "Can whitespace be ignored?",
         answer:
           "Yes, line comparison includes an option to ignore whitespace changes.",
+      },
+      {
+        question: "Does JSON key order affect the result?",
+        answer:
+          "No. JSON objects are normalized with sorted keys before comparison, while array order is preserved.",
       },
     ],
   },
@@ -991,18 +1004,33 @@ export const tools: ToolDefinition[] = [
     featured: true,
     sortOrder: 130,
     description:
-      "Test JavaScript regular expressions with live highlighting, flags, and match counts.",
-    keywords: ["regex", "regular expression", "javascript", "match", "pattern"],
+      "Test and replace with JavaScript regular expressions using captures, templates, and syntax explanations.",
+    keywords: [
+      "regex",
+      "regular expression",
+      "javascript",
+      "pcre",
+      "capture group",
+      "replace",
+      "template",
+      "match",
+      "pattern",
+    ],
     maxInputSize: TOOL_LIMITS.regex,
-    seoTitle: "Regex Tester Online — JavaScript Regular Expressions",
+    seoTitle: "Regex Tester & Replacer — Explain JavaScript Patterns",
     seoDescription:
-      "Test JavaScript regex patterns locally with live matches and safety limits.",
+      "Test, explain, and replace with JavaScript regex patterns locally using capture groups and common templates.",
     related: ["text-counter", "text-diff", "case-converter"],
     faq: [
       {
         question: "Which regex flavor is used?",
         answer:
-          "The tester uses your browser's JavaScript RegExp implementation.",
+          "The tester uses your browser's JavaScript RegExp implementation and lists important PCRE differences in the workspace.",
+      },
+      {
+        question: "Can replacements use capture groups?",
+        answer:
+          "Yes. Use $1 for numbered groups or $<name> for JavaScript named groups.",
       },
       {
         question: "How is ReDoS handled?",

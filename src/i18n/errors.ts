@@ -31,6 +31,8 @@ export function localizeToolError(message: string, messages: Messages): string {
       messages.errors.invalidColor,
     "This expression contains nested quantifiers that may cause excessive backtracking.":
       messages.errors.regexUnsafe,
+    "Original JSON is required.": messages.errors.originalJsonRequired,
+    "Changed JSON is required.": messages.errors.changedJsonRequired,
     "The cURL command contains an unclosed quote.": messages.errors.curlQuote,
     "The command must start with curl.": messages.errors.curlStart,
     "No request URL was found.": messages.errors.curlNoUrl,
@@ -92,6 +94,24 @@ export function localizeToolError(message: string, messages: Messages): string {
     [
       /^Regular expressions are limited to (\d+) characters\.$/,
       (m) => interpolate(messages.errors.regexLength, { limit: m[1] }),
+    ],
+    [
+      /^Regex replacements are limited to (\d+) characters\.$/,
+      (m) =>
+        interpolate(messages.errors.regexReplacementLength, { limit: m[1] }),
+    ],
+    [
+      /^Regex replacements are limited to (\d+) matches\.$/,
+      (m) =>
+        interpolate(messages.errors.regexReplacementMatches, { limit: m[1] }),
+    ],
+    [
+      /^Original JSON is invalid: (.+)$/s,
+      (m) => interpolate(messages.errors.originalJsonInvalid, { detail: m[1] }),
+    ],
+    [
+      /^Changed JSON is invalid: (.+)$/s,
+      (m) => interpolate(messages.errors.changedJsonInvalid, { detail: m[1] }),
     ],
     [
       /^Invalid cron expression: (.+)$/s,

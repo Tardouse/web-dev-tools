@@ -1,6 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 import { buildCronExpression, defaultCronBuilder, inspectCron } from "./cron";
-import { compareText, createSideBySideDiff, toUnifiedLikeDiff } from "./diff";
+import {
+  compareText,
+  createSideBySideDiff,
+  prepareDiffInputs,
+  toUnifiedLikeDiff,
+} from "./diff";
 import { parseTimestamp } from "./time";
 
 describe("time, cron, and diff tools", () => {
@@ -110,5 +115,33 @@ describe("time, cron, and diff tools", () => {
     );
     expect(result.right.some((line) => line.tone === "added")).toBe(true);
     expect(result.left.some((line) => line.tone === "empty")).toBe(true);
+  });
+  it("ignores case while preserving each side's original text", () => {
+    const parts = compareText("Hello\n", "hello\n", "lines", false, true);
+    expect(parts.every((part) => !part.added && !part.removed)).toBe(true);
+    const result = createSideBySideDiff(
+      "Hello\nKeep\n",
+      "hello\nkeep\n",
+      false,
+      true,
+    );
+    expect(result.left[0].segments[0].value).toBe("Hello");
+    expect(result.right[0].segments[0].value).toBe("hello");
+    expect(result.left.every((line) => line.tone === "unchanged")).toBe(true);
+  });
+  it("normalizes JSON object keys while preserving array order", () => {
+    const normalized = prepareDiffInputs(
+      '{"name":"Ada","meta":{"active":true,"score":1}}',
+      '{"meta":{"score":2,"active":true},"name":"Ada"}',
+      "json",
+    );
+    expect(normalized.before.indexOf('"meta"')).toBeLessThan(
+      normalized.before.indexOf('"name"'),
+    );
+    const parts = compareText('{"a":1,"b":2}', '{"b":2,"a":1}', "json");
+    expect(parts.every((part) => !part.added && !part.removed)).toBe(true);
+    expect(() => prepareDiffInputs("{", "{}", "json")).toThrow(
+      "Original JSON is invalid",
+    );
   });
 });

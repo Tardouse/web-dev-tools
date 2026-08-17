@@ -341,8 +341,15 @@ export const en = {
       "Enter a HEX color such as #2563eb or an RGB value such as 37, 99, 235.",
     rgbRange: "RGB channels must be between 0 and 255.",
     regexLength: "Regular expressions are limited to {limit} characters.",
+    regexReplacementLength:
+      "Regex replacement expressions are limited to {limit} characters.",
+    regexReplacementMatches: "Regex replacement is limited to {limit} matches.",
     regexUnsafe:
       "This expression contains nested quantifiers that may cause excessive backtracking.",
+    originalJsonRequired: "Enter the original JSON to continue.",
+    changedJsonRequired: "Enter the changed JSON to continue.",
+    originalJsonInvalid: "Original JSON is invalid: {detail}",
+    changedJsonInvalid: "Changed JSON is invalid: {detail}",
     curlQuote: "The cURL command contains an unclosed quote.",
     curlStart: "The command must start with curl.",
     curlNoUrl: "No request URL was found.",
